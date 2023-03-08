@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>913823039863-4ap3n0nf24m5pvolcpkt2uarbuplpuoa.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.913823039863-4ap3n0nf24m5pvolcpkt2uarbuplpuoa</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBLR727mbm8mASdQRNemaEF4uAn4lgXM8M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>913823039863</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.benweschler.dragonator</string>
+	<key>PROJECT_ID</key>
+	<string>dragonator</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dragonator.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:913823039863:ios:8ca13726b7a5eb65ff2172</string>
+</dict>
+</plist>
