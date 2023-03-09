@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 
+//TODO: add divider theme equal to divider at top of nav bar
+
 enum ThemeType {
   light,
 }
 
 class AppColors extends ThemeExtension<AppColors> {
   final Color neutralHighlight;
+  final Color captionColor;
 
-  const AppColors({required this.neutralHighlight});
+  const AppColors({
+    required this.neutralHighlight,
+    required this.captionColor,
+  });
 
   factory AppColors.fromType(ThemeType t) {
     switch (t) {
       case ThemeType.light:
-        return AppColors(
-          neutralHighlight: Colors.black.withOpacity(0.1),
+        return const AppColors(
+          neutralHighlight: Color(0x14000000),
+          captionColor: Color(0x99000000),
         );
     }
   }
@@ -25,9 +32,10 @@ class AppColors extends ThemeExtension<AppColors> {
       Theme.of(context).extension<AppColors>()!;
 
   @override
-  AppColors copyWith({Color? neutralHighlight}) {
+  AppColors copyWith({Color? neutralHighlight, Color? captionColor}) {
     return AppColors(
       neutralHighlight: neutralHighlight ?? this.neutralHighlight,
+      captionColor: captionColor ?? this.captionColor,
     );
   }
 
@@ -36,8 +44,8 @@ class AppColors extends ThemeExtension<AppColors> {
     if (other == null) return this;
 
     return AppColors(
-      neutralHighlight:
-          Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
+      neutralHighlight: Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
+      captionColor: Color.lerp(captionColor, other.captionColor, t)!,
     );
   }
 }

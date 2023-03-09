@@ -1,5 +1,5 @@
 import 'package:dragonator/main_app_scaffold.dart';
-import 'package:dragonator/screens/players_screen.dart';
+import 'package:dragonator/screens/players_screen/players_screen.dart';
 import 'package:dragonator/screens/profile_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
 import 'package:flutter/cupertino.dart';

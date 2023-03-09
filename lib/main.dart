@@ -1,6 +1,6 @@
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
-import 'package:dragonator/styles/colors.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class Player extends Equatable {
   final String id;
-  final String name;
+  final String firstName;
+  final String lastName;
   final int weight;
   final Gender gender;
   final SidePreference sidePreference;
@@ -13,7 +14,8 @@ class Player extends Equatable {
 
   const Player({
     required this.id,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.weight,
     required this.gender,
     required this.sidePreference,
@@ -27,8 +29,50 @@ class Player extends Equatable {
   List<Object?> get props => [id];
 }
 
-enum SidePreference { left, right }
+enum SidePreference {
+  left,
+  right;
 
-enum Gender { M, F, X }
+  @override
+  String toString() {
+    switch (this) {
+      case SidePreference.left:
+        return "L";
+      case SidePreference.right:
+        return "R";
+    }
+  }
+}
 
-enum AgeGroup { youth, adult }
+enum Gender {
+  M,
+  F,
+  X;
+
+  @override
+  String toString() {
+    switch (this) {
+      case Gender.M:
+        return "M";
+      case Gender.F:
+        return "F";
+      case Gender.X:
+        return "X";
+    }
+  }
+}
+
+enum AgeGroup {
+  youth,
+  adult;
+
+  @override
+  String toString() {
+    switch (this) {
+      case AgeGroup.youth:
+        return "Youth";
+      case AgeGroup.adult:
+        return "Adult";
+    }
+  }
+}

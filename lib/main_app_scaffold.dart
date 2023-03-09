@@ -1,6 +1,6 @@
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
-import 'package:dragonator/styles/colors.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -69,8 +69,8 @@ class CustomNavigationBar extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: Insets.sm),
-            height: 0.25,
+            margin: const EdgeInsets.only(bottom: Insets.xs),
+            height: 0.5,
           ),
           SafeArea(
             top: false,
@@ -131,11 +131,12 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
       Tween<Offset>(begin: const Offset(0, 0.25), end: Offset.zero)
           .animate(_controller);
 
-  final double _iconSize = 28;
+  final double _iconSize = 24;
 
   @override
   void initState() {
     if (widget.isActive) {
+      // If the button is not active, begin with the selector faded out.
       _controller.value = 1;
     }
 

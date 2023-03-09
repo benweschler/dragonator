@@ -1,4 +1,4 @@
-import 'package:dragonator/styles/colors.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/easy_base.dart';
 
 class AppModel extends EasyNotifier {

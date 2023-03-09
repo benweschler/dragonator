@@ -8,5 +8,5 @@ class Team extends Equatable {
   const Team({required this.name, this.roster = const {}});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [name, roster];
 }
