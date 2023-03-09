@@ -26,7 +26,7 @@ abstract class Corners {
 }
 
 /// The duration used for all animations.
-abstract class Durations {
+abstract class Timings {
   static const Duration short = Duration(milliseconds: 150);
   static const Duration med = Duration(milliseconds: 300);
 }
@@ -40,7 +40,7 @@ abstract class Fonts {}
 /// More specific variants are created on the fly using `style.copyWith()`
 /// Ex: newStyle = TextStyles.body1.copyWith(lineHeight: 2, color: Colors.red)
 abstract class TextStyles {
-  static const TextStyle h1 = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
+  static const TextStyle h1 = TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
   static const TextStyle h2 = TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
   static const TextStyle title1 = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   static const TextStyle body1 = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);

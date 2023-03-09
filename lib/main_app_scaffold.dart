@@ -1,5 +1,6 @@
 import 'package:dragonator/router.dart';
-import 'package:dragonator/styles.dart';
+import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -7,17 +8,17 @@ import 'package:go_router/go_router.dart';
 final List<NavigationTab> _bottomNavigationTabs = [
   NavigationTab(
     rootLocation: ScreenPaths.players,
-    icon: Icons.rowing_rounded,
+    icon: Icons.rowing_sharp,
     label: "Players",
   ),
   NavigationTab(
     rootLocation: ScreenPaths.races,
-    icon: Icons.analytics_rounded,
+    icon: Icons.analytics_sharp,
     label: "Races",
   ),
   NavigationTab(
     rootLocation: ScreenPaths.profile,
-    icon: Icons.person_rounded,
+    icon: Icons.person_sharp,
     label: "Profile",
   ),
 ];
@@ -65,35 +66,42 @@ class CustomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: SafeArea(
-        top: false,
-        minimum: const EdgeInsets.only(top: Insets.xs),
-        child: Row(
-          children: [
-            for (var tab in _bottomNavigationTabs)
-              Expanded(
-                child: NavigationBarButton(
-                  icon: tab.icon,
-                  label: tab.label,
-                  isActive: tab.rootLocation == selectedRouteName,
-                  onTap: () => _onItemTapped(context, tab.rootLocation),
-                ),
-              )
-          ],
-        ),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: Insets.sm),
+            height: 0.25,
+          ),
+          SafeArea(
+            top: false,
+            minimum: const EdgeInsets.only(top: Insets.xs),
+            child: Row(
+              children: [
+                for (var tab in _bottomNavigationTabs)
+                  Expanded(
+                    child: NavigationBarButton(
+                      icon: tab.icon,
+                      label: tab.label,
+                      isActive: tab.rootLocation == selectedRouteName,
+                      onTap: () => _onItemTapped(context, tab.rootLocation),
+                    ),
+                  )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void _onItemTapped(BuildContext context, String rootLocation) {
-    final location = GoRouter.of(context).location;
-    if ((rootLocation != "/" || location == "/") &&
-        location.startsWith(rootLocation)) return;
+    if (rootLocation == GoRouter.of(context).location) return;
+    HapticFeedback.lightImpact();
     context.go(rootLocation);
   }
 }
 
-class NavigationBarButton extends StatelessWidget {
+class NavigationBarButton extends StatefulWidget {
   final IconData icon;
   final String label;
   final bool isActive;
@@ -108,22 +116,78 @@ class NavigationBarButton extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //TODO: Don't hardcode grey opacity
-    final buttonColor =
-        IconTheme.of(context).color!.withOpacity(isActive ? 1 : 0.35);
+  State<NavigationBarButton> createState() => _NavigationBarButtonState();
+}
 
+class _NavigationBarButtonState extends State<NavigationBarButton>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    duration: Timings.short,
+    vsync: this,
+  );
+  late final _fadeAnimation =
+      Tween<double>(begin: 0, end: 1).animate(_controller);
+  late final _positionAnimation =
+      Tween<Offset>(begin: const Offset(0, 0.25), end: Offset.zero)
+          .animate(_controller);
+
+  final double _iconSize = 28;
+
+  @override
+  void initState() {
+    if (widget.isActive) {
+      _controller.value = 1;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant NavigationBarButton oldWidget) {
+    if (widget.isActive != oldWidget.isActive) {
+      widget.isActive ? _controller.forward() : _controller.reverse();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: buttonColor, size: 28),
+          Stack(
+            children: [
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: SlideTransition(
+                  position: _positionAnimation,
+                  child: Container(
+                    width: _iconSize + 2 * Insets.sm,
+                    height: _iconSize + 2 * Insets.sm,
+                    decoration: BoxDecoration(
+                      borderRadius: Corners.medBorderRadius,
+                      color: AppColors.of(context).neutralHighlight,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned.fill(child: Icon(widget.icon, size: _iconSize)),
+            ],
+          ),
+          const SizedBox(height: Insets.xs),
           Text(
-            label,
+            widget.label,
             style: TextStyles.caption.copyWith(
-              color: buttonColor,
+              color: Colors.black,
               fontWeight: FontWeight.w600,
             ),
           ),

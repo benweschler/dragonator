@@ -5,7 +5,8 @@ import 'package:dragonator/screens/races_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
-// UNCOMMENTING THIS WILL CRASH THE DART COMPILER
+//TODO: UNCOMMENTING THIS WILL CRASH THE DART COMPILER
+//TODO: adding <T> generic may fix crash
 //typedef AppPage = CupertinoPage;
 
 abstract class ScreenPaths {

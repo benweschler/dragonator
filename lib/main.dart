@@ -1,6 +1,6 @@
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
-import 'package:dragonator/theme.dart';
+import 'package:dragonator/styles/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Dragonator',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.fromType(
+      theme: AppColors.fromType(
         context.watch<AppModel>().themeType,
       ).toThemeData(),
       routerConfig: AppRouter().router,
