@@ -33,7 +33,7 @@ class PlayerCard extends StatelessWidget {
               Text(
                 "${player.firstName} ${player.lastName}",
                 style: TextStyles.title1.copyWith(
-                  color: const Color.fromRGBO(229, 92, 69, 1),
+                  color: AppColors.of(context).accent,
                 ),
               ),
               const SizedBox(height: Insets.xs),

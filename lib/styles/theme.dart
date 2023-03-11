@@ -7,11 +7,12 @@ enum ThemeType {
 }
 
 class AppColors extends ThemeExtension<AppColors> {
+  final Color accent = const Color(0xFFE55C45);
   final Color neutralHighlight;
   final Color captionColor;
   final bool isDark;
 
-  const AppColors({
+  const AppColors._({
     required this.neutralHighlight,
     required this.captionColor,
     required this.isDark,
@@ -20,7 +21,7 @@ class AppColors extends ThemeExtension<AppColors> {
   factory AppColors.fromType(ThemeType t) {
     switch (t) {
       case ThemeType.light:
-        return const AppColors(
+        return const AppColors._(
           neutralHighlight: Color(0x14000000),
           captionColor: Color(0x99000000),
           isDark: false,
@@ -41,7 +42,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? captionColor,
     bool? isDark,
   }) {
-    return AppColors(
+    return AppColors._(
       neutralHighlight: neutralHighlight ?? this.neutralHighlight,
       captionColor: captionColor ?? this.captionColor,
       isDark: isDark ?? this.isDark,
@@ -52,7 +53,7 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors lerp(AppColors? other, double t) {
     if (other == null) return this;
 
-    return AppColors(
+    return AppColors._(
       neutralHighlight:
           Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
       captionColor: Color.lerp(captionColor, other.captionColor, t)!,

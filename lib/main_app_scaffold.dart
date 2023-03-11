@@ -8,18 +8,18 @@ import 'package:go_router/go_router.dart';
 final List<NavigationTab> _bottomNavigationTabs = [
   NavigationTab(
     rootLocation: ScreenPaths.players,
-    icon: Icons.rowing_sharp,
+    icon: Icons.person_outline_sharp,
     label: "Players",
   ),
   NavigationTab(
     rootLocation: ScreenPaths.races,
-    icon: Icons.analytics_sharp,
+    icon: Icons.analytics_outlined,
     label: "Races",
   ),
   NavigationTab(
     rootLocation: ScreenPaths.profile,
-    icon: Icons.person_sharp,
-    label: "Profile",
+    icon: Icons.settings_outlined,
+    label: "Settings",
   ),
 ];
 
@@ -79,6 +79,7 @@ class CustomNavigationBar extends StatelessWidget {
             top: false,
             minimum: const EdgeInsets.symmetric(vertical: Insets.xs),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 for (var tab in _bottomNavigationTabs)
                   Expanded(
@@ -131,7 +132,7 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
   late final _fadeAnimation =
       Tween<double>(begin: 0, end: 1).animate(_controller);
   late final _positionAnimation =
-      Tween<Offset>(begin: const Offset(0, 0.25), end: Offset.zero)
+      Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero)
           .animate(_controller);
 
   final double _iconSize = 24;
@@ -170,21 +171,27 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
         children: [
           Stack(
             children: [
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _positionAnimation,
-                  child: Container(
-                    width: _iconSize + 1.5 * Insets.sm,
-                    height: _iconSize + 1.5 * Insets.sm,
-                    decoration: BoxDecoration(
-                      borderRadius: Corners.medBorderRadius,
-                      color: AppColors.of(context).neutralHighlight,
+              Positioned.fill(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _positionAnimation,
+                    child: Transform(
+                      transform: Matrix4.skewX(0.35),
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 1.1 * _iconSize,
+                        height: 1.1 * _iconSize,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.of(context).accent.withOpacity(0.2),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              Positioned.fill(child: Icon(widget.icon, size: _iconSize)),
+              Icon(widget.icon, size: _iconSize),
             ],
           ),
           const SizedBox(height: Insets.xs),
