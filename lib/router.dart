@@ -1,6 +1,6 @@
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/screens/players_screen/players_screen.dart';
-import 'package:dragonator/screens/profile_screen.dart';
+import 'package:dragonator/screens/settings_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -31,7 +31,7 @@ class AppRouter {
             routes: [
               AppRoute(ScreenPaths.players, (_) => PlayersScreen()),
               AppRoute(ScreenPaths.races, (_) => const RacesScreen()),
-              AppRoute(ScreenPaths.profile, (_) => const ProfileScreen()),
+              AppRoute(ScreenPaths.profile, (_) => const SettingsScreen()),
             ],
           ),
         ],

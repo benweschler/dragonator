@@ -5,28 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-final List<NavigationTab> _bottomNavigationTabs = [
-  NavigationTab(
-    rootLocation: ScreenPaths.players,
-    icon: Icons.person_outline_sharp,
-    label: "Players",
-  ),
-  NavigationTab(
-    rootLocation: ScreenPaths.races,
-    icon: Icons.analytics_outlined,
-    label: "Races",
-  ),
-  NavigationTab(
-    rootLocation: ScreenPaths.profile,
-    icon: Icons.settings_outlined,
-    label: "Settings",
-  ),
-];
-
 class MainAppScaffold extends StatefulWidget {
   final Widget body;
 
-  const MainAppScaffold({Key? key, required this.body}) : super(key: key);
+  MainAppScaffold({Key? key, required this.body}) : super(key: key);
+
+  final List<NavigationTab> _bottomNavigationTabs = [
+    NavigationTab(
+      rootLocation: ScreenPaths.players,
+      icon: Icons.person_outline_sharp,
+      label: "Players",
+    ),
+    NavigationTab(
+      rootLocation: ScreenPaths.races,
+      icon: Icons.analytics_outlined,
+      label: "Races",
+    ),
+    NavigationTab(
+      rootLocation: ScreenPaths.profile,
+      icon: Icons.settings_outlined,
+      label: "Settings",
+    ),
+  ];
 
   @override
   State<MainAppScaffold> createState() => _MainAppScaffoldState();
@@ -47,6 +47,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
             // The navigation bar does not have a Scaffold, and therefore does not
             // have a DefaultTextStyle, as its ancestor, so provide one here.
             CustomNavigationBar(
+              tabs: widget._bottomNavigationTabs,
               selectedRouteName: GoRouter.of(context).location,
             ),
           ],
@@ -57,10 +58,12 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
 }
 
 class CustomNavigationBar extends StatelessWidget {
+  final List<NavigationTab> tabs;
   final String selectedRouteName;
 
   const CustomNavigationBar({
     Key? key,
+    required this.tabs,
     required this.selectedRouteName,
   }) : super(key: key);
 
@@ -81,7 +84,7 @@ class CustomNavigationBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                for (var tab in _bottomNavigationTabs)
+                for (var tab in tabs)
                   Expanded(
                     child: NavigationBarButton(
                       icon: tab.icon,
