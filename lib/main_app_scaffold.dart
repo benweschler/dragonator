@@ -36,7 +36,9 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
+      value: AppColors.of(context).isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       child: DefaultTextStyle(
         style: TextStyles.body2,
         child: Column(
@@ -69,12 +71,13 @@ class CustomNavigationBar extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: Insets.xs),
-            height: 0.5,
+            height: 1,
+            color: AppColors.of(context).neutralHighlight,
           ),
+          const SizedBox(height: Insets.xs),
           SafeArea(
             top: false,
-            minimum: const EdgeInsets.only(top: Insets.xs),
+            minimum: const EdgeInsets.symmetric(vertical: Insets.xs),
             child: Row(
               children: [
                 for (var tab in _bottomNavigationTabs)
@@ -172,8 +175,8 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
                 child: SlideTransition(
                   position: _positionAnimation,
                   child: Container(
-                    width: _iconSize + 2 * Insets.sm,
-                    height: _iconSize + 2 * Insets.sm,
+                    width: _iconSize + 1.5 * Insets.sm,
+                    height: _iconSize + 1.5 * Insets.sm,
                     decoration: BoxDecoration(
                       borderRadius: Corners.medBorderRadius,
                       color: AppColors.of(context).neutralHighlight,

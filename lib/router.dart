@@ -29,7 +29,7 @@ class AppRouter {
             navigatorKey: _navBarNavigatorKey,
             builder: (_, __, child) => MainAppScaffold(body: child),
             routes: [
-              AppRoute(ScreenPaths.players, (_) => const PlayersScreen()),
+              AppRoute(ScreenPaths.players, (_) => PlayersScreen()),
               AppRoute(ScreenPaths.races, (_) => const RacesScreen()),
               AppRoute(ScreenPaths.profile, (_) => const ProfileScreen()),
             ],

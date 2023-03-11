@@ -9,10 +9,12 @@ enum ThemeType {
 class AppColors extends ThemeExtension<AppColors> {
   final Color neutralHighlight;
   final Color captionColor;
+  final bool isDark;
 
   const AppColors({
     required this.neutralHighlight,
     required this.captionColor,
+    required this.isDark,
   });
 
   factory AppColors.fromType(ThemeType t) {
@@ -21,21 +23,28 @@ class AppColors extends ThemeExtension<AppColors> {
         return const AppColors(
           neutralHighlight: Color(0x14000000),
           captionColor: Color(0x99000000),
+          isDark: false,
         );
     }
   }
 
-  ThemeData toThemeData() =>
-      ThemeData().copyWith(extensions: <ThemeExtension<dynamic>>[this]);
+  ThemeData toThemeData() => ThemeData(
+        brightness: isDark ? Brightness.dark : Brightness.light,
+      ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
   static AppColors of(BuildContext context) =>
       Theme.of(context).extension<AppColors>()!;
 
   @override
-  AppColors copyWith({Color? neutralHighlight, Color? captionColor}) {
+  AppColors copyWith({
+    Color? neutralHighlight,
+    Color? captionColor,
+    bool? isDark,
+  }) {
     return AppColors(
       neutralHighlight: neutralHighlight ?? this.neutralHighlight,
       captionColor: captionColor ?? this.captionColor,
+      isDark: isDark ?? this.isDark,
     );
   }
 
@@ -44,8 +53,10 @@ class AppColors extends ThemeExtension<AppColors> {
     if (other == null) return this;
 
     return AppColors(
-      neutralHighlight: Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
+      neutralHighlight:
+          Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
       captionColor: Color.lerp(captionColor, other.captionColor, t)!,
+      isDark: t < 0.5 ? isDark : other.isDark,
     );
   }
 }

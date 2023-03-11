@@ -58,7 +58,7 @@ Player _randomPlayer() {
     firstName: _firstNames[_random.nextInt(_firstNames.length-1)],
     lastName: _lastNames[_random.nextInt(_lastNames.length-1)],
     weight: _random.nextInt(75) + 110,
-    gender: Gender.values[_random.nextInt(2)],
+    gender: Gender.values[_random.nextInt(3)],
     sidePreference: _random.nextBool() ? SidePreference.left : SidePreference.right,
     ageGroup: _random.nextBool() ? AgeGroup.adult : AgeGroup.youth,
     drummerPreference: _random.nextBool(),
