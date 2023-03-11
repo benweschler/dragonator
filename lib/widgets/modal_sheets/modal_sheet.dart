@@ -43,45 +43,34 @@ class _ModalSheetHandle extends StatefulWidget {
 class _ModalSheetHandleState extends State<_ModalSheetHandle>
     with SingleTickerProviderStateMixin {
   final _handelHeight = Insets.xs;
-  late final _controller = AnimationController(
-    duration: Timings.short,
-    vsync: this,
-  );
-  late final _animation =
-      Tween<double>(begin: 35, end: 50).animate(_controller);
-  bool routeListenerAdded = false;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final double _collapsedHandleWidth = 35;
+  final double _expandedHandleWidth = 50;
+  bool _routeListenerAdded = false;
+  bool _isExpanded = false;
 
   void updateHandle(Animation<double> routeAnimation) {
     if (routeAnimation.isCompleted) {
-      _controller.forward();
-    } else if (!routeAnimation.isCompleted && _controller.isCompleted) {
-      _controller.reverse();
+      setState(() => _isExpanded = true);
+    } else if (!routeAnimation.isCompleted && _isExpanded) {
+      setState(() => _isExpanded = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!routeListenerAdded) {
+    if(!_routeListenerAdded) {
       final routeAnimation = ModalRoute.of(context)!.animation!;
       routeAnimation.addListener(() => updateHandle(routeAnimation));
-      routeListenerAdded = true;
+      _routeListenerAdded = true;
     }
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) => Container(
-        width: _animation.value,
-        height: _handelHeight,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(_handelHeight),
-        ),
+    return AnimatedContainer(
+      duration: Timings.short,
+      width: _isExpanded ? _expandedHandleWidth : _collapsedHandleWidth,
+      height: _handelHeight,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(_handelHeight),
       ),
     );
   }
