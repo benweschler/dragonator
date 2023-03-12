@@ -3,6 +3,7 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
+//TODO: this is probably a bad way to encapsulate this widget. Also, add documentation.
 class OptionButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final IconData icon;
@@ -21,7 +22,7 @@ class OptionButton extends StatelessWidget {
         padding: const EdgeInsets.all(Insets.xs),
         decoration: ShapeDecoration(
           shape: const StadiumBorder(),
-          color: AppColors.of(context).neutralSurface,
+          color: AppColors.of(context).smallSurface,
         ),
         child: Icon(
           icon,

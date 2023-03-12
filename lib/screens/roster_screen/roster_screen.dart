@@ -10,7 +10,6 @@ import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'components/player_preview_card.dart';
 
@@ -81,7 +80,7 @@ class _RosterContent extends StatelessWidget {
       children: [
         const Text("Roster", style: TextStyles.h1),
         const Spacer(),
-        OptionButton(onTap: () => context.push("lskdf"), icon: Icons.sort_rounded),
+        OptionButton(onTap: () => {}, icon: Icons.sort_rounded),
         const SizedBox(width: Insets.sm),
         OptionButton(onTap: () {}, icon: Icons.filter_alt_rounded),
       ],

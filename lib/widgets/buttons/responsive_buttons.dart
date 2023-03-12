@@ -8,15 +8,15 @@ import 'package:flutter/widgets.dart';
 /// with the color of your widget using
 /// [Color.alphaBlend(overlayColor, yourColor)].
 class ResponsiveButton extends StatefulWidget {
-  final Widget Function(Color overlayColor) builder;
   final GestureTapCallback? onTap;
+  final Widget Function(Color overlayColor) builder;
   final Color _overlayColor = const Color(0x80FFFFFF);
 
   /// A button that adds a light overlay when tapped.
   const ResponsiveButton({
     Key? key,
-    required this.builder,
     required this.onTap,
+    required this.builder,
   }) : super(key: key);
 
   @override

@@ -40,6 +40,12 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
           ? SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: DefaultTextStyle(
+        //TODO: add correct color for text, because right now color of default text style is null.
+        /*
+         * Then hunt down anywhere text color is hardcoded or default text style is used,
+         * and reference AppColors instead. This default text style should only be used
+         * as the underlying default.
+         */
         style: TextStyles.body2,
         child: Column(
           children: [
@@ -48,7 +54,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
             // have a DefaultTextStyle, as its ancestor, so provide one here.
             CustomNavigationBar(
               tabs: widget._bottomNavigationTabs,
-              selectedRouteName: GoRouter.of(context).location,
+              selectedRoutePath: GoRouter.of(context).location,
             ),
           ],
         ),
@@ -59,12 +65,12 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
 
 class CustomNavigationBar extends StatelessWidget {
   final List<NavigationTab> tabs;
-  final String selectedRouteName;
+  final String selectedRoutePath;
 
   const CustomNavigationBar({
     Key? key,
     required this.tabs,
-    required this.selectedRouteName,
+    required this.selectedRoutePath,
   }) : super(key: key);
 
   @override
@@ -75,7 +81,7 @@ class CustomNavigationBar extends StatelessWidget {
         children: [
           Container(
             height: 1,
-            color: AppColors.of(context).neutralSurface,
+            color: AppColors.of(context).smallSurface,
           ),
           const SizedBox(height: Insets.xs),
           SafeArea(
@@ -89,7 +95,7 @@ class CustomNavigationBar extends StatelessWidget {
                     child: NavigationBarButton(
                       icon: tab.icon,
                       label: tab.label,
-                      isActive: tab.rootLocation == selectedRouteName,
+                      isActive: selectedRoutePath.startsWith(tab.rootLocation),
                       onTap: () => _onItemTapped(context, tab.rootLocation),
                     ),
                   )
