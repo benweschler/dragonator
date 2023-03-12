@@ -12,9 +12,9 @@ class MainAppScaffold extends StatefulWidget {
 
   final List<NavigationTab> _bottomNavigationTabs = [
     NavigationTab(
-      rootLocation: ScreenPaths.players,
-      icon: Icons.person_outline_sharp,
-      label: "Players",
+      rootLocation: ScreenPaths.roster,
+      icon: Icons.people_outline_rounded,
+      label: "Roster",
     ),
     NavigationTab(
       rootLocation: ScreenPaths.races,
@@ -23,7 +23,7 @@ class MainAppScaffold extends StatefulWidget {
     ),
     NavigationTab(
       rootLocation: ScreenPaths.profile,
-      icon: Icons.settings_outlined,
+      icon: Icons.settings_rounded,
       label: "Settings",
     ),
   ];
@@ -75,7 +75,7 @@ class CustomNavigationBar extends StatelessWidget {
         children: [
           Container(
             height: 1,
-            color: AppColors.of(context).neutralHighlight,
+            color: AppColors.of(context).neutralSurface,
           ),
           const SizedBox(height: Insets.xs),
           SafeArea(
@@ -134,9 +134,8 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
   );
   late final _fadeAnimation =
       Tween<double>(begin: 0, end: 1).animate(_controller);
-  late final _positionAnimation =
-      Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero)
-          .animate(_controller);
+  late final _scaleAnimation =
+      Tween<double>(begin: 1.33, end: 1).animate(_controller);
 
   final double _iconSize = 24;
 
@@ -166,6 +165,19 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
 
   @override
   Widget build(BuildContext context) {
+    final Widget activeTabHighlight = Transform(
+      transform: Matrix4.skewX(0.35),
+      alignment: Alignment.center,
+      child: Container(
+        width: 1.1 * _iconSize,
+        height: 1.1 * _iconSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.of(context).accent.withOpacity(0.2),
+        ),
+      ),
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: widget.onTap,
@@ -177,20 +189,9 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
               Positioned.fill(
                 child: FadeTransition(
                   opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _positionAnimation,
-                    child: Transform(
-                      transform: Matrix4.skewX(0.35),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 1.1 * _iconSize,
-                        height: 1.1 * _iconSize,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.of(context).accent.withOpacity(0.2),
-                        ),
-                      ),
-                    ),
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: activeTabHighlight,
                   ),
                 ),
               ),

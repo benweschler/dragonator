@@ -1,17 +1,28 @@
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+/// A scaffold that adds a [CustomAppBar] and screen border offsets to a screen.
 class CustomScaffold extends StatelessWidget {
   final Widget? leading;
   final Widget? center;
   final Widget? trailing;
   final Widget child;
 
+  /// Whether to automatically populate the [leading] widget with a
+  /// [CustomBackButton] if no other leading widget is provided and the page can
+  /// pop.
+  ///
+  /// Defaults to true.
+  final bool automaticallyImplyBackButton;
+
   const CustomScaffold({
     Key? key,
     this.leading,
     this.trailing,
     this.center,
+    this.automaticallyImplyBackButton = true,
     required this.child,
   }) : super(key: key);
 
@@ -24,7 +35,11 @@ class CustomScaffold extends StatelessWidget {
         child: Column(
           children: [
             CustomAppBar(
-              leading: leading,
+              leading: automaticallyImplyBackButton &&
+                      leading == null &&
+                      context.canPop()
+                  ? const CustomBackButton()
+                  : leading,
               center: center,
               trailing: trailing,
             ),
@@ -61,16 +76,23 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: Insets.med,
-        horizontal: Insets.offset,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      padding: const EdgeInsets.symmetric(vertical: Insets.sm),
+      // Use a stack to ensure that the center widget is always centered on the
+      // screen, regardless of whether a leading or trailing widget is provided.
+      //
+      // NavigationToolbar is a prebuilt widget that lays out an app bar, but it
+      // uses CustomMultiChildLayout and so cannot have a dynamic height that
+      // wraps its children.
+      child: Stack(
         children: [
-          if (leading != null) leading!,
-          if (center != null) Expanded(child: Center(child: center!)),
-          if (trailing != null) trailing!,
+          if (center != null) Center(child: center!),
+          Row(
+            children: [
+              if (leading != null) leading!,
+              const Spacer(),
+              if (trailing != null) trailing!,
+            ],
+          ),
         ],
       ),
     );

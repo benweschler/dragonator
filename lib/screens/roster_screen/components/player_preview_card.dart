@@ -1,17 +1,23 @@
 import 'package:dragonator/data/player.dart';
+import 'package:dragonator/dummy_data.dart';
+import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class PlayerCard extends StatelessWidget {
+class PlayerPreviewCard extends StatelessWidget {
   final Player player;
 
-  const PlayerCard(this.player, {Key? key}) : super(key: key);
+  PlayerPreviewCard(String playerID, {Key? key})
+      : player = playerIDMap[playerID]!,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => context.push(ScreenPaths.player(player.id)),
+      behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: Insets.sm,
@@ -39,9 +45,9 @@ class PlayerCard extends StatelessWidget {
               const SizedBox(height: Insets.xs),
               Text.rich(TextSpan(children: [
                 TextSpan(
-                    text: "${player.weight}",
-                    style:
-                        TextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+                  text: "${player.weight}",
+                  style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+                ),
                 const TextSpan(text: " lbs", style: TextStyles.body2),
               ])),
             ],
@@ -53,7 +59,7 @@ class PlayerCard extends StatelessWidget {
               Text(
                 "Gender",
                 style: TextStyles.caption.copyWith(
-                  color: AppColors.of(context).captionColor,
+                  color: AppColors.of(context).neutralContent,
                 ),
               ),
               Text("${player.gender}", style: TextStyles.title1),
@@ -66,12 +72,16 @@ class PlayerCard extends StatelessWidget {
               Text(
                 "Side",
                 style: TextStyles.caption.copyWith(
-                  color: AppColors.of(context).captionColor,
+                  color: AppColors.of(context).neutralContent,
                 ),
               ),
               Text("${player.sidePreference}", style: TextStyles.title1),
             ],
           ),
+        ),
+        Icon(
+          Icons.chevron_right_rounded,
+          color: AppColors.of(context).neutralContent,
         ),
       ],
     );

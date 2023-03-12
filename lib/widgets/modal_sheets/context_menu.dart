@@ -18,8 +18,10 @@ class ContextMenu extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        //TODO: using divider here
-        children: <Widget>[...actions].separate(const Divider()).toList(),
+        children: <Widget>[...actions]
+            //TODO: using divider here
+            .separate(const Divider(height: 0.5, thickness: 0.5))
+            .toList(),
       ),
     );
   }

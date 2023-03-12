@@ -36,30 +36,29 @@ const List<String> _lastNames = [
   "Gottfried",
 ];
 
+final roster = [for (int i = 0; i < 22 * 2; i++) _randomPlayer()];
+final Map<String, Player> playerIDMap =
+    Map.fromIterable(roster, key: (player) => player.id);
+
 final teamOne = Team(
   name: "Team One",
-  roster: {
-    for(int i = 0; i < 22; i++)
-      _randomPlayer()
-  },
+  playerIDs: roster.sublist(0, 22).map((player) => player.id).toSet(),
 );
 
 final teamTwo = Team(
   name: "Team Two",
-  roster: {
-    for(int i = 0; i < 22; i++)
-      _randomPlayer()
-  },
+  playerIDs: roster.sublist(22).map((player) => player.id).toSet(),
 );
 
 Player _randomPlayer() {
   return Player(
     id: _uuid.v4(),
-    firstName: _firstNames[_random.nextInt(_firstNames.length-1)],
-    lastName: _lastNames[_random.nextInt(_lastNames.length-1)],
+    firstName: _firstNames[_random.nextInt(_firstNames.length - 1)],
+    lastName: _lastNames[_random.nextInt(_lastNames.length - 1)],
     weight: _random.nextInt(75) + 110,
     gender: Gender.values[_random.nextInt(3)],
-    sidePreference: _random.nextBool() ? SidePreference.left : SidePreference.right,
+    sidePreference:
+        _random.nextBool() ? SidePreference.left : SidePreference.right,
     ageGroup: _random.nextBool() ? AgeGroup.adult : AgeGroup.youth,
     drummerPreference: _random.nextBool(),
     steersPersonPreference: _random.nextBool(),

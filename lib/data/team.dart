@@ -1,12 +1,13 @@
-import 'package:dragonator/data/player.dart';
 import 'package:equatable/equatable.dart';
 
 class Team extends Equatable {
   final String name;
-  final Set<Player> roster;
 
-  const Team({required this.name, this.roster = const {}});
+  /// A set of the player ID's of the players on this team.
+  final Set<String> playerIDs;
+
+  const Team({required this.name, this.playerIDs = const {}});
 
   @override
-  List<Object?> get props => [name, roster];
+  List<Object?> get props => [name, playerIDs];
 }

@@ -8,22 +8,22 @@ enum ThemeType {
 
 class AppColors extends ThemeExtension<AppColors> {
   final Color accent = const Color(0xFFE55C45);
-  final Color neutralHighlight;
-  final Color captionColor;
+  final Color neutralSurface;
+  final Color neutralContent;
   final bool isDark;
 
   const AppColors._({
-    required this.neutralHighlight,
-    required this.captionColor,
+    required this.neutralSurface,
+    required this.neutralContent,
     required this.isDark,
   });
 
   factory AppColors.fromType(ThemeType t) {
     switch (t) {
       case ThemeType.light:
-        return const AppColors._(
-          neutralHighlight: Color(0x14000000),
-          captionColor: Color(0x99000000),
+        return AppColors._(
+          neutralSurface: Colors.black.withOpacity(0.08),
+          neutralContent: Colors.black.withOpacity(0.5),
           isDark: false,
         );
     }
@@ -38,13 +38,14 @@ class AppColors extends ThemeExtension<AppColors> {
 
   @override
   AppColors copyWith({
-    Color? neutralHighlight,
-    Color? captionColor,
+    Color? neutralSurface,
+    Color? onNeutralSurface,
+    Color? neutralContent,
     bool? isDark,
   }) {
     return AppColors._(
-      neutralHighlight: neutralHighlight ?? this.neutralHighlight,
-      captionColor: captionColor ?? this.captionColor,
+      neutralSurface: neutralSurface ?? this.neutralSurface,
+      neutralContent: neutralContent ?? this.neutralContent,
       isDark: isDark ?? this.isDark,
     );
   }
@@ -54,9 +55,8 @@ class AppColors extends ThemeExtension<AppColors> {
     if (other == null) return this;
 
     return AppColors._(
-      neutralHighlight:
-          Color.lerp(neutralHighlight, other.neutralHighlight, t)!,
-      captionColor: Color.lerp(captionColor, other.captionColor, t)!,
+      neutralSurface: Color.lerp(neutralSurface, other.neutralSurface, t)!,
+      neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:dragonator/main_app_scaffold.dart';
-import 'package:dragonator/screens/players_screen/players_screen.dart';
+import 'package:dragonator/screens/player_screen.dart';
+import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,31 +12,42 @@ import 'package:go_router/go_router.dart';
 
 abstract class ScreenPaths {
   static String splash = '/';
-  static String players = '/players';
+  static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
+  static String player(String id) => '/roster/player/$id';
 }
 
 class AppRouter {
   final _rootNavigatorKey = GlobalKey<NavigatorState>();
   final _navBarNavigatorKey = GlobalKey<NavigatorState>();
 
-  GoRouter get router => GoRouter(
-        //TODO: get rid of initialLocation?
-        initialLocation: "/players",
-        navigatorKey: _rootNavigatorKey,
-        routes: [
-          ShellRoute(
-            navigatorKey: _navBarNavigatorKey,
-            builder: (_, __, child) => MainAppScaffold(body: child),
-            routes: [
-              AppRoute(ScreenPaths.players, (_) => PlayersScreen()),
-              AppRoute(ScreenPaths.races, (_) => const RacesScreen()),
-              AppRoute(ScreenPaths.profile, (_) => const SettingsScreen()),
-            ],
-          ),
-        ],
-      );
+  GoRouter get router {
+    return GoRouter(
+      initialLocation: ScreenPaths.roster,
+      navigatorKey: _rootNavigatorKey,
+      routes: [
+        ShellRoute(
+          navigatorKey: _navBarNavigatorKey,
+          builder: (_, __, child) => MainAppScaffold(body: child),
+          routes: [
+            AppRoute(
+              ScreenPaths.roster,
+              (_) => RosterScreen(),
+              routes: [
+                AppRoute(
+                  "player/:id",
+                  (state) => PlayerScreen(state.params['id']!),
+                ),
+              ],
+            ),
+            AppRoute(ScreenPaths.races, (_) => const RacesScreen()),
+            AppRoute(ScreenPaths.profile, (_) => const SettingsScreen()),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 /// Custom GoRoute sub-class to make the router declaration easier to read.
