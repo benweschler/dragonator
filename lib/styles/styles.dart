@@ -28,6 +28,7 @@ abstract class Corners {
 /// The duration used for all animations.
 abstract class Timings {
   static const Duration short = Duration(milliseconds: 150);
+  static const Duration med = Duration(milliseconds: 300);
 }
 
 /// Fonts - A list of Font Families, used by the TextStyles class to create

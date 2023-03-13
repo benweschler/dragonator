@@ -19,13 +19,15 @@ class ModalSheet extends StatelessWidget {
         children: [
           const _ModalSheetHandle(),
           const SizedBox(height: Insets.xs),
-          Container(
-            margin: const EdgeInsets.all(Insets.sm),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: Corners.medBorderRadius,
+          Flexible(
+            child: Container(
+              margin: const EdgeInsets.all(Insets.sm),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: Corners.medBorderRadius,
+              ),
+              child: child,
             ),
-            child: child,
           ),
         ],
       ),

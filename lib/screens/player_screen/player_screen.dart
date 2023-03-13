@@ -60,11 +60,7 @@ class PlayerScreen extends StatelessWidget {
               label: "View active lineups",
               icon: Icons.library_books_rounded,
             ),
-            ActionButton(
-              onTap: () {},
-              label: "View Teams",
-              icon: Icons.groups_3_rounded,
-            ),
+
             ActionButton(
               onTap: () {},
               label: "Delete",

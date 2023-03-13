@@ -16,12 +16,14 @@ class ContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return ModalSheet(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[...actions]
-            //TODO: using divider here
-            .separate(const Divider(height: 0.5, thickness: 0.5))
-            .toList(),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[...actions]
+              //TODO: using divider here
+              .separate(const Divider(height: 0.5, thickness: 0.5))
+              .toList(),
+        ),
       ),
     );
   }
@@ -58,7 +60,7 @@ class ContextMenuAction extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: TextStyles.title1.copyWith(fontWeight: FontWeight.w600),
+                style: TextStyles.body1.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
           ],

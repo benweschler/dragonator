@@ -105,11 +105,11 @@ class ResponsiveStrokeButton extends StatefulWidget {
 class _ResponsiveStrokeButtonState extends State<ResponsiveStrokeButton>
     with SingleTickerProviderStateMixin {
   late final _controller = AnimationController(
-    duration: Timings.short,
+    duration: Timings.med,
     vsync: this,
   );
   late final _opacityAnimation =
-      Tween<double>(begin: 1, end: 0.5).animate(_controller);
+      Tween<double>(begin: 1, end: 0.33).animate(_controller);
 
   @override
   void dispose() {
