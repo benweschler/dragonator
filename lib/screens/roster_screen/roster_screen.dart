@@ -1,42 +1,47 @@
 import 'dart:math';
 
 import 'package:dragonator/data/team.dart';
-import 'package:dragonator/dummy_data.dart';
+import 'package:dragonator/dummy_data.dart' as dummy_data;
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
-import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
+import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
 
 import 'components/player_preview_card.dart';
 
 class RosterScreen extends StatelessWidget {
-  final ValueNotifier<Team> selectedTeamNotifier = ValueNotifier(teamOne);
+  final List<Team> teams;
+  late final ValueNotifier<int> selectedTeamIndexNotifier = ValueNotifier(0);
 
-  RosterScreen({Key? key}) : super(key: key);
+  RosterScreen({Key? key})
+      : teams = dummy_data.teams,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: selectedTeamNotifier,
+      valueListenable: selectedTeamIndexNotifier,
       builder: (_, team, __) {
         return CustomScaffold(
           center: ResponsiveStrokeButton(
-            onTap: () => context.showModal(
-              _ChangeTeamMenu(changeTeam: (newTeam) {
-                if (selectedTeamNotifier.value != newTeam) {
-                  selectedTeamNotifier.value = newTeam;
+            onTap: () => context.showModal(SelectionMenu(
+              items: teams.map((team) => team.name).toList(),
+              initiallySelectedIndex: selectedTeamIndexNotifier.value,
+              onItemTap: (newTeamIndex) {
+                if (selectedTeamIndexNotifier.value != newTeamIndex) {
+                  selectedTeamIndexNotifier.value = newTeamIndex;
                 }
-              }),
-            ),
+              },
+            )),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "${team.name} ",
+                  "${teams[selectedTeamIndexNotifier.value].name} ",
                   style: TextStyles.title1,
                 ),
                 Transform.rotate(
@@ -46,7 +51,7 @@ class RosterScreen extends StatelessWidget {
               ],
             ),
           ),
-          child: _RosterContent(team),
+          child: _RosterContent(teams[selectedTeamIndexNotifier.value]),
         );
       },
     );
@@ -94,30 +99,6 @@ class _RosterContent extends StatelessWidget {
             //TODO: don't hardcode, this sucks
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
-      ],
-    );
-  }
-}
-
-class _ChangeTeamMenu extends StatelessWidget {
-  final ValueChanged<Team> changeTeam;
-
-  const _ChangeTeamMenu({Key? key, required this.changeTeam}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ContextMenu(
-      actions: [
-        ContextMenuAction(
-          icon: Icons.abc,
-          label: "Team One",
-          onTap: () => changeTeam(teamOne),
-        ),
-        ContextMenuAction(
-          icon: Icons.abc,
-          label: "Team Two",
-          onTap: () => changeTeam(teamTwo),
-        ),
       ],
     );
   }

@@ -39,13 +39,14 @@ const List<String> _lastNames = [
 final roster = [for (int i = 0; i < 22 * 2; i++) _randomPlayer()];
 final Map<String, Player> playerIDMap =
     Map.fromIterable(roster, key: (player) => player.id);
+final teams = [_teamOne, _teamTwo];
 
-final teamOne = Team(
+final _teamOne = Team(
   name: "Team One",
   playerIDs: roster.sublist(0, 22).map((player) => player.id).toSet(),
 );
 
-final teamTwo = Team(
+final _teamTwo = Team(
   name: "Team Two",
   playerIDs: roster.sublist(22).map((player) => player.id).toSet(),
 );

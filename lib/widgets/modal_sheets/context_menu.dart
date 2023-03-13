@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'modal_sheet.dart';
 
+//TODO: this is currently unused
 class ContextMenu extends StatelessWidget {
   final List<ContextMenuAction> actions;
 
@@ -32,23 +33,23 @@ class ContextMenu extends StatelessWidget {
 class ContextMenuAction extends StatelessWidget {
   final IconData icon;
   final String label;
-  final GestureTapCallback? onTap;
+  final GestureTapCallback onTap;
 
   const ContextMenuAction({
     Key? key,
     required this.icon,
     required this.label,
-    this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onTap?.call();
+        onTap();
         Navigator.of(context).pop();
       },
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: Insets.offset,
           vertical: Insets.lg,
