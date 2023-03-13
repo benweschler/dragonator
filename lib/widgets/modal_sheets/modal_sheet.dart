@@ -45,8 +45,17 @@ class _ModalSheetHandleState extends State<_ModalSheetHandle>
   final _handelHeight = Insets.xs;
   final double _collapsedHandleWidth = 35;
   final double _expandedHandleWidth = 50;
-  bool _routeListenerAdded = false;
   bool _isExpanded = false;
+
+  @override
+  void didChangeDependencies() {
+    // dependOnInheritedWidgetOfExactType cannot be called in initState. It is
+    //safe to call in didChangeDependencies, which is called immediately after
+    // initState.
+    final routeAnimation = ModalRoute.of(context)!.animation!;
+    routeAnimation.addListener(() => updateHandle(routeAnimation));
+    super.didChangeDependencies();
+  }
 
   void updateHandle(Animation<double> routeAnimation) {
     if (routeAnimation.isCompleted) {
@@ -58,12 +67,6 @@ class _ModalSheetHandleState extends State<_ModalSheetHandle>
 
   @override
   Widget build(BuildContext context) {
-    if(!_routeListenerAdded) {
-      final routeAnimation = ModalRoute.of(context)!.animation!;
-      routeAnimation.addListener(() => updateHandle(routeAnimation));
-      _routeListenerAdded = true;
-    }
-
     return AnimatedContainer(
       duration: Timings.short,
       width: _isExpanded ? _expandedHandleWidth : _collapsedHandleWidth,
