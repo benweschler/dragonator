@@ -141,7 +141,7 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
   late final _fadeAnimation =
       Tween<double>(begin: 0, end: 1).animate(_controller);
   late final _scaleAnimation =
-      Tween<double>(begin: 1.33, end: 1).animate(_controller);
+      Tween<double>(begin: 1.5, end: 1).animate(_controller);
 
   final double _iconSize = 24;
 

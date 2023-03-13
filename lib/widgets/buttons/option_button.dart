@@ -1,4 +1,3 @@
-import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class OptionButton extends StatelessWidget {
     return ResponsiveButton(
       onTap: onTap,
       builder: (overlay) => Container(
-        padding: const EdgeInsets.all(Insets.xs),
+        padding: const EdgeInsets.all(6),
         decoration: ShapeDecoration(
           shape: const StadiumBorder(),
           color: AppColors.of(context).smallSurface,
@@ -30,7 +29,7 @@ class OptionButton extends StatelessWidget {
             overlay,
             AppColors.of(context).neutralContent,
           ),
-          size: 18,
+          size: 20,
         ),
       ),
     );

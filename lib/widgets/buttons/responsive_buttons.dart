@@ -29,7 +29,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
     duration: Timings.short,
     vsync: this,
   );
-  late final _scaleAnimation = Tween<double>(begin: 1, end: 0.85)
+  late final _scaleAnimation = Tween<double>(begin: 1, end: 0.8)
       .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
   /// True if the button is pressed and false if it is not pressed.

@@ -32,6 +32,7 @@ class AppRouter {
           builder: (_, __, child) => MainAppScaffold(body: child),
           routes: [
             AppRoute(
+              isNavBarTab: true,
               ScreenPaths.roster,
               (_) => RosterScreen(),
               routes: [
@@ -41,8 +42,16 @@ class AppRouter {
                 ),
               ],
             ),
-            AppRoute(ScreenPaths.races, (_) => const RacesScreen()),
-            AppRoute(ScreenPaths.profile, (_) => const SettingsScreen()),
+            AppRoute(
+              isNavBarTab: true,
+              ScreenPaths.races,
+              (_) => const RacesScreen(),
+            ),
+            AppRoute(
+              isNavBarTab: true,
+              ScreenPaths.profile,
+              (_) => const SettingsScreen(),
+            ),
           ],
         ),
       ],

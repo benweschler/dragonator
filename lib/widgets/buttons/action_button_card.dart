@@ -45,27 +45,18 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveButton(
+    return ResponsiveStrokeButton(
       onTap: onTap,
-      builder: (overlay) => Padding(
+      child: Padding(
         padding: const EdgeInsets.symmetric(vertical: _actionButtonPadding),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              color: Color.alphaBlend(overlay, AppColors.of(context).accent),
+              color: AppColors.of(context).accent,
             ),
             const SizedBox(width: Insets.sm),
-            Text(
-              label,
-              style: TextStyles.body2.copyWith(
-                color: Color.alphaBlend(
-                  overlay,
-                  DefaultTextStyle.of(context).style.color!,
-                ),
-              ),
-            ),
+            Text(label),
           ],
         ),
       ),

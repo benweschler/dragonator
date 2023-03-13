@@ -1,5 +1,5 @@
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/easy_base.dart';
+import 'package:dragonator/utils/easy_notifier.dart';
 
 class AppModel extends EasyNotifier {
   static const ThemeType _defaultThemeType = ThemeType.light;

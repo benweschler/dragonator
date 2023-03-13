@@ -2,6 +2,7 @@ import 'package:dragonator/data/player.dart';
 import 'package:dragonator/dummy_data.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/widgets/buttons/action_button_card.dart';
+import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,10 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      leading: const CustomBackButton(),
       trailing: OptionButton(onTap: () {}, icon: Icons.edit_rounded),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
         children: [
           Center(
             child: Text(
@@ -63,6 +65,11 @@ class PlayerScreen extends StatelessWidget {
               label: "View Teams",
               icon: Icons.groups_3_rounded,
             ),
+            ActionButton(
+              onTap: () {},
+              label: "Delete",
+              icon: Icons.delete_rounded,
+            ),
           ]),
         ],
       ),
@@ -77,6 +84,9 @@ class PlayerStatTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statTextStyle =
+        TextStyles.body1.copyWith(fontWeight: FontWeight.bold);
+
     return LabeledStatTable(
       rows: [
         LabeledStatRow(
@@ -85,21 +95,20 @@ class PlayerStatTable extends StatelessWidget {
             Text.rich(TextSpan(children: [
               TextSpan(
                 text: "${player.weight}",
-                style: TextStyles.body1
-                    .copyWith(fontWeight: FontWeight.bold),
+                style: statTextStyle,
               ),
               const TextSpan(text: " lbs", style: TextStyles.body2),
             ])),
-            Text("${player.gender}", style: TextStyles.title1),
+            Text("${player.gender}", style: statTextStyle),
           ],
         ),
         LabeledStatRow(
           labels: ["Side Preference", "Age Group"],
           stats: [
-            Text("${player.sidePreference}", style: TextStyles.title1),
+            Text("${player.sidePreference}", style: statTextStyle),
             Text(
               "${player.ageGroup}",
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: statTextStyle,
             ),
           ],
         ),

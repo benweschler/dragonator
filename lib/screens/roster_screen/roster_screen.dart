@@ -81,7 +81,7 @@ class _RosterContent extends StatelessWidget {
         const Text("Roster", style: TextStyles.h1),
         const Spacer(),
         OptionButton(onTap: () => {}, icon: Icons.sort_rounded),
-        const SizedBox(width: Insets.sm),
+        const SizedBox(width: Insets.med),
         OptionButton(onTap: () {}, icon: Icons.filter_alt_rounded),
       ],
     );
