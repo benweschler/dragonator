@@ -61,16 +61,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      // Only animate between app bars scoped within the same Navigator.
-      tag: Navigator.of(context),
-      transitionOnUserGestures: true,
-      flightShuttleBuilder: _shuttleBuilder,
-      child: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
-        // SafeArea is adding bottom padding during the hero animation for some
-        // reason.
-        bottom: false,
+    return SafeArea(
+      minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
+      child: Hero(
+        // Only animate between app bars scoped within the same Navigator.
+        tag: Navigator.of(context),
+        transitionOnUserGestures: true,
+        flightShuttleBuilder: _shuttleBuilder,
         child: Stack(
           fit: StackFit.expand,
           children: [
