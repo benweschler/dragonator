@@ -1,6 +1,8 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+import 'animations/transitions.dart';
+
 /// A scaffold that adds a [CustomAppBar] and screen border offsets to a screen.
 class CustomScaffold extends StatelessWidget {
   final Widget? leading;
@@ -59,18 +61,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
-      // We need to add padding below the SafeArea in order to add a top inset
-      // from the bottom of the upper safe area inset.
-      child: Padding(
-        padding: const EdgeInsets.symmetric(),
-        // Use a stack to ensure that the center widget is always centered on the
-        // screen, regardless of whether a leading or trailing widget is provided.
-        //
-        // NavigationToolbar is a prebuilt widget that lays out an app bar, but it
-        // uses CustomMultiChildLayout and so cannot have a dynamic height that
-        // wraps its children.
+    return Hero(
+      // Only animate between app bars scoped within the same Navigator.
+      tag: Navigator.of(context),
+      transitionOnUserGestures: true,
+      flightShuttleBuilder: _shuttleBuilder,
+      child: SafeArea(
+        minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
+        // SafeArea is adding bottom padding during the hero animation for some
+        // reason.
+        bottom: false,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -84,6 +84,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _shuttleBuilder(
+      BuildContext flightContext,
+      Animation<double> animation,
+      HeroFlightDirection flightDirection,
+      BuildContext fromHeroContext,
+      BuildContext toHeroContext,
+      ) {
+    return CrossFadeTransition(
+      animation: flightDirection == HeroFlightDirection.push
+          ? animation
+          : ReverseAnimation(animation),
+      //TODO: these DefaultTextStyles are required because heroes do not provide a default text style. Check status of this issue: https://github.com/flutter/flutter/issues/36220
+      firstChild: DefaultTextStyle(
+        style: DefaultTextStyle.of(fromHeroContext).style,
+        child: fromHeroContext.widget,
+      ),
+      secondChild: DefaultTextStyle(
+        style: DefaultTextStyle.of(toHeroContext).style,
+        child: toHeroContext.widget,
       ),
     );
   }
