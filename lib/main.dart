@@ -19,12 +19,14 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AppModel()),
     ],
-    child: const MyApp(),
+    child: MyApp(AppRouter().router),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final RouterConfig<Object> router;
+
+  const MyApp(this.router, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
       theme: AppColors.fromType(
         context.watch<AppModel>().themeType,
       ).toThemeData(),
-      routerConfig: AppRouter().router,
+      routerConfig: router,
     );
   }
 }
