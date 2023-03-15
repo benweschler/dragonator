@@ -13,7 +13,7 @@ class PlayerPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(ScreenPaths.player(player.id)),
+      onTap: () => context.push(RoutePaths.player(player.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(

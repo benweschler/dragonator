@@ -34,7 +34,7 @@ class RosterScreen extends StatelessWidget {
           floatingActionButton: CustomFAB(
             color: Colors.black,
             child: const Icon(Icons.add_rounded, color: Colors.white),
-            onTap: () => context.push(ScreenPaths.editPlayer()),
+            onTap: () => context.push(RoutePaths.editPlayer()),
           ),
           center: ResponsiveStrokeButton(
             onTap: () => context.showModal(SelectionMenu(

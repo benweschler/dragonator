@@ -12,15 +12,14 @@ import 'package:go_router/go_router.dart';
 //TODO: adding <T> generic may fix crash
 //typedef AppPage = CupertinoPage;
 
-abstract class ScreenPaths {
+abstract class RoutePaths {
   static String splash = '/';
   static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
-
   static String player(String id) => '/roster/player/$id';
-
-  static String editPlayer([String? id]) => '/roster/edit-player/$id';
+  static String editPlayer([String? id]) =>
+      _appendQueryParams('/roster/edit-player', {"id": id});
 }
 
 class AppRouter {
@@ -29,7 +28,7 @@ class AppRouter {
 
   GoRouter get router {
     return GoRouter(
-      initialLocation: ScreenPaths.roster,
+      initialLocation: RoutePaths.roster,
       navigatorKey: _rootNavigatorKey,
       routes: [
         ShellRoute(
@@ -37,31 +36,30 @@ class AppRouter {
           builder: (_, __, child) => MainAppScaffold(body: child),
           routes: [
             AppRoute(
+              path: RoutePaths.roster,
+              builder: (_) => RosterScreen(),
               isNavBarTab: true,
-              ScreenPaths.roster,
-              (_) => RosterScreen(),
               routes: [
                 AppRoute(
-                  "player/:id",
-                  (state) => PlayerScreen(state.params['id']!),
+                  path: "player/:id",
+                  builder: (state) => PlayerScreen(state.params['id']!),
                 ),
-                GoRoute(
-                  path: "edit-player/:id",
-                  pageBuilder: (_, state) => FadeTransitionPage(
-                    child: EditPlayerScreen(state.params['id']!)
-                  ),
+                AppRoute(
+                  path: "edit-player",
+                  pageBuilder: (state) => FadeTransitionPage(
+                      child: EditPlayerScreen(state.queryParams['id'])),
                 ),
               ],
             ),
             AppRoute(
+              path: RoutePaths.races,
               isNavBarTab: true,
-              ScreenPaths.races,
-              (_) => const RacesScreen(),
+              builder: (_) => const RacesScreen(),
             ),
             AppRoute(
+              path: RoutePaths.profile,
               isNavBarTab: true,
-              ScreenPaths.profile,
-              (_) => const SettingsScreen(),
+              builder: (_) => const SettingsScreen(),
             ),
           ],
         ),
@@ -87,23 +85,40 @@ class AppRoute extends GoRoute {
   /// tabs is instant.
   final bool isNavBarTab;
 
-  AppRoute(
-    String path,
-    Widget Function(GoRouterState state) builder, {
+  AppRoute({
+    required String path,
+    Widget Function(GoRouterState state)? builder,
+    Page Function(GoRouterState state)? pageBuilder,
     List<GoRoute> routes = const [],
     this.isNavBarTab = false,
-  }) : super(
+  })  : assert((builder == null) ^ (pageBuilder == null)),
+        super(
           path: path,
           routes: routes,
           pageBuilder: (context, state) {
+            if (pageBuilder != null) return pageBuilder(state);
+
             if (isNavBarTab) {
               return NoTransitionPage(
                 key: state.pageKey,
-                child: builder(state),
+                child: builder!(state),
               );
             }
 
-            return CupertinoPage(child: builder(state));
+            return CupertinoPage(child: builder!(state));
           },
         );
+}
+
+/// Appropriately appends to a route path in order to add [queryParams].
+String _appendQueryParams(String path, Map<String, String?> queryParams) {
+  if (queryParams.isEmpty) return path;
+  path += "?";
+
+  for (final entry in queryParams.entries) {
+    if (entry.value == null) continue;
+    path += "${entry.key}=${entry.value}";
+  }
+
+  return path;
 }

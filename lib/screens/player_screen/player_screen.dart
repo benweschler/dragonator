@@ -24,7 +24,7 @@ class PlayerScreen extends StatelessWidget {
     return CustomScaffold(
       leading: const CustomBackButton(),
       trailing: OptionButton(
-        onTap: () => context.push(ScreenPaths.editPlayer(player.id)),
+        onTap: () => context.push(RoutePaths.editPlayer(player.id)),
         icon: Icons.edit_rounded,
       ),
       child: SingleChildScrollView(

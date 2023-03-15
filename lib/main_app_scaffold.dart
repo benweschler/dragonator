@@ -12,17 +12,17 @@ class MainAppScaffold extends StatefulWidget {
 
   final List<NavigationTab> _bottomNavigationTabs = [
     NavigationTab(
-      rootLocation: ScreenPaths.roster,
+      rootLocation: RoutePaths.roster,
       icon: Icons.people_outline_rounded,
       label: "Roster",
     ),
     NavigationTab(
-      rootLocation: ScreenPaths.races,
+      rootLocation: RoutePaths.races,
       icon: Icons.analytics_outlined,
       label: "Races",
     ),
     NavigationTab(
-      rootLocation: ScreenPaths.profile,
+      rootLocation: RoutePaths.profile,
       icon: Icons.settings_rounded,
       label: "Settings",
     ),
