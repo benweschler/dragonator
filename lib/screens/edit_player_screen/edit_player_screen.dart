@@ -10,41 +10,62 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import 'field_names.dart';
 import 'labeled_text_field.dart';
 
 class EditPlayerScreen extends StatelessWidget {
-  final Player player;
+  final Player? player;
   final Map<String, dynamic> playerTemplate = {};
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
+  static const _uuid = Uuid();
 
-  EditPlayerScreen(String playerID, {Key? key})
-      : player = dummy_data.playerIDMap[playerID]!,
+  EditPlayerScreen(String? playerID, {Key? key})
+      : player = dummy_data.playerIDMap[playerID],
         super(key: key);
 
   void _saveData() {
     _formKey.currentState!.save();
     final formData = _formKey.currentState!.value;
 
-    dummy_data.playerIDMap[player.id] = player.copyWith(
-      firstName: formData[FieldNames.firstName],
-      lastName: formData[FieldNames.lastName],
-      weight: int.parse(formData[FieldNames.weight]),
-      gender: formData[FieldNames.gender],
-      sidePreference: formData[FieldNames.sidePreference],
-      ageGroup: formData[FieldNames.ageGroup],
-      drummerPreference: formData[FieldNames.drummerPreference],
-      steersPersonPreference: formData[FieldNames.steersPersonPreference],
-      strokePreference: formData[FieldNames.strokePreference],
-    );
+    if (player != null) {
+      dummy_data.playerIDMap[player!.id] = player!.copyWith(
+        firstName: formData[FieldNames.firstName],
+        lastName: formData[FieldNames.lastName],
+        weight: int.parse(formData[FieldNames.weight]),
+        gender: formData[FieldNames.gender],
+        sidePreference: formData[FieldNames.sidePreference],
+        ageGroup: formData[FieldNames.ageGroup],
+        drummerPreference: formData[FieldNames.drummerPreference],
+        steersPersonPreference: formData[FieldNames.steersPersonPreference],
+        strokePreference: formData[FieldNames.strokePreference],
+      );
+    } else {
+      final id = _uuid.v4();
+      dummy_data.playerIDMap[id] = Player(
+        id: id,
+        firstName: formData[FieldNames.firstName],
+        lastName: formData[FieldNames.lastName],
+        weight: int.parse(formData[FieldNames.weight]),
+        gender: formData[FieldNames.gender],
+        sidePreference: formData[FieldNames.sidePreference],
+        ageGroup: formData[FieldNames.ageGroup],
+        drummerPreference: formData[FieldNames.drummerPreference],
+        steersPersonPreference: formData[FieldNames.steersPersonPreference],
+        strokePreference: formData[FieldNames.strokePreference],
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       leading: OptionButton(onTap: context.pop, icon: Icons.close_rounded),
-      center: const Text("Edit Player", style: TextStyles.title1),
+      center: Text(
+        player == null ? "Create Player" : "Edit Player",
+        style: TextStyles.title1,
+      ),
       trailing: OptionButton(
         onTap: () {
           _saveData();
@@ -63,7 +84,7 @@ class EditPlayerScreen extends StatelessWidget {
                 label: "First Name",
                 child: FormBuilderTextField(
                   name: FieldNames.firstName,
-                  initialValue: player.firstName,
+                  initialValue: player?.firstName,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -72,7 +93,7 @@ class EditPlayerScreen extends StatelessWidget {
                 label: "Last Name",
                 child: FormBuilderTextField(
                   name: FieldNames.lastName,
-                  initialValue: player.lastName,
+                  initialValue: player?.lastName,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -87,19 +108,19 @@ class EditPlayerScreen extends StatelessWidget {
                   PreferenceSelector(
                     name: FieldNames.drummerPreference,
                     label: "Drummer",
-                    initialValue: player.drummerPreference,
+                    initialValue: player?.drummerPreference ?? false,
                   ),
                   PreferenceSelector(
                     name: FieldNames.steersPersonPreference,
                     label: "Steers Person",
-                    initialValue: player.steersPersonPreference,
+                    initialValue: player?.steersPersonPreference ?? false,
                   ),
                 ].map((e) => Expanded(child: e)).toList(),
               ),
               PreferenceSelector(
                 name: FieldNames.strokePreference,
                 label: "Stroke",
-                initialValue: player.strokePreference,
+                initialValue: player?.strokePreference ?? false,
               ),
             ],
           ),

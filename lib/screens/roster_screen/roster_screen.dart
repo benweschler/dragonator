@@ -3,14 +3,17 @@ import 'dart:math';
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/dummy_data.dart' as dummy_data;
+import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
+import 'package:dragonator/widgets/custom_fab.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'player_preview_card.dart';
 
@@ -28,6 +31,11 @@ class RosterScreen extends StatelessWidget {
       valueListenable: selectedTeamIndexNotifier,
       builder: (_, team, __) {
         return CustomScaffold(
+          floatingActionButton: CustomFAB(
+            color: Colors.black,
+            child: const Icon(Icons.add_rounded, color: Colors.white),
+            onTap: () => context.push(ScreenPaths.editPlayer()),
+          ),
           center: ResponsiveStrokeButton(
             onTap: () => context.showModal(SelectionMenu(
               items: teams.map((team) => team.name).toList(),
@@ -96,8 +104,8 @@ class _RosterContent extends StatelessWidget {
     );
 
     final sortedIDs = team.playerIDs.toList()
-      ..sort((a, b) => playerIDMap[a]!.firstName
-          .compareTo(playerIDMap[b]!.firstName));
+      ..sort((a, b) =>
+          playerIDMap[a]!.firstName.compareTo(playerIDMap[b]!.firstName));
 
     return ListView(
       children: [

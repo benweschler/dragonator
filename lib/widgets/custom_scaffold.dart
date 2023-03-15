@@ -8,28 +8,46 @@ class CustomScaffold extends StatelessWidget {
   final Widget? leading;
   final Widget? center;
   final Widget? trailing;
+  final Widget? floatingActionButton;
   final Widget child;
 
   const CustomScaffold({
     Key? key,
     this.leading,
     this.trailing,
-    this.center, required this.child,
+    this.center,
+    this.floatingActionButton,
+    required this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget body = SafeArea(
+      bottom: false,
+      minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
+      child: child,
+    );
+
+    if(floatingActionButton != null) {
+      body = Stack(
+        children: [
+          body,
+          Positioned(
+            bottom: Insets.lg,
+            right: Insets.xl,
+            child: floatingActionButton!,
+          ),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: CustomAppBar(
         leading: leading,
         center: center,
         trailing: trailing,
       ),
-      body: SafeArea(
-        bottom: false,
-        minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
-        child: child,
-      ),
+      body: body,
     );
   }
 }
@@ -86,12 +104,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _shuttleBuilder(
-      BuildContext flightContext,
-      Animation<double> animation,
-      HeroFlightDirection flightDirection,
-      BuildContext fromHeroContext,
-      BuildContext toHeroContext,
-      ) {
+    BuildContext flightContext,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
     return CrossFadeTransition(
       animation: flightDirection == HeroFlightDirection.push
           ? animation

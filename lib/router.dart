@@ -20,7 +20,7 @@ abstract class ScreenPaths {
 
   static String player(String id) => '/roster/player/$id';
 
-  static String editPlayer(String id) => '/roster/edit-player/$id';
+  static String editPlayer([String? id]) => '/roster/edit-player/$id';
 }
 
 class AppRouter {
@@ -47,9 +47,8 @@ class AppRouter {
                 ),
                 GoRoute(
                   path: "edit-player/:id",
-                  builder: (_, state) => EditPlayerScreen(state.params['id']!),
                   pageBuilder: (_, state) => FadeTransitionPage(
-                    child: EditPlayerScreen(state.params['id']!),
+                    child: EditPlayerScreen(state.params['id']!)
                   ),
                 ),
               ],

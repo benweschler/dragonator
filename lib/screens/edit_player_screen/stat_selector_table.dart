@@ -12,7 +12,7 @@ import 'package:dragonator/dummy_data.dart' as dummy_data;
 import 'field_names.dart';
 
 class StatSelectorTable extends StatelessWidget {
-  final Player player;
+  final Player? player;
 
   const StatSelectorTable(this.player, {Key? key}) : super(key: key);
 
@@ -20,7 +20,7 @@ class StatSelectorTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final weightField = FormBuilderTextField(
       name: FieldNames.weight,
-      initialValue: player.weight.toString(),
+      initialValue:player?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: CustomInputDecoration(
@@ -31,11 +31,11 @@ class StatSelectorTable extends StatelessWidget {
 
     final genderSelector = FormBuilderField<Gender>(
       name: FieldNames.gender,
-      initialValue: player.gender,
+      initialValue: player?.gender,
       builder: (state) {
         return CupertinoSlidingSegmentedControl(
           backgroundColor: AppColors.of(context).smallSurface,
-          groupValue: state.value!,
+          groupValue: state.value,
           children: const {
             Gender.M: Text("M"),
             Gender.F: Text("F"),
@@ -48,11 +48,11 @@ class StatSelectorTable extends StatelessWidget {
 
     final sidePreferenceSelector = FormBuilderField<SidePreference>(
       name: FieldNames.sidePreference,
-      initialValue: player.sidePreference,
+      initialValue: player?.sidePreference,
       builder: (state) {
         return CupertinoSlidingSegmentedControl(
           backgroundColor: AppColors.of(context).smallSurface,
-          groupValue: state.value!,
+          groupValue: state.value,
           children: const {
             SidePreference.left: Text("Left"),
             SidePreference.right: Text("Right"),
@@ -74,7 +74,7 @@ class StatSelectorTable extends StatelessWidget {
         isExpanded: false,
         elevation: 2,
         borderRadius: Corners.smBorderRadius,
-        initialValue: player.ageGroup,
+        initialValue: player?.ageGroup,
         items: [
           for (final group in dummy_data.ageGroups)
             DropdownMenuItem(
