@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/dummy_data.dart' as dummy_data;
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -15,12 +13,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 
 class EditPlayerScreen extends StatelessWidget {
-  final PlayerTemplate playerTemplate;
-  final GlobalKey<FormBuilderState> _key = GlobalKey();
+  final Player player;
+  final Map<String, dynamic> playerTemplate = {};
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   EditPlayerScreen(String playerID, {Key? key})
-      : playerTemplate =
-            PlayerTemplate.fromPlayer(dummy_data.playerIDMap[playerID]!),
+      : player = dummy_data.playerIDMap[playerID]!,
         super(key: key);
 
   @override
@@ -32,15 +30,12 @@ class EditPlayerScreen extends StatelessWidget {
         style: TextStyles.title1,
       ),
       trailing: OptionButton(
-        onTap: () {
-          dummy_data.playerIDMap[playerTemplate.id] = playerTemplate.toPlayer();
-          context.pop();
-        },
+        onTap: context.pop,
         icon: Icons.check_rounded,
       ),
       child: FormBuilder(
         autovalidateMode: AutovalidateMode.always,
-        key: _key,
+        key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -48,8 +43,8 @@ class EditPlayerScreen extends StatelessWidget {
               LabeledTextField(
                 label: "First Name",
                 child: FormBuilderTextField(
-                  name: "first",
-                  initialValue: playerTemplate.firstName,
+                  name: FieldNames.firstName,
+                  initialValue: player.firstName,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -57,8 +52,8 @@ class EditPlayerScreen extends StatelessWidget {
               LabeledTextField(
                 label: "Last Name",
                 child: FormBuilderTextField(
-                  name: "last",
-                  initialValue: playerTemplate.lastName,
+                  name: FieldNames.lastName,
+                  initialValue: player.lastName,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -73,8 +68,8 @@ class EditPlayerScreen extends StatelessWidget {
                     ],
                     stats: [
                       FormBuilderTextField(
-                        name: "weight",
-                        initialValue: playerTemplate.weight.toString(),
+                        name: FieldNames.weight,
+                        initialValue: player.weight.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
@@ -85,8 +80,8 @@ class EditPlayerScreen extends StatelessWidget {
                         ),
                       ),
                       FormBuilderField<Gender>(
-                        name: "gender",
-                        initialValue: playerTemplate.gender,
+                        name: FieldNames.gender,
+                        initialValue: player.gender,
                         builder: (state) {
                           return CupertinoSlidingSegmentedControl(
                             backgroundColor: AppColors.of(context).smallSurface,
@@ -106,8 +101,8 @@ class EditPlayerScreen extends StatelessWidget {
                     labels: ["Side Preference", "Age Group"],
                     stats: [
                       FormBuilderField<SidePreference>(
-                        name: "side",
-                        initialValue: playerTemplate.sidePreference,
+                        name: FieldNames.sidePreference,
+                        initialValue: player.sidePreference,
                         builder: (state) {
                           return CupertinoSlidingSegmentedControl(
                             backgroundColor: AppColors.of(context).smallSurface,
@@ -120,15 +115,29 @@ class EditPlayerScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      FormBuilderTextField(
-                        name: "age",
-                        initialValue: playerTemplate.ageGroup.toString(),
-                        readOnly: true,
-                        decoration: CustomInputDecoration(
-                          AppColors.of(context),
-                          suffixIcon: Transform.rotate(
-                            angle: pi / 2,
-                            child: const Icon(Icons.chevron_right_rounded),
+                      Theme(
+                        data: ThemeData(
+                          splashColor: Colors.transparent,
+                          splashFactory: NoSplash.splashFactory,
+                          highlightColor: Colors.transparent,
+                          canvasColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        child: FormBuilderDropdown<String>(
+                          name: FieldNames.ageGroup,
+                          isExpanded: false,
+                          elevation: 2,
+                          borderRadius: Corners.smBorderRadius,
+                          initialValue: player.ageGroup,
+                          items: [
+                            for (final group in dummy_data.ageGroups)
+                              DropdownMenuItem(
+                                value: group,
+                                child: Text(group),
+                              ),
+                          ],
+                          decoration: CustomInputDecoration(
+                            AppColors.of(context),
                           ),
                         ),
                       ),
@@ -141,28 +150,24 @@ class EditPlayerScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: PreferenceButton(
+                      name: FieldNames.drummerPreference,
                       label: "Drummer",
-                      hasPreference: playerTemplate.drummerPreference,
-                      onTap: () => playerTemplate.drummerPreference =
-                          !playerTemplate.drummerPreference,
+                      initialValue: player.drummerPreference,
                     ),
                   ),
                   Expanded(
                     child: PreferenceButton(
+                      name: FieldNames.steersPersonPreference,
                       label: "Steers Person",
-                      hasPreference: playerTemplate.steersPersonPreference,
-                      onTap: () => playerTemplate.steersPersonPreference =
-                          !playerTemplate.steersPersonPreference,
+                      initialValue: player.steersPersonPreference,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: Insets.lg),
               PreferenceButton(
+                name: FieldNames.strokePreference,
                 label: "Stroke",
-                hasPreference: playerTemplate.strokePreference,
-                onTap: () => playerTemplate.strokePreference =
-                    !playerTemplate.strokePreference,
+                initialValue: player.strokePreference,
               ),
             ],
           ),
@@ -200,87 +205,45 @@ class LabeledTextField extends StatelessWidget {
   }
 }
 
-class PreferenceButton extends StatefulWidget {
+class PreferenceButton extends StatelessWidget {
+  final String name;
   final String label;
-  final bool hasPreference;
-  final GestureTapCallback onTap;
+  final bool initialValue;
 
   const PreferenceButton({
     Key? key,
+    required this.name,
     required this.label,
-    required this.hasPreference,
-    required this.onTap,
+    required this.initialValue,
   }) : super(key: key);
 
   @override
-  State<PreferenceButton> createState() => _PreferenceButtonState();
-}
-
-class _PreferenceButtonState extends State<PreferenceButton> {
-  late bool hasPreference = widget.hasPreference;
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() => hasPreference = !hasPreference);
-        widget.onTap();
-      },
-      child: Row(
+    return FormBuilderField<bool>(
+      name: name,
+      initialValue: initialValue,
+      builder: (state) => Row(
         children: [
           Checkbox(
-            value: hasPreference,
-            onChanged: (_) {
-              setState(() => hasPreference = !hasPreference);
-              widget.onTap();
-            },
+            value: state.value,
+            onChanged: (newValue) => state.didChange(newValue),
           ),
           const SizedBox(width: Insets.med),
-          Text(widget.label),
+          Text(label),
         ],
       ),
     );
   }
 }
 
-/// A mutable copy of a [Player] that stores the edited state of a player on the
-/// edit screen.
-class PlayerTemplate {
-  final String id;
-  String firstName;
-  String lastName;
-  int weight;
-  Gender gender;
-  SidePreference sidePreference;
-
-  //TODO: wouldn't age group be a team-level attribute?
-  AgeGroup ageGroup;
-  bool drummerPreference;
-  bool steersPersonPreference;
-  bool strokePreference;
-
-  PlayerTemplate.fromPlayer(Player player)
-      : id = player.id,
-        firstName = player.firstName,
-        lastName = player.lastName,
-        weight = player.weight,
-        gender = player.gender,
-        sidePreference = player.sidePreference,
-        ageGroup = player.ageGroup,
-        drummerPreference = player.drummerPreference,
-        steersPersonPreference = player.steersPersonPreference,
-        strokePreference = player.strokePreference;
-
-  Player toPlayer() => Player(
-        id: id,
-        firstName: firstName,
-        lastName: lastName,
-        weight: weight,
-        gender: gender,
-        sidePreference: sidePreference,
-        ageGroup: ageGroup,
-        drummerPreference: drummerPreference,
-        steersPersonPreference: steersPersonPreference,
-        strokePreference: strokePreference,
-      );
+abstract class FieldNames {
+  static const firstName = "first";
+  static const lastName = "last";
+  static const weight = "weight";
+  static const gender = "gender";
+  static const sidePreference = "side";
+  static const ageGroup = "age";
+  static const drummerPreference = "drummer";
+  static const steersPersonPreference = "steersPerson";
+  static const strokePreference = "stroke";
 }

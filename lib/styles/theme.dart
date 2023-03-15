@@ -38,11 +38,7 @@ class AppColors extends ThemeExtension<AppColors> {
       brightness: isDark ? Brightness.dark : Brightness.light,
       checkboxTheme: const CheckboxThemeData(
         splashRadius: 0,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        visualDensity: VisualDensity(
-          horizontal: VisualDensity.minimumDensity,
-          vertical: VisualDensity.minimumDensity,
-        ),
+        visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
       ),
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 

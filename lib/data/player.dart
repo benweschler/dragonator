@@ -1,30 +1,29 @@
+//TODO: isn't AgeGroup a team-level attribute?
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:equatable/equatable.dart';
 
-class Player extends Equatable {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final int weight;
-  final Gender gender;
-  final SidePreference sidePreference;
-  //TODO: wouldn't age group be a team-level attribute?
-  final AgeGroup ageGroup;
-  final bool drummerPreference;
-  final bool steersPersonPreference;
-  final bool strokePreference;
+part 'player.freezed.dart';
+part 'player.g.dart';
 
-  const Player({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.weight,
-    required this.gender,
-    required this.sidePreference,
-    required this.ageGroup,
-    required this.drummerPreference,
-    required this.steersPersonPreference,
-    required this.strokePreference,
-  });
+@Freezed(equal: false)
+class Player extends Equatable with _$Player {
+  const Player._();
+
+  const factory Player({
+    required String id,
+    required String firstName,
+    required String lastName,
+    required int weight,
+    required Gender gender,
+    required SidePreference sidePreference,
+    required String ageGroup,
+    required bool drummerPreference,
+    required bool steersPersonPreference,
+    required bool strokePreference,
+  }) = _Player;
+
+  factory Player.fromJson(Map<String, Object?> json)
+    => _$PlayerFromJson(json);
 
   @override
   List<Object?> get props => [id];
@@ -60,16 +59,5 @@ enum Gender {
       case Gender.X:
         return "X";
     }
-  }
-}
-
-class AgeGroup {
-  final String label;
-
-  const AgeGroup(this.label);
-
-  @override
-  String toString() {
-    return label;
   }
 }

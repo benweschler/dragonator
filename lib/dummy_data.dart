@@ -52,7 +52,7 @@ const List<String> _lastNames = [
   "Gottfried",
 ];
 
-const List<AgeGroup> _ageGroups = [AgeGroup("Adult"), AgeGroup("Youth")];
+const List<String> ageGroups = ["Adult", "Youth"];
 
 Player _randomPlayer() {
   return Player(
@@ -63,7 +63,7 @@ Player _randomPlayer() {
     gender: Gender.values[_random.nextInt(3)],
     sidePreference:
         _random.nextBool() ? SidePreference.left : SidePreference.right,
-    ageGroup: _ageGroups[_random.nextInt(_ageGroups.length - 1)],
+    ageGroup: ageGroups[_random.nextInt(ageGroups.length - 1)],
     drummerPreference: _random.nextBool(),
     steersPersonPreference: _random.nextBool(),
     strokePreference: _random.nextBool(),
