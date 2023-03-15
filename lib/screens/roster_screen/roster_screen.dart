@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dragonator/data/player.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/dummy_data.dart' as dummy_data;
 import 'package:dragonator/styles/styles.dart';
@@ -11,7 +12,7 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
 
-import 'components/player_preview_card.dart';
+import 'player_preview_card.dart';
 
 class RosterScreen extends StatelessWidget {
   final List<Team> teams;
@@ -60,8 +61,11 @@ class RosterScreen extends StatelessWidget {
 
 class _RosterContent extends StatelessWidget {
   final Team team;
+  final Map<String, Player> playerIDMap;
 
-  const _RosterContent(this.team, {Key? key}) : super(key: key);
+  _RosterContent(this.team, {Key? key})
+      : playerIDMap = dummy_data.playerIDMap,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,15 +95,28 @@ class _RosterContent extends StatelessWidget {
       ],
     );
 
+    final sortedIDs = team.playerIDs.toList()
+      ..sort((a, b) => playerIDMap[a]!.firstName
+          .compareTo(playerIDMap[b]!.firstName));
+
     return ListView(
       children: [
         heading,
-        ...team.playerIDs
-            .map<Widget>((player) => PlayerPreviewCard(player))
+        ...sortedIDs
+            .map<Widget>((id) => PlayerPreviewCard(playerIDMap[id]!))
             //TODO: don't hardcode, this sucks
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
       ],
     );
   }
+}
+
+enum SortingStrategy {
+  firstName,
+  lastName,
+  weight,
+  gender,
+  sidePreference,
+  ageGroup,
 }

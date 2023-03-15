@@ -1,5 +1,4 @@
 import 'package:dragonator/data/player.dart';
-import 'package:dragonator/dummy_data.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -9,9 +8,7 @@ import 'package:go_router/go_router.dart';
 class PlayerPreviewCard extends StatelessWidget {
   final Player player;
 
-  PlayerPreviewCard(String playerID, {Key? key})
-      : player = playerIDMap[playerID]!,
-        super(key: key);
+  const PlayerPreviewCard(this.player, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

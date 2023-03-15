@@ -7,6 +7,7 @@ class Player extends Equatable {
   final int weight;
   final Gender gender;
   final SidePreference sidePreference;
+  //TODO: wouldn't age group be a team-level attribute?
   final AgeGroup ageGroup;
   final bool drummerPreference;
   final bool steersPersonPreference;
@@ -62,17 +63,13 @@ enum Gender {
   }
 }
 
-enum AgeGroup {
-  youth,
-  adult;
+class AgeGroup {
+  final String label;
+
+  const AgeGroup(this.label);
 
   @override
   String toString() {
-    switch (this) {
-      case AgeGroup.youth:
-        return "Youth";
-      case AgeGroup.adult:
-        return "Adult";
-    }
+    return label;
   }
 }

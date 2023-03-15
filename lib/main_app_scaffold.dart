@@ -46,7 +46,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
          * and reference AppColors instead. This default text style should only be used
          * as the underlying default.
          */
-        style: TextStyles.body2,
+        style: TextStyles.body1,
         child: Column(
           children: [
             Expanded(child: widget.body),

@@ -6,6 +6,22 @@ import 'package:uuid/uuid.dart';
 
 const Uuid _uuid = Uuid();
 final Random _random = Random();
+
+final roster = [for (int i = 0; i < 22 * 2; i++) _randomPlayer()];
+final Map<String, Player> playerIDMap =
+Map.fromIterable(roster, key: (player) => player.id);
+final teams = [_teamOne, _teamTwo];
+
+final _teamOne = Team(
+  name: "Team One",
+  playerIDs: roster.sublist(0, 22).map((player) => player.id).toSet(),
+);
+
+final _teamTwo = Team(
+  name: "Team Two",
+  playerIDs: roster.sublist(22).map((player) => player.id).toSet(),
+);
+
 const List<String> _firstNames = [
   "Ben",
   "Pang",
@@ -36,20 +52,7 @@ const List<String> _lastNames = [
   "Gottfried",
 ];
 
-final roster = [for (int i = 0; i < 22 * 2; i++) _randomPlayer()];
-final Map<String, Player> playerIDMap =
-    Map.fromIterable(roster, key: (player) => player.id);
-final teams = [_teamOne, _teamTwo];
-
-final _teamOne = Team(
-  name: "Team One",
-  playerIDs: roster.sublist(0, 22).map((player) => player.id).toSet(),
-);
-
-final _teamTwo = Team(
-  name: "Team Two",
-  playerIDs: roster.sublist(22).map((player) => player.id).toSet(),
-);
+const List<AgeGroup> _ageGroups = [AgeGroup("Adult"), AgeGroup("Youth")];
 
 Player _randomPlayer() {
   return Player(
@@ -60,7 +63,7 @@ Player _randomPlayer() {
     gender: Gender.values[_random.nextInt(3)],
     sidePreference:
         _random.nextBool() ? SidePreference.left : SidePreference.right,
-    ageGroup: _random.nextBool() ? AgeGroup.adult : AgeGroup.youth,
+    ageGroup: _ageGroups[_random.nextInt(_ageGroups.length - 1)],
     drummerPreference: _random.nextBool(),
     steersPersonPreference: _random.nextBool(),
     strokePreference: _random.nextBool(),

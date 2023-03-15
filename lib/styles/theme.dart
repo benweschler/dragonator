@@ -24,7 +24,7 @@ class AppColors extends ThemeExtension<AppColors> {
     switch (t) {
       case ThemeType.light:
         return AppColors._(
-          smallSurface: Colors.black.withOpacity(0.08),
+          smallSurface: Colors.black.withOpacity(0.07),
           largeSurface: Colors.black.withOpacity(0.04),
           neutralContent: Colors.black.withOpacity(0.5),
           isDark: false,
@@ -32,9 +32,25 @@ class AppColors extends ThemeExtension<AppColors> {
     }
   }
 
-  ThemeData toThemeData() => ThemeData(
-        brightness: isDark ? Brightness.dark : Brightness.light,
-      ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
+  ThemeData toThemeData() {
+    final themeData = ThemeData(
+      useMaterial3: true,
+      brightness: isDark ? Brightness.dark : Brightness.light,
+      checkboxTheme: const CheckboxThemeData(
+        splashRadius: 0,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity(
+          horizontal: VisualDensity.minimumDensity,
+          vertical: VisualDensity.minimumDensity,
+        ),
+      ),
+    ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
+
+    return themeData.copyWith(
+        colorScheme: themeData.colorScheme.copyWith(
+      primary: accent,
+    ));
+  }
 
   static AppColors of(BuildContext context) =>
       Theme.of(context).extension<AppColors>()!;

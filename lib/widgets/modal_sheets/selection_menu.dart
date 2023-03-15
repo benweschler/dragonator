@@ -30,27 +30,30 @@ class _SelectionMenuState extends State<SelectionMenu> {
   Widget build(BuildContext context) {
     return ModalSheet(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: List<Widget>.generate(
-            widget.items.length,
-            (index) => _SelectionMenuItem(
-              label: widget.items[index],
-              isSelected: index == selectedItemIndex,
-              onTap: () {
-                if(selectedItemIndex != index) {
-                  widget.onItemTap(index);
-                  setState(() => selectedItemIndex = index);
-                  HapticFeedback.lightImpact();
-                  context.pop();
-                }
-              },
-            ),
-          )
-              //TODO: using divider here
-              .separate(const Divider(height: 0.5, thickness: 0.5))
-              .toList(),
+      child: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List<Widget>.generate(
+              widget.items.length,
+              (index) => _SelectionMenuItem(
+                label: widget.items[index],
+                isSelected: index == selectedItemIndex,
+                onTap: () {
+                  if(selectedItemIndex != index) {
+                    widget.onItemTap(index);
+                    setState(() => selectedItemIndex = index);
+                    HapticFeedback.lightImpact();
+                    context.pop();
+                  }
+                },
+              ),
+            )
+                //TODO: using divider here
+                .separate(const Divider(height: 0.5, thickness: 0.5))
+                .toList(),
+          ),
         ),
       ),
     );

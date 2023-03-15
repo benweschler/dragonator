@@ -1,8 +1,10 @@
 import 'package:dragonator/main_app_scaffold.dart';
+import 'package:dragonator/screens/edit_player_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
+import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +17,10 @@ abstract class ScreenPaths {
   static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
+
   static String player(String id) => '/roster/player/$id';
+
+  static String editPlayer(String id) => '/roster/edit-player/$id';
 }
 
 class AppRouter {
@@ -40,6 +45,13 @@ class AppRouter {
                   "player/:id",
                   (state) => PlayerScreen(state.params['id']!),
                 ),
+                GoRoute(
+                  path: "edit-player/:id",
+                  builder: (_, state) => EditPlayerScreen(state.params['id']!),
+                  pageBuilder: (_, state) => FadeTransitionPage(
+                    child: EditPlayerScreen(state.params['id']!),
+                  ),
+                ),
               ],
             ),
             AppRoute(
@@ -57,6 +69,15 @@ class AppRouter {
       ],
     );
   }
+}
+
+class FadeTransitionPage extends CustomTransitionPage {
+  FadeTransitionPage({required super.child})
+      : super(
+          transitionDuration: Timings.short,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+        );
 }
 
 /// Custom GoRoute sub-class to make the router declaration easier to read.
@@ -82,6 +103,7 @@ class AppRoute extends GoRoute {
                 child: builder(state),
               );
             }
+
             return CupertinoPage(child: builder(state));
           },
         );

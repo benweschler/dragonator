@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +16,26 @@ class PreferenceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = hasPreference
-        ? Icon(Icons.check_circle_rounded, color: AppColors.of(context).accent)
-        : const Icon(Icons.circle_outlined);
+    final Widget icon;
+    if (hasPreference) {
+      icon = Icon(
+        Icons.check_circle_rounded,
+        color: AppColors.of(context).accent,
+      );
+    } else {
+      icon = Transform.rotate(
+        angle: pi / 4,
+        child: Icon(
+          Icons.add_circle_outline_rounded,
+          color: AppColors.of(context).neutralContent,
+        ),
+      );
+    }
 
     return Row(
       children: [
         icon,
-        const SizedBox(width: Insets.sm),
+        const SizedBox(width: Insets.med),
         Text(label),
       ],
     );

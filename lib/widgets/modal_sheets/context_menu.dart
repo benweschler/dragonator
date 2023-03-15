@@ -17,13 +17,16 @@ class ContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return ModalSheet(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[...actions]
-              //TODO: using divider here
-              .separate(const Divider(height: 0.5, thickness: 0.5))
-              .toList(),
+      child: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[...actions]
+                //TODO: using divider here
+                .separate(const Divider(height: 0.5, thickness: 0.5))
+                .toList(),
+          ),
         ),
       ),
     );
