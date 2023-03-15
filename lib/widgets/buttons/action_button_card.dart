@@ -16,6 +16,8 @@ class ActionButtonCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: _actionButtonPadding),
       decoration: BoxDecoration(
+        //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
         borderRadius: Corners.smBorderRadius,
         color: AppColors.of(context).largeSurface,
       ),

@@ -20,7 +20,12 @@ class OptionButton extends StatelessWidget {
       builder: (overlay) => Container(
         padding: const EdgeInsets.all(6),
         decoration: ShapeDecoration(
-          shape: const StadiumBorder(),
+          shape: StadiumBorder(
+            side: BorderSide(
+              //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
+            color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+          ),
           color: AppColors.of(context).smallSurface,
         ),
         child: Icon(

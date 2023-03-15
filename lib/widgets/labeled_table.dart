@@ -43,10 +43,11 @@ class LabeledTable extends StatelessWidget {
       ),
       const SizedBox(height: Insets.xs),
       Row(
-          children: row.stats
-              .map(_wrapElement)
-              .separate(const SizedBox(width: Insets.med))
-              .toList()),
+        children: row.stats
+            .map(_wrapElement)
+            .separate(const SizedBox(width: Insets.med))
+            .toList(),
+      ),
       const SizedBox(height: Insets.med),
     ];
   }
