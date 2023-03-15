@@ -1,5 +1,5 @@
 import 'package:dragonator/main_app_scaffold.dart';
-import 'package:dragonator/screens/edit_player_screen.dart';
+import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
