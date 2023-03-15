@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/dummy_data.dart' as dummy_data;
+import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/labeled_table.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
-import 'package:dragonator/widgets/text_fields/custom_text_form_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,17 +47,19 @@ class EditPlayerScreen extends StatelessWidget {
               const SizedBox(height: Insets.med),
               LabeledTextField(
                 label: "First Name",
-                child: CustomTextFormField(
+                child: FormBuilderTextField(
                   name: "first",
                   initialValue: playerTemplate.firstName,
+                  decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
               const SizedBox(height: Insets.med),
               LabeledTextField(
                 label: "Last Name",
-                child: CustomTextFormField(
+                child: FormBuilderTextField(
                   name: "last",
                   initialValue: playerTemplate.lastName,
+                  decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
               const SizedBox(height: Insets.xl),
@@ -68,14 +72,17 @@ class EditPlayerScreen extends StatelessWidget {
                       "Gender",
                     ],
                     stats: [
-                      CustomTextFormField(
+                      FormBuilderTextField(
                         name: "weight",
                         initialValue: playerTemplate.weight.toString(),
                         keyboardType: TextInputType.number,
-                        suffix: const Text("lbs"),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
+                        decoration: CustomInputDecoration(
+                          AppColors.of(context),
+                          suffix: const Text("lbs", style: TextStyles.body2),
+                        ),
                       ),
                       FormBuilderField<Gender>(
                         name: "gender",
@@ -113,7 +120,18 @@ class EditPlayerScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      Text(playerTemplate.ageGroup.toString()),
+                      FormBuilderTextField(
+                        name: "age",
+                        initialValue: playerTemplate.ageGroup.toString(),
+                        readOnly: true,
+                        decoration: CustomInputDecoration(
+                          AppColors.of(context),
+                          suffixIcon: Transform.rotate(
+                            angle: pi / 2,
+                            child: const Icon(Icons.chevron_right_rounded),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
