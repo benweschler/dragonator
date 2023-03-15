@@ -12,6 +12,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 
+abstract class FieldNames {
+  static const firstName = "first";
+  static const lastName = "last";
+  static const weight = "weight";
+  static const gender = "gender";
+  static const sidePreference = "side";
+  static const ageGroup = "age";
+  static const drummerPreference = "drummer";
+  static const steersPersonPreference = "steersPerson";
+  static const strokePreference = "stroke";
+}
+
 class EditPlayerScreen extends StatelessWidget {
   final Player player;
   final Map<String, dynamic> playerTemplate = {};
@@ -21,16 +33,33 @@ class EditPlayerScreen extends StatelessWidget {
       : player = dummy_data.playerIDMap[playerID]!,
         super(key: key);
 
+  void _saveData() {
+    _formKey.currentState!.save();
+    final formData = _formKey.currentState!.value;
+
+    dummy_data.playerIDMap[player.id] = player.copyWith(
+      firstName: formData[FieldNames.firstName],
+      lastName: formData[FieldNames.lastName],
+      weight: int.parse(formData[FieldNames.weight]),
+      gender: formData[FieldNames.gender],
+      sidePreference: formData[FieldNames.sidePreference],
+      ageGroup: formData[FieldNames.ageGroup],
+      drummerPreference: formData[FieldNames.drummerPreference],
+      steersPersonPreference: formData[FieldNames.steersPersonPreference],
+      strokePreference: formData[FieldNames.strokePreference],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       leading: OptionButton(onTap: context.pop, icon: Icons.close_rounded),
-      center: const Text(
-        "Edit Player",
-        style: TextStyles.title1,
-      ),
+      center: const Text("Edit Player", style: TextStyles.title1),
       trailing: OptionButton(
-        onTap: context.pop,
+        onTap: () {
+          _saveData();
+          context.pop();
+        },
         icon: Icons.check_rounded,
       ),
       child: FormBuilder(
@@ -234,16 +263,4 @@ class PreferenceButton extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract class FieldNames {
-  static const firstName = "first";
-  static const lastName = "last";
-  static const weight = "weight";
-  static const gender = "gender";
-  static const sidePreference = "side";
-  static const ageGroup = "age";
-  static const drummerPreference = "drummer";
-  static const steersPersonPreference = "steersPerson";
-  static const strokePreference = "stroke";
 }
