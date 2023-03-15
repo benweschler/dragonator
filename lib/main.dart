@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'data/dummy_data.dart';
 import 'firebase_options.dart';
+import 'models/roster_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +17,13 @@ void main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  final rosterModel = RosterModel();
+
+  assignDummyData(rosterModel);
+
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider.value(value: rosterModel),
       ChangeNotifierProvider(create: (_) => AppModel()),
     ],
     child: MyApp(AppRouter().router),

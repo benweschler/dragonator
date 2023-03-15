@@ -1,4 +1,5 @@
 import 'package:dragonator/data/player.dart';
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:dragonator/dummy_data.dart' as dummy_data;
+import 'package:provider/provider.dart';
 
 import 'field_names.dart';
 
@@ -20,7 +21,7 @@ class StatSelectorTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final weightField = FormBuilderTextField(
       name: FieldNames.weight,
-      initialValue:player?.weight.toString(),
+      initialValue: player?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: CustomInputDecoration(
@@ -69,21 +70,22 @@ class StatSelectorTable extends StatelessWidget {
         highlightColor: Colors.transparent,
         canvasColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      child: FormBuilderDropdown<String>(
-        name: FieldNames.ageGroup,
-        isExpanded: false,
-        elevation: 2,
-        borderRadius: Corners.smBorderRadius,
-        initialValue: player?.ageGroup,
-        items: [
-          for (final group in dummy_data.ageGroups)
-            DropdownMenuItem(
-              value: group,
-              child: Text(group),
-            ),
-        ],
-        decoration: CustomInputDecoration(
-          AppColors.of(context),
+      child: Selector<RosterModel, Iterable<String>>(
+        selector: (_, model) => model.ageGroups,
+        builder: (_, ageGroups, __) => FormBuilderDropdown<String>(
+          name: FieldNames.ageGroup,
+          isExpanded: false,
+          elevation: 2,
+          borderRadius: Corners.smBorderRadius,
+          initialValue: player?.ageGroup,
+          items: [
+            for (final group in ageGroups)
+              DropdownMenuItem(
+                value: group,
+                child: Text(group),
+              ),
+          ],
+          decoration: CustomInputDecoration(AppColors.of(context)),
         ),
       ),
     );

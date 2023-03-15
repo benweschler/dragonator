@@ -17,9 +17,14 @@ abstract class RoutePaths {
   static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
+
   static String player(String id) => '/roster/player/$id';
-  static String editPlayer([String? id]) =>
-      _appendQueryParams('/roster/edit-player', {"id": id});
+
+  static String editPlayer({String? playerID, String? teamID}) =>
+      _appendQueryParams(
+        '/roster/edit-player',
+        {"playerID": playerID, "teamID": teamID},
+      );
 }
 
 class AppRouter {
@@ -47,7 +52,11 @@ class AppRouter {
                 AppRoute(
                   path: "edit-player",
                   pageBuilder: (state) => FadeTransitionPage(
-                      child: EditPlayerScreen(state.queryParams['id'])),
+                    child: EditPlayerScreen(
+                      playerID: state.queryParams['playerID'],
+                      teamID: state.queryParams['teamID'],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -115,9 +124,11 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
   if (queryParams.isEmpty) return path;
   path += "?";
 
+  int index = 0;
   for (final entry in queryParams.entries) {
     if (entry.value == null) continue;
     path += "${entry.key}=${entry.value}";
+    if (index < queryParams.length - 1) path += "&";
   }
 
   return path;

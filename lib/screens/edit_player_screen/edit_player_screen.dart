@@ -1,5 +1,5 @@
 import 'package:dragonator/data/player.dart';
-import 'package:dragonator/dummy_data.dart' as dummy_data;
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/edit_player_screen/preference_selector.dart';
 import 'package:dragonator/screens/edit_player_screen/stat_selector_table.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -10,27 +10,29 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'field_names.dart';
 import 'labeled_text_field.dart';
 
 class EditPlayerScreen extends StatelessWidget {
-  final Player? player;
-  final Map<String, dynamic> playerTemplate = {};
+  final String? playerID;
+  final String? teamID;
+
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
   static const _uuid = Uuid();
 
-  EditPlayerScreen(String? playerID, {Key? key})
-      : player = dummy_data.playerIDMap[playerID],
+  EditPlayerScreen({this.playerID, this.teamID, Key? key})
+      : assert((playerID == null) ^ (teamID == null)),
         super(key: key);
 
-  void _saveData() {
+  void _saveData(RosterModel model, Player? player) {
     _formKey.currentState!.save();
     final formData = _formKey.currentState!.value;
 
     if (player != null) {
-      dummy_data.playerIDMap[player!.id] = player!.copyWith(
+      final updatedPlayer = player.copyWith(
         firstName: formData[FieldNames.firstName],
         lastName: formData[FieldNames.lastName],
         weight: int.parse(formData[FieldNames.weight]),
@@ -41,10 +43,10 @@ class EditPlayerScreen extends StatelessWidget {
         steersPersonPreference: formData[FieldNames.steersPersonPreference],
         strokePreference: formData[FieldNames.strokePreference],
       );
+      model.assignPlayerID(updatedPlayer.id, updatedPlayer);
     } else {
-      final id = _uuid.v4();
-      dummy_data.playerIDMap[id] = Player(
-        id: id,
+      final newPlayer = Player(
+        id: _uuid.v4(),
         firstName: formData[FieldNames.firstName],
         lastName: formData[FieldNames.lastName],
         weight: int.parse(formData[FieldNames.weight]),
@@ -55,20 +57,25 @@ class EditPlayerScreen extends StatelessWidget {
         steersPersonPreference: formData[FieldNames.steersPersonPreference],
         strokePreference: formData[FieldNames.strokePreference],
       );
+      model.assignPlayerID(newPlayer.id, newPlayer);
+      model.addToTeam(teamID!, newPlayer.id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final rosterModel = context.read<RosterModel>();
+    final player = rosterModel.getPlayer(playerID);
+
     return CustomScaffold(
       leading: OptionButton(onTap: context.pop, icon: Icons.close_rounded),
       center: Text(
-        player == null ? "Create Player" : "Edit Player",
+        playerID == null ? "Create Player" : "Edit Player",
         style: TextStyles.title1,
       ),
       trailing: OptionButton(
         onTap: () {
-          _saveData();
+          _saveData(rosterModel, player);
           context.pop();
         },
         icon: Icons.check_rounded,

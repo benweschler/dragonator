@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/data/team.dart';
-import 'package:dragonator/dummy_data.dart' as dummy_data;
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
@@ -14,53 +14,62 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'player_preview_card.dart';
 
 class RosterScreen extends StatelessWidget {
-  final List<Team> teams;
-  late final ValueNotifier<int> selectedTeamIndexNotifier = ValueNotifier(0);
+  final ValueNotifier<int> selectedTeamIndexNotifier = ValueNotifier(0);
 
-  RosterScreen({Key? key})
-      : teams = dummy_data.teams,
-        super(key: key);
+  RosterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: selectedTeamIndexNotifier,
       builder: (_, team, __) {
-        return CustomScaffold(
-          floatingActionButton: CustomFAB(
-            color: Colors.black,
-            child: const Icon(Icons.add_rounded, color: Colors.white),
-            onTap: () => context.push(RoutePaths.editPlayer()),
-          ),
-          center: ResponsiveStrokeButton(
-            onTap: () => context.showModal(SelectionMenu(
-              items: teams.map((team) => team.name).toList(),
-              initiallySelectedIndex: selectedTeamIndexNotifier.value,
-              onItemTap: (newTeamIndex) {
-                if (selectedTeamIndexNotifier.value != newTeamIndex) {
-                  selectedTeamIndexNotifier.value = newTeamIndex;
-                }
-              },
-            )),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "${teams[selectedTeamIndexNotifier.value].name} ",
-                  style: TextStyles.title1,
+        return Consumer<RosterModel>(
+          builder: (context, rosterModel, _) {
+            final teams = rosterModel.teams.toList();
+
+            return CustomScaffold(
+              floatingActionButton: CustomFAB(
+                color: Colors.black,
+                child: const Icon(Icons.add_rounded, color: Colors.white),
+                onTap: () => context.push(RoutePaths.editPlayer(
+                  teamID: teams[selectedTeamIndexNotifier.value].id,
+                )),
+              ),
+              center: ResponsiveStrokeButton(
+                onTap: () => context.showModal(SelectionMenu(
+                  items: teams.map((team) => team.name).toList(),
+                  initiallySelectedIndex: selectedTeamIndexNotifier.value,
+                  onItemTap: (newTeamIndex) {
+                    if (selectedTeamIndexNotifier.value != newTeamIndex) {
+                      selectedTeamIndexNotifier.value = newTeamIndex;
+                    }
+                  },
+                )),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "${teams[selectedTeamIndexNotifier.value].name} ",
+                      style: TextStyles.title1,
+                    ),
+                    Transform.rotate(
+                      angle: pi / 2,
+                      child: const Icon(Icons.chevron_right_rounded),
+                    ),
+                  ],
                 ),
-                Transform.rotate(
-                  angle: pi / 2,
-                  child: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
-            ),
-          ),
-          child: _RosterContent(teams[selectedTeamIndexNotifier.value]),
+              ),
+              child: _RosterContent(
+                team: teams[selectedTeamIndexNotifier.value],
+                rosterModel: rosterModel,
+              ),
+            );
+          },
         );
       },
     );
@@ -69,14 +78,22 @@ class RosterScreen extends StatelessWidget {
 
 class _RosterContent extends StatelessWidget {
   final Team team;
-  final Map<String, Player> playerIDMap;
+  final RosterModel rosterModel;
 
-  _RosterContent(this.team, {Key? key})
-      : playerIDMap = dummy_data.playerIDMap,
-        super(key: key);
+  const _RosterContent({
+    required this.team,
+    required this.rosterModel,
+    Key? key,
+  }) : super(key: key);
+
+  int alphabeticalSort(a, b) => a.firstName.compareTo(b.firstName);
 
   @override
   Widget build(BuildContext context) {
+    final List<Player> players = [
+      for (String id in team.playerIDs) rosterModel.getPlayer(id)!
+    ];
+
     if (team.playerIDs.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,15 +120,13 @@ class _RosterContent extends StatelessWidget {
       ],
     );
 
-    final sortedIDs = team.playerIDs.toList()
-      ..sort((a, b) =>
-          playerIDMap[a]!.firstName.compareTo(playerIDMap[b]!.firstName));
+    final sortedPlayers = players..sort(alphabeticalSort);
 
     return ListView(
       children: [
         heading,
-        ...sortedIDs
-            .map<Widget>((id) => PlayerPreviewCard(playerIDMap[id]!))
+        ...sortedPlayers
+            .map<Widget>((player) => PlayerPreviewCard(player))
             //TODO: don't hardcode, this sucks
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
