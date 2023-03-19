@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _loginButtonKey = GlobalKey<AsyncActionButtonState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String? errorMessage;
@@ -34,8 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
     // Do not allow a login attempt if credentials have not been
     // entered.
     if (!areCredentialsEntered) return;
-
-    FirebaseAuthException;
 
     return FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
@@ -95,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     textInputAction: TextInputAction.go,
                     onChanged: (_) => updateAreCredentialsEntered(),
-                    onSubmitted: (_) => logIn(),
+                    onSubmitted: (_) => _loginButtonKey.currentState!.onTap(),
                     autofillHints: const [AutofillHints.password],
                     decoration: CustomInputDecoration(
                       appColors,
@@ -108,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                   const SizedBox(height: Insets.xl * 1.2),
                   AsyncActionButton(
+                    key: _loginButtonKey,
                     label: "Log In",
                     isEnabled: areCredentialsEntered,
                     onTap: logIn,

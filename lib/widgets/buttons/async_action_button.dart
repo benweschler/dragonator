@@ -21,13 +21,26 @@ class AsyncActionButton<T extends Object> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AsyncActionButton> createState() => _AsyncActionButtonState<T>();
+  State<AsyncActionButton> createState() => AsyncActionButtonState<T>();
 }
 
 //TODO: ask stackoverflow question about why tf I have to do this absolute baboonery of tightening State<AsyncActionButton> to State<AsyncActionButton<T>>. T should be passed correctly through createState.
-class _AsyncActionButtonState<T extends Object>
+class AsyncActionButtonState<T extends Object>
     extends State<AsyncActionButton<T>> {
   bool isLoading = false;
+
+  void onTap() async {
+    setState(() => isLoading = true);
+
+
+    try {
+      await widget
+          .onTap()
+          .whenComplete(() => setState(() => isLoading = false));
+    } on T catch (error) {
+      widget.catchError?.call(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +49,7 @@ class _AsyncActionButtonState<T extends Object>
     return IgnorePointer(
       ignoring: !widget.isEnabled || isLoading,
       child: ResponsiveButton.large(
-        onTap: () async {
-          setState(() => isLoading = true);
-
-          try {
-            await widget
-                .onTap()
-                .whenComplete(() => setState(() => isLoading = false));
-          } on T catch (error) {
-            widget.catchError?.call(error);
-          }
-        },
+        onTap: onTap,
         builder: (overlay) => Container(
           padding: const EdgeInsets.all(Insets.med),
           decoration: BoxDecoration(
