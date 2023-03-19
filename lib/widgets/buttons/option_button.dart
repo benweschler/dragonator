@@ -23,7 +23,7 @@ class OptionButton extends StatelessWidget {
           shape: StadiumBorder(
             side: BorderSide(
               //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
-            color: Theme.of(context).colorScheme.outlineVariant,
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
           ),
           color: AppColors.of(context).smallSurface,

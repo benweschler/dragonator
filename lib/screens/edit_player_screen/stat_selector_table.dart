@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'field_names.dart';
 
+//TODO: segmented controls are too small
 class StatSelectorTable extends StatelessWidget {
   final Player? player;
 

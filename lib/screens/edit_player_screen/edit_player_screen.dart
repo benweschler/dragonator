@@ -45,6 +45,7 @@ class EditPlayerScreen extends StatelessWidget {
       );
       model.assignPlayerID(updatedPlayer.id, updatedPlayer);
     } else {
+      //TODO: add validation for unfilled fields
       final newPlayer = Player(
         id: _uuid.v4(),
         firstName: formData[FieldNames.firstName],

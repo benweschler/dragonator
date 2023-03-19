@@ -3,7 +3,6 @@ import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'data/dummy_data.dart';
@@ -15,7 +14,9 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //TODO: set preferred device orientation on ios and android
+
+  final appModel  = AppModel();
 
   final rosterModel = RosterModel();
 
@@ -24,7 +25,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: rosterModel),
-      ChangeNotifierProvider(create: (_) => AppModel()),
+      ChangeNotifierProvider.value(value: appModel),
     ],
     child: MyApp(AppRouter().router),
   ));

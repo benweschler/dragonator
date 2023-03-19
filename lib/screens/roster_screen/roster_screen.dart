@@ -18,58 +18,58 @@ import 'package:provider/provider.dart';
 
 import 'player_preview_card.dart';
 
-class RosterScreen extends StatelessWidget {
-  final ValueNotifier<int> selectedTeamIndexNotifier = ValueNotifier(0);
+class RosterScreen extends StatefulWidget {
+  const RosterScreen({Key? key}) : super(key: key);
 
-  RosterScreen({Key? key}) : super(key: key);
+  @override
+  State<RosterScreen> createState() => _RosterScreenState();
+}
+
+class _RosterScreenState extends State<RosterScreen> {
+  int selectedTeamIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: selectedTeamIndexNotifier,
-      builder: (_, team, __) {
-        return Consumer<RosterModel>(
-          builder: (context, rosterModel, _) {
-            final teams = rosterModel.teams.toList();
+    return Consumer<RosterModel>(
+      builder: (context, rosterModel, _) {
+        final teams = rosterModel.teams.toList();
 
-            return CustomScaffold(
-              floatingActionButton: CustomFAB(
-                color: Colors.black,
-                child: const Icon(Icons.add_rounded, color: Colors.white),
-                onTap: () => context.push(RoutePaths.editPlayer(
-                  teamID: teams[selectedTeamIndexNotifier.value].id,
-                )),
-              ),
-              center: ResponsiveStrokeButton(
-                onTap: () => context.showModal(SelectionMenu(
-                  items: teams.map((team) => team.name).toList(),
-                  initiallySelectedIndex: selectedTeamIndexNotifier.value,
-                  onItemTap: (newTeamIndex) {
-                    if (selectedTeamIndexNotifier.value != newTeamIndex) {
-                      selectedTeamIndexNotifier.value = newTeamIndex;
-                    }
-                  },
-                )),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "${teams[selectedTeamIndexNotifier.value].name} ",
-                      style: TextStyles.title1,
-                    ),
-                    Transform.rotate(
-                      angle: pi / 2,
-                      child: const Icon(Icons.chevron_right_rounded),
-                    ),
-                  ],
+        return CustomScaffold(
+          floatingActionButton: CustomFAB(
+            color: Colors.black,
+            child: const Icon(Icons.add_rounded, color: Colors.white),
+            onTap: () => context.push(RoutePaths.editPlayer(
+              teamID: teams[selectedTeamIndex].id,
+            )),
+          ),
+          center: ResponsiveStrokeButton(
+            onTap: () => context.showModal(SelectionMenu(
+              items: teams.map((team) => team.name).toList(),
+              initiallySelectedIndex: selectedTeamIndex,
+              onItemTap: (newTeamIndex) {
+                if (selectedTeamIndex != newTeamIndex) {
+                  setState(() => selectedTeamIndex = newTeamIndex);
+                }
+              },
+            )),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "${teams[selectedTeamIndex].name} ",
+                  style: TextStyles.title1,
                 ),
-              ),
-              child: _RosterContent(
-                team: teams[selectedTeamIndexNotifier.value],
-                rosterModel: rosterModel,
-              ),
-            );
-          },
+                Transform.rotate(
+                  angle: pi / 2,
+                  child: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          ),
+          child: _RosterContent(
+            team: teams[selectedTeamIndex],
+            rosterModel: rosterModel,
+          ),
         );
       },
     );

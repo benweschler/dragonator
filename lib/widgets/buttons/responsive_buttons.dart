@@ -11,13 +11,25 @@ class ResponsiveButton extends StatefulWidget {
   final GestureTapCallback? onTap;
   final Widget Function(Color overlayColor) builder;
   final Color _overlayColor = const Color(0x80FFFFFF);
+  final double _scaleLowerBound;
 
   /// A button that adds a light overlay when tapped.
   const ResponsiveButton({
     Key? key,
     required this.onTap,
     required this.builder,
-  }) : super(key: key);
+  })  : _scaleLowerBound = 0.8,
+        super(key: key);
+
+  /// A button that adds a light overlay when tapped.
+  ///
+  /// Uses a smaller shrinking animation, appropriate for large buttons.
+  const ResponsiveButton.large({
+    Key? key,
+    required this.onTap,
+    required this.builder,
+  })  : _scaleLowerBound = 0.95,
+        super(key: key);
 
   @override
   State<ResponsiveButton> createState() => _ResponsiveButtonState();
@@ -29,8 +41,10 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
     duration: Timings.short,
     vsync: this,
   );
-  late final _scaleAnimation = Tween<double>(begin: 1, end: 0.8)
-      .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  late final _scaleAnimation = Tween<double>(
+    begin: 1,
+    end: widget._scaleLowerBound,
+  ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
   /// True if the button is pressed and false if it is not pressed.
   bool pressedState = false;

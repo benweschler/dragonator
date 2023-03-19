@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
+import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
 import 'package:dragonator/styles/styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,6 +21,7 @@ abstract class RoutePaths {
   static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
+  static String login = '/login';
 
   static String player(String id) => '/roster/player/$id';
 
@@ -35,14 +40,23 @@ class AppRouter {
     return GoRouter(
       initialLocation: RoutePaths.roster,
       navigatorKey: _rootNavigatorKey,
+      refreshListenable: GoRouterRefreshStream(
+        FirebaseAuth.instance.authStateChanges(),
+      ),
+      redirect: redirectNavigation,
       routes: [
+        AppRoute(
+          path: RoutePaths.login,
+          isNavBarTab: true,
+          builder: (_) => const LoginScreen(),
+        ),
         ShellRoute(
           navigatorKey: _navBarNavigatorKey,
           builder: (_, __, child) => MainAppScaffold(body: child),
           routes: [
             AppRoute(
               path: RoutePaths.roster,
-              builder: (_) => RosterScreen(),
+              builder: (_) => const RosterScreen(),
               isNavBarTab: true,
               routes: [
                 AppRoute(
@@ -75,6 +89,18 @@ class AppRouter {
       ],
     );
   }
+
+  String? redirectNavigation(BuildContext context, GoRouterState state) {
+    if (FirebaseAuth.instance.currentUser == null &&
+        state.subloc != RoutePaths.login) {
+      return RoutePaths.login;
+    } else if (FirebaseAuth.instance.currentUser != null &&
+        state.subloc == RoutePaths.login) {
+      return RoutePaths.roster;
+    }
+
+    return null;
+  }
 }
 
 class FadeTransitionPage extends CustomTransitionPage {
@@ -101,6 +127,10 @@ class AppRoute extends GoRoute {
     List<GoRoute> routes = const [],
     this.isNavBarTab = false,
   })  : assert((builder == null) ^ (pageBuilder == null)),
+        assert(
+          !(pageBuilder != null && isNavBarTab),
+          "Passing a pageBuilder causes isNavBarTab to have no effect. Offending route: $path.",
+        ),
         super(
           path: path,
           routes: routes,
@@ -132,4 +162,23 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
   }
 
   return path;
+}
+
+/// Converts a [Stream] to a [Listenable], which can then be passed as a
+/// [refreshListenable] to a [GoRouter].
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }

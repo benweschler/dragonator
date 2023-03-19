@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 class CustomInputDecoration extends InputDecoration {
   final AppColors colors;
 
-  CustomInputDecoration(
-    this.colors, {
-    super.suffix,
-    super.suffixIcon,
-    super.hintText,
-  }) : super(
-          contentPadding: const EdgeInsets.all(Insets.sm),
+  CustomInputDecoration(this.colors, {super.suffix, super.hintText})
+      : super(
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: Insets.sm,
+            horizontal: Insets.med,
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
