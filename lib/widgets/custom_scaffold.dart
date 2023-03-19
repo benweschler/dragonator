@@ -28,16 +28,12 @@ class CustomScaffold extends StatelessWidget {
       child: child,
     );
 
-    if(floatingActionButton != null) {
+    if (floatingActionButton != null) {
       body = Stack(
         children: [
           body,
           Positioned(
-            // The Scaffold doesn't know about the bottom navigation bar since it
-            // extends behind it, so add extra bottom padding.
-            // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
-            bottom: MediaQuery.of(context).viewPadding.bottom + Insets.xl * 2.5,
-            // Original: bottom: Insets.lg,
+            bottom: Insets.lg,
             right: Insets.xl,
             child: floatingActionButton!,
           ),
@@ -51,9 +47,22 @@ class CustomScaffold extends StatelessWidget {
         center: center,
         trailing: trailing,
       ),
-      body: body,
+      // The Scaffold doesn't know about the bottom navigation bar since it
+      // extends behind it, so add extra bottom padding to fill the space behind
+      // the app bar.
+      // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
+      body: Column(
+        children: [
+          Expanded(child: body),
+          SizedBox(
+            height: MediaQuery.of(context).viewPadding.bottom + _appBarHeight,
+          ),
+        ],
+      ),
     );
   }
+
+  final double _appBarHeight = 54;
 }
 
 /// An app bar with the option of a single leading element, a single center
