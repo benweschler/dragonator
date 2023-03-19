@@ -47,14 +47,25 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
          * as the underlying default.
          */
         style: TextStyles.body1,
-        child: Column(
+        // Use a Stack to allow the body to extend behind the navigation bar,
+        // ensuring that each page's Scaffold is the full height of the screen.
+        // Scaffolds that aren't the full height of the display cause errors,
+        // such as adding padding to avoid on-screen keyboards incorrectly.
+        // However, this workaround can cause issues since the app's body isn't
+        // aware of the bottom navigation bar.
+        // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
+        // See: https://github.com/flutter/flutter/issues/24768
+        child: Stack(
           children: [
             Expanded(child: widget.body),
-            // The navigation bar does not have a Scaffold, and therefore does not
-            // have a DefaultTextStyle, as its ancestor, so provide one here.
-            CustomNavigationBar(
-              tabs: widget._bottomNavigationTabs,
-              selectedRoutePath: GoRouter.of(context).location,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: CustomNavigationBar(
+                tabs: widget._bottomNavigationTabs,
+                selectedRoutePath: GoRouter.of(context).location,
+              ),
             ),
           ],
         ),

@@ -33,7 +33,11 @@ class CustomScaffold extends StatelessWidget {
         children: [
           body,
           Positioned(
-            bottom: Insets.lg,
+            // The Scaffold doesn't know about the bottom navigation bar since it
+            // extends behind it, so add extra bottom padding.
+            // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
+            bottom: MediaQuery.of(context).viewPadding.bottom + Insets.xl * 2.5,
+            // Original: bottom: Insets.lg,
             right: Insets.xl,
             child: floatingActionButton!,
           ),
