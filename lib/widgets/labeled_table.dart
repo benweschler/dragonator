@@ -33,7 +33,7 @@ class LabeledTable extends StatelessWidget {
             .copyWith(color: AppColors.of(context).neutralContent),
       ));
 
-  List<Widget> _expandRow(LabeledTableRow row, BuildContext context) {
+  List<Widget> _buildRow(LabeledTableRow row, BuildContext context) {
     return [
       Row(
         children: row.labels
@@ -55,7 +55,7 @@ class LabeledTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: rows.expand((row) => _expandRow(row, context)).toList()
+      children: rows.expand((row) => _buildRow(row, context)).toList()
         // Remove final sized box padding.
         ..removeLast(),
     );

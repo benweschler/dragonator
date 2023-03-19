@@ -12,6 +12,11 @@ import 'package:provider/provider.dart';
 
 import 'field_names.dart';
 
+/// The amount of padding that must be added to the children of a segmented
+/// control in order for the segmented control to be the same height as a text
+/// field.
+const _segmentedControlPadding = Insets.sm * 1.2;
+
 //TODO: segmented controls are too small
 class StatSelectorTable extends StatelessWidget {
   final Player? player;
@@ -35,15 +40,20 @@ class StatSelectorTable extends StatelessWidget {
       name: FieldNames.gender,
       initialValue: player?.gender,
       builder: (state) {
-        return CupertinoSlidingSegmentedControl(
-          backgroundColor: AppColors.of(context).smallSurface,
-          groupValue: state.value,
-          children: const {
-            Gender.M: Text("M"),
-            Gender.F: Text("F"),
-            Gender.X: Text("X"),
-          },
-          onValueChanged: (gender) => state.didChange(gender),
+        return SizedBox(
+          width: double.infinity,
+          child: CupertinoSlidingSegmentedControl(
+            backgroundColor: AppColors.of(context).smallSurface,
+            groupValue: state.value,
+            children: Map.fromIterable(
+              Gender.values,
+              value: (gender) => Padding(
+                padding: const EdgeInsets.all(_segmentedControlPadding),
+                child: Text(gender.toString()),
+              ),
+            ),
+            onValueChanged: (gender) => state.didChange(gender),
+          ),
         );
       },
     );
@@ -52,14 +62,20 @@ class StatSelectorTable extends StatelessWidget {
       name: FieldNames.sidePreference,
       initialValue: player?.sidePreference,
       builder: (state) {
-        return CupertinoSlidingSegmentedControl(
-          backgroundColor: AppColors.of(context).smallSurface,
-          groupValue: state.value,
-          children: const {
-            SidePreference.left: Text("Left"),
-            SidePreference.right: Text("Right"),
-          },
-          onValueChanged: (gender) => state.didChange(gender),
+        return SizedBox(
+          width: double.infinity,
+          child: CupertinoSlidingSegmentedControl(
+            backgroundColor: AppColors.of(context).smallSurface,
+            groupValue: state.value,
+            children: Map.fromIterable(
+              SidePreference.values,
+              value: (sidePreference) => Padding(
+                padding: const EdgeInsets.all(_segmentedControlPadding),
+                child: Text(sidePreference.toString()),
+              ),
+            ),
+            onValueChanged: (gender) => state.didChange(gender),
+          ),
         );
       },
     );
