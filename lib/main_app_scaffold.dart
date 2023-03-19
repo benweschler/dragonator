@@ -57,7 +57,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
         // See: https://github.com/flutter/flutter/issues/24768
         child: Stack(
           children: [
-            Expanded(child: widget.body),
+            widget.body,
             Positioned(
               left: 0,
               right: 0,
