@@ -60,7 +60,9 @@ class AppRouter {
         ),
         ShellRoute(
           navigatorKey: _navBarNavigatorKey,
-          builder: (_, __, child) => MainAppScaffold(body: child),
+          pageBuilder: (_, __, child) => NoTransitionPage(
+            child: MainAppScaffold(body: child),
+          ),
           routes: [
             AppRoute(
               path: RoutePaths.roster,
@@ -100,7 +102,8 @@ class AppRouter {
 
   String? redirectNavigation(BuildContext context, GoRouterState state) {
     if (FirebaseAuth.instance.currentUser == null &&
-        state.subloc != RoutePaths.login && state.subloc != RoutePaths.signUp) {
+        state.subloc != RoutePaths.login &&
+        state.subloc != RoutePaths.signUp) {
       return RoutePaths.login;
     } else if (FirebaseAuth.instance.currentUser != null &&
         state.subloc == RoutePaths.login) {
