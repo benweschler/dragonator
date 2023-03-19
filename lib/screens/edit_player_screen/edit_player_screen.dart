@@ -33,29 +33,29 @@ class EditPlayerScreen extends StatelessWidget {
 
     if (player != null) {
       final updatedPlayer = player.copyWith(
-        firstName: formData[FieldNames.firstName],
-        lastName: formData[FieldNames.lastName],
-        weight: int.parse(formData[FieldNames.weight]),
-        gender: formData[FieldNames.gender],
-        sidePreference: formData[FieldNames.sidePreference],
-        ageGroup: formData[FieldNames.ageGroup],
-        drummerPreference: formData[FieldNames.drummerPreference],
-        steersPersonPreference: formData[FieldNames.steersPersonPreference],
-        strokePreference: formData[FieldNames.strokePreference],
+        firstName: formData[EditPlayerFieldNames.firstName],
+        lastName: formData[EditPlayerFieldNames.lastName],
+        weight: int.parse(formData[EditPlayerFieldNames.weight]),
+        gender: formData[EditPlayerFieldNames.gender],
+        sidePreference: formData[EditPlayerFieldNames.sidePreference],
+        ageGroup: formData[EditPlayerFieldNames.ageGroup],
+        drummerPreference: formData[EditPlayerFieldNames.drummerPreference],
+        steersPersonPreference: formData[EditPlayerFieldNames.steersPersonPreference],
+        strokePreference: formData[EditPlayerFieldNames.strokePreference],
       );
       model.assignPlayerID(updatedPlayer.id, updatedPlayer);
     } else {
       final newPlayer = Player(
         id: _uuid.v4(),
-        firstName: formData[FieldNames.firstName],
-        lastName: formData[FieldNames.lastName],
-        weight: int.parse(formData[FieldNames.weight]),
-        gender: formData[FieldNames.gender],
-        sidePreference: formData[FieldNames.sidePreference],
-        ageGroup: formData[FieldNames.ageGroup],
-        drummerPreference: formData[FieldNames.drummerPreference],
-        steersPersonPreference: formData[FieldNames.steersPersonPreference],
-        strokePreference: formData[FieldNames.strokePreference],
+        firstName: formData[EditPlayerFieldNames.firstName],
+        lastName: formData[EditPlayerFieldNames.lastName],
+        weight: int.parse(formData[EditPlayerFieldNames.weight]),
+        gender: formData[EditPlayerFieldNames.gender],
+        sidePreference: formData[EditPlayerFieldNames.sidePreference],
+        ageGroup: formData[EditPlayerFieldNames.ageGroup],
+        drummerPreference: formData[EditPlayerFieldNames.drummerPreference],
+        steersPersonPreference: formData[EditPlayerFieldNames.steersPersonPreference],
+        strokePreference: formData[EditPlayerFieldNames.strokePreference],
       );
       model.assignPlayerID(newPlayer.id, newPlayer);
       model.addToTeam(teamID!, newPlayer.id);
@@ -81,20 +81,21 @@ class EditPlayerScreen extends StatelessWidget {
         },
         icon: Icons.check_rounded,
       ),
-      child: FormBuilder(
-        key: _formKey,
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: FormBuilder(
+          key: _formKey,
           child: Column(
             children: [
               const SizedBox(height: Insets.med),
               LabeledTextField(
                 label: "First Name",
                 child: FormBuilderTextField(
-                  name: FieldNames.firstName,
+                  name: EditPlayerFieldNames.firstName,
                   initialValue: player?.firstName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: Validators.hasText,
+                  keyboardType: TextInputType.name,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -102,11 +103,12 @@ class EditPlayerScreen extends StatelessWidget {
               LabeledTextField(
                 label: "Last Name",
                 child: FormBuilderTextField(
-                  name: FieldNames.lastName,
+                  name: EditPlayerFieldNames.lastName,
                   initialValue: player?.lastName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: Validators.hasText,
+                  keyboardType: TextInputType.name,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -119,19 +121,19 @@ class EditPlayerScreen extends StatelessWidget {
               Row(
                 children: [
                   PreferenceSelector(
-                    name: FieldNames.drummerPreference,
+                    name: EditPlayerFieldNames.drummerPreference,
                     label: "Drummer",
                     initialValue: player?.drummerPreference ?? false,
                   ),
                   PreferenceSelector(
-                    name: FieldNames.steersPersonPreference,
+                    name: EditPlayerFieldNames.steersPersonPreference,
                     label: "Steers Person",
                     initialValue: player?.steersPersonPreference ?? false,
                   ),
                 ].map((e) => Expanded(child: e)).toList(),
               ),
               PreferenceSelector(
-                name: FieldNames.strokePreference,
+                name: EditPlayerFieldNames.strokePreference,
                 label: "Stroke",
                 initialValue: player?.strokePreference ?? false,
               ),

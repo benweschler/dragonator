@@ -1,11 +1,14 @@
+import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/widgets/buttons/async_action_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'login_button.dart';
+import 'login_errors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _loginButtonKey = GlobalKey<LoginButtonState>();
   String? errorMessage;
   bool areCredentialsEntered = false;
 
@@ -26,6 +28,27 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<dynamic> logIn() async {
+    // Do not allow a login attempt if credentials have not been
+    // entered.
+    if (!areCredentialsEntered) return;
+
+    FirebaseAuthException;
+
+    return FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+  }
+
+  void catchLoginError(FirebaseAuthException error) {
+    if (error.code == "network-request-failed") {
+      setState(() => errorMessage = LoginErrors.networkError);
+    } else {
+      setState(() => errorMessage = LoginErrors.invalidLogin);
+    }
   }
 
   void updateAreCredentialsEntered() {
@@ -41,62 +64,60 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: Insets.xl),
         child: AutofillGroup(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Center(
-                child: Text(
-                  "Log In",
-                  style: TextStyles.h2,
-                ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Center(
+                    child: Text(
+                      "Log In",
+                      style: TextStyles.h2,
+                    ),
+                  ),
+                  const SizedBox(height: Insets.xl),
+                  TextField(
+                    controller: _emailController,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (_) => updateAreCredentialsEntered(),
+                    autofillHints: const [AutofillHints.email],
+                    decoration: CustomInputDecoration(
+                      appColors,
+                      hintText: "Email",
+                    ),
+                  ),
+                  const SizedBox(height: Insets.lg),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    textInputAction: TextInputAction.go,
+                    onChanged: (_) => updateAreCredentialsEntered(),
+                    onSubmitted: (_) => logIn(),
+                    autofillHints: const [AutofillHints.password],
+                    decoration: CustomInputDecoration(
+                      appColors,
+                      hintText: "Password",
+                    ),
+                  ),
+                  if (errorMessage != null) ...[
+                    const SizedBox(height: Insets.lg),
+                    ErrorCard(errorMessage!),
+                  ],
+                  const SizedBox(height: Insets.xl * 1.2),
+                  AsyncActionButton(
+                    label: "Log In",
+                    isEnabled: areCredentialsEntered,
+                    onTap: logIn,
+                    catchError: catchLoginError,
+                  ),
+                  const SizedBox(height: Insets.sm),
+                  const GoToSignUpButton(),
+                ],
               ),
-              const SizedBox(height: Insets.xl),
-              TextField(
-                controller: _emailController,
-                autocorrect: false,
-                enableSuggestions: false,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.emailAddress,
-                onChanged: (_) => updateAreCredentialsEntered(),
-                autofillHints: const [AutofillHints.email],
-                decoration: CustomInputDecoration(
-                  appColors,
-                  hintText: "Email",
-                ),
-              ),
-              const SizedBox(height: Insets.lg),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                textInputAction: TextInputAction.go,
-                onChanged: (_) => updateAreCredentialsEntered(),
-                onSubmitted: (_) => _loginButtonKey.currentState!.logIn(),
-                autofillHints: const [AutofillHints.password],
-                decoration: CustomInputDecoration(
-                  appColors,
-                  hintText: "Password",
-                ),
-              ),
-              if (errorMessage != null) ...[
-                const SizedBox(height: Insets.lg),
-                ErrorCard(errorMessage!),
-              ],
-              const SizedBox(height: Insets.xl * 1.2),
-              LoginButton(
-                key: _loginButtonKey,
-                // Do not allow a login attempt if credentials have not been
-                // entered.
-                isEnabled: areCredentialsEntered,
-                logIn: () => FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: _emailController.text.trim(),
-                  password: _passwordController.text.trim(),
-                ),
-                onError: (error) => setState(() => errorMessage = error),
-              ),
-              const SizedBox(height: Insets.sm),
-              const SignUpButton(),
-            ],
+            ),
           ),
         ),
       ),
@@ -104,13 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class SignUpButton extends StatelessWidget {
-  const SignUpButton({Key? key}) : super(key: key);
+class GoToSignUpButton extends StatelessWidget {
+  const GoToSignUpButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveButton.large(
-      onTap: () {},
+      onTap: () => context.push(RoutePaths.signUp),
       builder: (overlay) => Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.med),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
+import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
@@ -16,12 +17,14 @@ import 'package:go_router/go_router.dart';
 //TODO: adding <T> generic may fix crash
 //typedef AppPage = CupertinoPage;
 
+//TODO: consider using go_router_builder for strongly-typed routing.
 abstract class RoutePaths {
   static String splash = '/';
   static String roster = '/roster';
   static String races = '/races';
   static String profile = '/profile';
-  static String login = '/login';
+  static String login = '/logIn';
+  static String signUp = '/signUp';
 
   static String player(String id) => '/roster/player/$id';
 
@@ -49,6 +52,11 @@ class AppRouter {
           path: RoutePaths.login,
           isNavBarTab: true,
           builder: (_) => const LoginScreen(),
+        ),
+        AppRoute(
+          path: RoutePaths.signUp,
+          isNavBarTab: true,
+          builder: (_) => SignUpScreen(),
         ),
         ShellRoute(
           navigatorKey: _navBarNavigatorKey,
@@ -92,7 +100,7 @@ class AppRouter {
 
   String? redirectNavigation(BuildContext context, GoRouterState state) {
     if (FirebaseAuth.instance.currentUser == null &&
-        state.subloc != RoutePaths.login) {
+        state.subloc != RoutePaths.login && state.subloc != RoutePaths.signUp) {
       return RoutePaths.login;
     } else if (FirebaseAuth.instance.currentUser != null &&
         state.subloc == RoutePaths.login) {

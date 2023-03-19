@@ -1,4 +1,4 @@
-abstract class FieldNames {
+abstract class EditPlayerFieldNames {
   static const firstName = "first";
   static const lastName = "last";
   static const weight = "weight";

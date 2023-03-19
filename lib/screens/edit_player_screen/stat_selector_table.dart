@@ -27,7 +27,7 @@ class StatSelectorTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weightField = FormBuilderTextField(
-      name: FieldNames.weight,
+      name: EditPlayerFieldNames.weight,
       initialValue: player?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -40,7 +40,7 @@ class StatSelectorTable extends StatelessWidget {
     );
 
     final genderSelector = FormBuilderField<Gender>(
-      name: FieldNames.gender,
+      name: EditPlayerFieldNames.gender,
       initialValue: player?.gender,
       validator: Validators.hasSelection,
       builder: (state) {
@@ -65,7 +65,7 @@ class StatSelectorTable extends StatelessWidget {
     );
 
     final sidePreferenceSelector = FormBuilderField<SidePreference>(
-      name: FieldNames.sidePreference,
+      name: EditPlayerFieldNames.sidePreference,
       initialValue: player?.sidePreference,
       validator: Validators.hasSelection,
       builder: (state) {
@@ -99,7 +99,7 @@ class StatSelectorTable extends StatelessWidget {
       child: Selector<RosterModel, Iterable<String>>(
         selector: (_, model) => model.ageGroups,
         builder: (_, ageGroups, __) => FormBuilderDropdown<String>(
-          name: FieldNames.ageGroup,
+          name: EditPlayerFieldNames.ageGroup,
           isExpanded: false,
           elevation: 2,
           borderRadius: Corners.smBorderRadius,
