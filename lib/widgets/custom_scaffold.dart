@@ -47,22 +47,17 @@ class CustomScaffold extends StatelessWidget {
         center: center,
         trailing: trailing,
       ),
-      // The Scaffold doesn't know about the bottom navigation bar since it
-      // extends behind it, so add extra bottom padding to fill the space behind
-      // the app bar.
+      body: body,
+      // The Scaffold extends behind the app's bottom navigation bar, so add a
+      // dummy nav bar to fill the space behind the real nav bar.
+      //
+      // Scaffolds that don't fill the entire screen incorrectly add bottom
+      // padding to avoid the software keyboard, so this is done as a workaround
+      // to ensure that the scaffold fills the screen.
       // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
-      body: Column(
-        children: [
-          Expanded(child: body),
-          SizedBox(
-            height: MediaQuery.of(context).viewPadding.bottom + _appBarHeight,
-          ),
-        ],
-      ),
+      bottomNavigationBar: const _DummyNavigationBar(),
     );
   }
-
-  final double _appBarHeight = 54;
 }
 
 /// An app bar with the option of a single leading element, a single center
@@ -139,3 +134,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+
+class _DummyNavigationBar extends StatelessWidget {
+  final double _navBarHeight = 54;
+
+  const _DummyNavigationBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).viewPadding.bottom + _navBarHeight,
+    );
+  }
+}
+
