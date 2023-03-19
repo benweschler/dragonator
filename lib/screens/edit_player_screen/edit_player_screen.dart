@@ -82,7 +82,6 @@ class EditPlayerScreen extends StatelessWidget {
         icon: Icons.check_rounded,
       ),
       child: FormBuilder(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
@@ -93,8 +92,9 @@ class EditPlayerScreen extends StatelessWidget {
                 child: FormBuilderTextField(
                   name: FieldNames.firstName,
                   initialValue: player?.firstName,
-                  validator: Validators.hasText,
                   autocorrect: false,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: Validators.hasText,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -104,8 +104,9 @@ class EditPlayerScreen extends StatelessWidget {
                 child: FormBuilderTextField(
                   name: FieldNames.lastName,
                   initialValue: player?.lastName,
-                  validator: Validators.hasText,
                   autocorrect: false,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: Validators.hasText,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),

@@ -31,6 +31,7 @@ class StatSelectorTable extends StatelessWidget {
       initialValue: player?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: Validators.hasText,
       decoration: CustomInputDecoration(
         AppColors.of(context),
@@ -103,6 +104,7 @@ class StatSelectorTable extends StatelessWidget {
           elevation: 2,
           borderRadius: Corners.smBorderRadius,
           initialValue: player?.ageGroup,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: Validators.hasText,
           items: [
             for (final group in ageGroups)
