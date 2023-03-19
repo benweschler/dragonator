@@ -14,7 +14,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  //TODO: set preferred device orientation on ios and android
+  //TODO: set preferred device orientation on android
 
   final appModel = AppModel();
 
