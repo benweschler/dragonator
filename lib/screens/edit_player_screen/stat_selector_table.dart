@@ -1,5 +1,6 @@
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/screens/edit_player_screen/validators.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -30,6 +31,7 @@ class StatSelectorTable extends StatelessWidget {
       initialValue: player?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: Validators.hasText,
       decoration: CustomInputDecoration(
         AppColors.of(context),
         suffix: const Text("lbs", style: TextStyles.body2),
@@ -39,11 +41,14 @@ class StatSelectorTable extends StatelessWidget {
     final genderSelector = FormBuilderField<Gender>(
       name: FieldNames.gender,
       initialValue: player?.gender,
+      validator: Validators.hasSelection,
       builder: (state) {
         return SizedBox(
           width: double.infinity,
           child: CupertinoSlidingSegmentedControl(
-            backgroundColor: AppColors.of(context).smallSurface,
+            backgroundColor: state.hasError
+                ? AppColors.of(context).errorSurface
+                : AppColors.of(context).smallSurface,
             groupValue: state.value,
             children: Map.fromIterable(
               Gender.values,
@@ -61,11 +66,14 @@ class StatSelectorTable extends StatelessWidget {
     final sidePreferenceSelector = FormBuilderField<SidePreference>(
       name: FieldNames.sidePreference,
       initialValue: player?.sidePreference,
+      validator: Validators.hasSelection,
       builder: (state) {
         return SizedBox(
           width: double.infinity,
           child: CupertinoSlidingSegmentedControl(
-            backgroundColor: AppColors.of(context).smallSurface,
+            backgroundColor: state.hasError
+                ? AppColors.of(context).errorSurface
+                : AppColors.of(context).smallSurface,
             groupValue: state.value,
             children: Map.fromIterable(
               SidePreference.values,
@@ -95,6 +103,7 @@ class StatSelectorTable extends StatelessWidget {
           elevation: 2,
           borderRadius: Corners.smBorderRadius,
           initialValue: player?.ageGroup,
+          validator: Validators.hasText,
           items: [
             for (final group in ageGroups)
               DropdownMenuItem(

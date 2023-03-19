@@ -13,8 +13,12 @@ class SettingsScreen extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(FirebaseAuth.instance.currentUser!.displayName ??
+                "No Display Name"),
+            Text(FirebaseAuth.instance.currentUser!.uid),
+            Text(FirebaseAuth.instance.currentUser!.email ?? "No Email"),
+            const SizedBox(height: Insets.med),
             ResponsiveButton.large(
               onTap: FirebaseAuth.instance.signOut,
               builder: (overlay) {

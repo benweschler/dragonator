@@ -2,6 +2,7 @@ import 'package:dragonator/data/player.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/edit_player_screen/preference_selector.dart';
 import 'package:dragonator/screens/edit_player_screen/stat_selector_table.dart';
+import 'package:dragonator/screens/edit_player_screen/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -27,8 +28,7 @@ class EditPlayerScreen extends StatelessWidget {
       : assert((playerID == null) ^ (teamID == null)),
         super(key: key);
 
-  void _saveData(RosterModel model, Player? player) {
-    _formKey.currentState!.save();
+  void _savePlayer(RosterModel model, Player? player) {
     final formData = _formKey.currentState!.value;
 
     if (player != null) {
@@ -45,7 +45,6 @@ class EditPlayerScreen extends StatelessWidget {
       );
       model.assignPlayerID(updatedPlayer.id, updatedPlayer);
     } else {
-      //TODO: add validation for unfilled fields
       final newPlayer = Player(
         id: _uuid.v4(),
         firstName: formData[FieldNames.firstName],
@@ -76,13 +75,14 @@ class EditPlayerScreen extends StatelessWidget {
       ),
       trailing: OptionButton(
         onTap: () {
-          _saveData(rosterModel, player);
+          if (!_formKey.currentState!.saveAndValidate()) return;
+          _savePlayer(rosterModel, player);
           context.pop();
         },
         icon: Icons.check_rounded,
       ),
       child: FormBuilder(
-        autovalidateMode: AutovalidateMode.always,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
@@ -93,6 +93,8 @@ class EditPlayerScreen extends StatelessWidget {
                 child: FormBuilderTextField(
                   name: FieldNames.firstName,
                   initialValue: player?.firstName,
+                  validator: Validators.hasText,
+                  autocorrect: false,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -102,6 +104,8 @@ class EditPlayerScreen extends StatelessWidget {
                 child: FormBuilderTextField(
                   name: FieldNames.lastName,
                   initialValue: player?.lastName,
+                  validator: Validators.hasText,
+                  autocorrect: false,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),

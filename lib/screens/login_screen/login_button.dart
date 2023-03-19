@@ -27,13 +27,15 @@ class LoginButtonState extends State<LoginButton> {
   bool isLoading = false;
 
   Future<void> logIn() async {
+    // Prevent external callers from attempting a log in if log in is disabled.
+    if(!widget.isEnabled) return;
+
     setState(() => isLoading = true);
     try {
       await widget
           .logIn()
           .whenComplete(() => setState(() => isLoading = false));
     } on FirebaseAuthException catch (error) {
-      print(error.code);
       if (error.code == "network-request-failed") {
         widget.onError(LoginErrors.networkError);
       } else {

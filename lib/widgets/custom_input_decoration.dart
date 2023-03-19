@@ -7,6 +7,7 @@ class CustomInputDecoration extends InputDecoration {
 
   CustomInputDecoration(this.colors, {super.suffix, super.hintText})
       : super(
+          errorStyle: const TextStyle(height: 0),
           contentPadding: const EdgeInsets.symmetric(
             vertical: Insets.sm,
             horizontal: Insets.med,

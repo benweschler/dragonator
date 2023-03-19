@@ -16,7 +16,7 @@ void main() async {
 
   //TODO: set preferred device orientation on ios and android
 
-  final appModel  = AppModel();
+  final appModel = AppModel();
 
   final rosterModel = RosterModel();
 

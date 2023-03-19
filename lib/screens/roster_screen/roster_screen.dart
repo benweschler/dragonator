@@ -38,7 +38,7 @@ class _RosterScreenState extends State<RosterScreen> {
           floatingActionButton: CustomFAB(
             color: Colors.black,
             child: const Icon(Icons.add_rounded, color: Colors.white),
-            onTap: () => context.push(RoutePaths.editPlayer(
+            onTap: () => context.go(RoutePaths.editPlayer(
               teamID: teams[selectedTeamIndex].id,
             )),
           ),
