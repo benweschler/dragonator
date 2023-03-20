@@ -56,7 +56,7 @@ class _RosterScreenState extends State<RosterScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "${teams[selectedTeamIndex].name} ",
+                  '${teams[selectedTeamIndex].name} ',
                   style: TextStyles.title1,
                 ),
                 Transform.rotate(
@@ -98,11 +98,11 @@ class _RosterContent extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Roster", style: TextStyles.h1),
+          const Text('Roster', style: TextStyles.h1),
           Expanded(
             child: Center(
               child: Text(
-                "No players in ${team.name}",
+                'No players in ${team.name}',
               ),
             ),
           ),
@@ -112,7 +112,7 @@ class _RosterContent extends StatelessWidget {
 
     final Widget heading = Row(
       children: [
-        const Text("Roster", style: TextStyles.h1),
+        const Text('Roster', style: TextStyles.h1),
         const Spacer(),
         OptionButton(onTap: () => {}, icon: Icons.sort_rounded),
         const SizedBox(width: Insets.med),
@@ -127,7 +127,7 @@ class _RosterContent extends StatelessWidget {
         heading,
         ...sortedPlayers
             .map<Widget>((player) => PlayerPreviewCard(player))
-            //TODO: don't hardcode, this sucks
+            //TODO: used divider
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
       ],

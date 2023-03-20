@@ -109,11 +109,11 @@ class _AsyncActionButtonContent extends StatelessWidget {
             delegate: _LoadingButtonLayoutDelegate(isLoading),
             children: [
               LayoutId(
-                id: "text",
+                id: 'text',
                 child: Opacity(opacity: !isLoading ? 1 : 0, child: label),
               ),
               LayoutId(
-                id: "indicator",
+                id: 'indicator',
                 child: Opacity(
                   opacity: isLoading ? 1 : 0,
                   child: LoadingIndicator(loadingIndicatorColor),
@@ -134,15 +134,15 @@ class _LoadingButtonLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    final textSize = layoutChild("text", BoxConstraints.loose(size));
-    positionChild("text", Offset(size.width / 2 - textSize.width / 2, 0));
+    final textSize = layoutChild('text', BoxConstraints.loose(size));
+    positionChild('text', Offset(size.width / 2 - textSize.width / 2, 0));
 
     final indicatorSize = layoutChild(
-      "indicator",
+      'indicator',
       BoxConstraints.expand(width: textSize.height, height: textSize.height),
     );
     positionChild(
-      "indicator",
+      'indicator',
       Offset(size.width / 2 - indicatorSize.width / 2, 0),
     );
   }

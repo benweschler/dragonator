@@ -70,7 +70,7 @@ class EditPlayerScreen extends StatelessWidget {
     return CustomScaffold(
       leading: OptionButton(onTap: context.pop, icon: Icons.close_rounded),
       center: Text(
-        playerID == null ? "Create Player" : "Edit Player",
+        playerID == null ? 'Create Player' : 'Edit Player',
         style: TextStyles.title1,
       ),
       trailing: OptionButton(
@@ -88,7 +88,7 @@ class EditPlayerScreen extends StatelessWidget {
             children: [
               const SizedBox(height: Insets.med),
               LabeledTextField(
-                label: "First Name",
+                label: 'First Name',
                 child: FormBuilderTextField(
                   name: EditPlayerFieldNames.firstName,
                   initialValue: player?.firstName,
@@ -101,7 +101,7 @@ class EditPlayerScreen extends StatelessWidget {
               ),
               const SizedBox(height: Insets.med),
               LabeledTextField(
-                label: "Last Name",
+                label: 'Last Name',
                 child: FormBuilderTextField(
                   name: EditPlayerFieldNames.lastName,
                   initialValue: player?.lastName,
@@ -122,19 +122,19 @@ class EditPlayerScreen extends StatelessWidget {
                 children: [
                   PreferenceSelector(
                     name: EditPlayerFieldNames.drummerPreference,
-                    label: "Drummer",
+                    label: 'Drummer',
                     initialValue: player?.drummerPreference ?? false,
                   ),
                   PreferenceSelector(
                     name: EditPlayerFieldNames.steersPersonPreference,
-                    label: "Steers Person",
+                    label: 'Steers Person',
                     initialValue: player?.steersPersonPreference ?? false,
                   ),
                 ].map((e) => Expanded(child: e)).toList(),
               ),
               PreferenceSelector(
                 name: EditPlayerFieldNames.strokePreference,
-                label: "Stroke",
+                label: 'Stroke',
                 initialValue: player?.strokePreference ?? false,
               ),
             ],

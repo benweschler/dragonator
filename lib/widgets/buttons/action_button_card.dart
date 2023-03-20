@@ -23,7 +23,6 @@ class ActionButtonCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        //TODO: this is terrible. fix this.
         children: <Widget>[...actionButtons]
             //TODO: used divider
             .separate(const Divider(height: 0.5, thickness: 0.5))

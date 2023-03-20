@@ -69,7 +69,7 @@ class SignUpScreen extends StatelessWidget {
                 children: [
                   const Center(
                     child: Text(
-                      "Sign Up",
+                      'Sign Up',
                       style: TextStyles.h2,
                     ),
                   ),
@@ -87,15 +87,15 @@ class SignUpScreen extends StatelessWidget {
                           validator: (value) => _validateNameField(
                             value: value,
                             fieldName: SignUpFieldNames.firstName,
-                            unPairedErrorText: "Enter your first name",
-                            pairedErrorText: "Enter your name",
+                            unPairedErrorText: 'Enter your first name',
+                            pairedErrorText: 'Enter your name',
                           ),
                           onChanged: (_) => _onNameFieldChanged(
                             SignUpFieldNames.firstName,
                           ),
                           decoration: CustomInputDecoration(
                             appColors,
-                            hintText: "First Name",
+                            hintText: 'First Name',
                           ),
                         ),
                       ),
@@ -113,12 +113,12 @@ class SignUpScreen extends StatelessWidget {
                           validator: (value) => _validateNameField(
                             value: value,
                             fieldName: SignUpFieldNames.lastName,
-                            unPairedErrorText: "Enter your last name",
+                            unPairedErrorText: 'Enter your last name',
                             pairedErrorText: null,
                           ),
                           decoration: CustomInputDecoration(
                             appColors,
-                            hintText: "Last Name",
+                            hintText: 'Last Name',
                             showEmptyErrorText: true,
                           ),
                         ),
@@ -133,11 +133,11 @@ class SignUpScreen extends StatelessWidget {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     autofillHints: const [AutofillHints.email],
                     validator: Validators.email(
-                      errorText: "Enter a valid email",
+                      errorText: 'Enter a valid email',
                     ),
                     decoration: CustomInputDecoration(
                       appColors,
-                      hintText: "Email",
+                      hintText: 'Email',
                     ),
                   ),
                   const SizedBox(height: Insets.xl),
@@ -148,11 +148,11 @@ class SignUpScreen extends StatelessWidget {
                     autofillHints: const [AutofillHints.newPassword],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: Validators.required(
-                      errorText: "Enter a password",
+                      errorText: 'Enter a password',
                     ),
                     decoration: CustomInputDecoration(
                       appColors,
-                      hintText: "Password",
+                      hintText: 'Password',
                     ),
                   ),
                   const SizedBox(height: Insets.lg),
@@ -168,17 +168,17 @@ class SignUpScreen extends StatelessWidget {
                       return Validators.confirmPassword(
                         _formKey.currentState
                             ?.fields[SignUpFieldNames.password]!.value,
-                        errorText: "Passwords do not match",
+                        errorText: 'Passwords do not match',
                       ).call(value);
                     },
                     decoration: CustomInputDecoration(
                       appColors,
-                      hintText: "Confirm Password",
+                      hintText: 'Confirm Password',
                     ),
                   ),
                   const SizedBox(height: Insets.xl * 1.5),
                   AsyncActionButton(
-                    label: "Sign In",
+                    label: 'Sign Up',
                     isEnabled: true,
                     action: () async {
                       await Future.delayed(const Duration(seconds: 1));

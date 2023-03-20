@@ -68,5 +68,5 @@ class LabeledTableRow {
 
   const LabeledTableRow({required this.labels, required this.stats})
       : assert(labels.length == stats.length,
-            "The number of labels and stats in a row but be equal.");
+            'The number of labels and stats in a row but be equal.');
 }

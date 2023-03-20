@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void catchLoginError(FirebaseAuthException error) {
-    if (error.code == "network-request-failed") {
+    if (error.code == 'network-request-failed') {
       setState(() => errorMessage = LoginErrors.networkError);
     } else {
       setState(() => errorMessage = LoginErrors.invalidLogin);
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Center(
                     child: Text(
-                      "Log In",
+                      'Log In',
                       style: TextStyles.h2,
                     ),
                   ),
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     autofillHints: const [AutofillHints.email],
                     decoration: CustomInputDecoration(
                       appColors,
-                      hintText: "Email",
+                      hintText: 'Email',
                     ),
                   ),
                   const SizedBox(height: Insets.lg),
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     autofillHints: const [AutofillHints.password],
                     decoration: CustomInputDecoration(
                       appColors,
-                      hintText: "Password",
+                      hintText: 'Password',
                     ),
                   ),
                   if (errorMessage != null) ...[
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: Insets.xl * 1.2),
                   AsyncActionButton(
                     key: _loginButtonKey,
-                    label: "Log In",
+                    label: 'Log In',
                     isEnabled: areCredentialsEntered,
                     action: logIn,
                     catchError: catchLoginError,
@@ -136,7 +136,7 @@ class GoToSignUpButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.med),
           child: Text(
-            "Sign Up",
+            'Sign Up',
             style: TextStyles.body1.copyWith(
               color: Color.alphaBlend(overlay, AppColors.of(context).accent),
               fontWeight: FontWeight.w600,

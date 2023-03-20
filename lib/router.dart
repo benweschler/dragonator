@@ -31,7 +31,7 @@ abstract class RoutePaths {
   static String editPlayer({String? playerID, String? teamID}) =>
       _appendQueryParams(
         '/roster/edit-player',
-        {"playerID": playerID, "teamID": teamID},
+        {'playerID': playerID, 'teamID': teamID},
       );
 }
 
@@ -70,11 +70,11 @@ class AppRouter {
               isNavBarTab: true,
               routes: [
                 AppRoute(
-                  path: "player/:id",
+                  path: 'player/:id',
                   builder: (state) => PlayerScreen(state.params['id']!),
                 ),
                 AppRoute(
-                  path: "edit-player",
+                  path: 'edit-player',
                   pageBuilder: (state) => FadeTransitionPage(
                     child: EditPlayerScreen(
                       playerID: state.queryParams['playerID'],
@@ -140,7 +140,7 @@ class AppRoute extends GoRoute {
   })  : assert((builder == null) ^ (pageBuilder == null)),
         assert(
           !(pageBuilder != null && isNavBarTab),
-          "Passing a pageBuilder causes isNavBarTab to have no effect. Offending route: $path.",
+          'Passing a pageBuilder causes isNavBarTab to have no effect. Offending route: $path.',
         ),
         super(
           path: path,
@@ -163,13 +163,13 @@ class AppRoute extends GoRoute {
 /// Appropriately appends to a route path in order to add [queryParams].
 String _appendQueryParams(String path, Map<String, String?> queryParams) {
   if (queryParams.isEmpty) return path;
-  path += "?";
+  path += '?';
 
   int index = 0;
   for (final entry in queryParams.entries) {
     if (entry.value == null) continue;
-    path += "${entry.key}=${entry.value}";
-    if (index < queryParams.length - 1) path += "&";
+    path += '${entry.key}=${entry.value}';
+    if (index < queryParams.length - 1) path += '&';
   }
 
   return path;

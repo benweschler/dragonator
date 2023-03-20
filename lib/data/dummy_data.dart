@@ -21,7 +21,7 @@ void assignDummyData(RosterModel rosterModel) {
 
   final teamOne = Team(
     id: _uuid.v4(),
-    name: "Team One",
+    name: 'Team One',
     playerIDs: dummyRoster
         .map((player) => player.id)
         .take(dummyRoster.length ~/ 2)
@@ -30,7 +30,7 @@ void assignDummyData(RosterModel rosterModel) {
 
   final teamTwo = Team(
     id: _uuid.v4(),
-    name: "Team Two",
+    name: 'Team Two',
     playerIDs: dummyRoster
         .map((player) => player.id)
         .toList()
@@ -59,33 +59,33 @@ Player _randomPlayer() {
 }
 
 const List<String> _firstNames = [
-  "Ben",
-  "Pang",
-  "Adam",
-  "Tyriq",
-  "Aaron",
-  "Adee",
-  "Itai",
-  "Fabio",
-  "Luis",
-  "Emma",
-  "Valencia",
-  "Talia",
+  'Ben',
+  'Pang',
+  'Adam',
+  'Tyriq',
+  'Aaron',
+  'Adee',
+  'Itai',
+  'Fabio',
+  'Luis',
+  'Emma',
+  'Valencia',
+  'Talia',
 ];
 
 const List<String> _lastNames = [
-  "Weschler",
-  "Lawrence",
-  "Storm",
-  "Williams",
-  "Kaplan",
-  "Gilad",
-  "Buzi",
-  "Ferrera",
-  "Mendez",
-  "Stone",
-  "White",
-  "Gottfried",
+  'Weschler',
+  'Lawrence',
+  'Storm',
+  'Williams',
+  'Kaplan',
+  'Gilad',
+  'Buzi',
+  'Ferrera',
+  'Mendez',
+  'Stone',
+  'White',
+  'Gottfried',
 ];
 
-const List<String> _ageGroups = ["Adult", "Youth"];
+const List<String> _ageGroups = ['Adult', 'Youth'];

@@ -14,17 +14,17 @@ class MainAppScaffold extends StatefulWidget {
     NavigationTab(
       rootLocation: RoutePaths.roster,
       icon: Icons.people_outline_rounded,
-      label: "Roster",
+      label: 'Roster',
     ),
     NavigationTab(
       rootLocation: RoutePaths.races,
       icon: Icons.analytics_outlined,
-      label: "Races",
+      label: 'Races',
     ),
     NavigationTab(
       rootLocation: RoutePaths.profile,
       icon: Icons.settings_rounded,
-      label: "Settings",
+      label: 'Settings',
     ),
   ];
 

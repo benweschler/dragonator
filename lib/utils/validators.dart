@@ -6,25 +6,25 @@ abstract class Validators {
   /// An empty value is either null, the empty String, or an empty Iterable or
   /// Map.
   static String? Function(T?) required<T>({String? errorText}) =>
-      FormBuilderValidators.required<T>(errorText: errorText ?? "");
+      FormBuilderValidators.required<T>(errorText: errorText ?? '');
 
   /// Checks if the field value is equal to [other] and is non-empty;
   static String? Function(T?) equals<T extends Object>(T? other,
           {String? errorText}) =>
       (value) => required().call(value) != null || value != other
-          ? errorText ?? ""
+          ? errorText ?? ''
           : null;
 
   /// Checks if the field value is an integer and non-empty.
   static String? Function(String?) isInt({String? errorText}) =>
       (value) => required().call(value) != null || int.tryParse(value!) == null
-          ? errorText ?? ""
+          ? errorText ?? ''
           : null;
 
   /// Checks if the field value is an email and is non-empty.
   static String? Function(String?) email({String? errorText}) => (value) {
-        if (required().call(value) != null) return errorText ?? "";
-        return FormBuilderValidators.email(errorText: errorText ?? "")
+        if (required().call(value) != null) return errorText ?? '';
+        return FormBuilderValidators.email(errorText: errorText ?? '')
             .call(value);
       };
 
@@ -41,7 +41,7 @@ abstract class Validators {
         if (!(Validators.required().call(password) == null)) return null;
         return Validators.equals(
           password,
-          errorText: "Passwords do not match",
+          errorText: 'Passwords do not match',
         ).call(value);
       };
 }

@@ -18,7 +18,6 @@ import 'field_names.dart';
 /// field.
 const _segmentedControlPadding = Insets.sm * 1.2;
 
-//TODO: segmented controls are too small
 class StatSelectorTable extends StatelessWidget {
   final Player? player;
 
@@ -35,7 +34,7 @@ class StatSelectorTable extends StatelessWidget {
       validator: Validators.isInt(),
       decoration: CustomInputDecoration(
         AppColors.of(context),
-        suffix: const Text("lbs", style: TextStyles.body2),
+        suffix: const Text('lbs', style: TextStyles.body2),
       ),
     );
 
@@ -122,11 +121,11 @@ class StatSelectorTable extends StatelessWidget {
       elementAlignment: Alignment.centerLeft,
       rows: [
         LabeledTableRow(
-          labels: ["Weight", "Gender"],
+          labels: ['Weight', 'Gender'],
           stats: [weightField, genderSelector],
         ),
         LabeledTableRow(
-          labels: ["Side Preference", "Age Group"],
+          labels: ['Side Preference', 'Age Group'],
           stats: [sidePreferenceSelector, ageGroupDropDown],
         ),
       ],

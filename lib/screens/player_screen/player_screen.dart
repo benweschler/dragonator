@@ -33,7 +33,7 @@ class PlayerScreen extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  "${player.firstName} ${player.lastName}",
+                  '${player.firstName} ${player.lastName}',
                   style: TextStyles.h2.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
@@ -44,13 +44,13 @@ class PlayerScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: PreferenceRow(
-                      label: "Drummer",
+                      label: 'Drummer',
                       hasPreference: player.drummerPreference,
                     ),
                   ),
                   Expanded(
                     child: PreferenceRow(
-                      label: "Steers Person",
+                      label: 'Steers Person',
                       hasPreference: player.steersPersonPreference,
                     ),
                   ),
@@ -58,7 +58,7 @@ class PlayerScreen extends StatelessWidget {
               ),
               const SizedBox(height: Insets.med),
               PreferenceRow(
-                label: "Stroke",
+                label: 'Stroke',
                 hasPreference: player.strokePreference,
               ),
               const SizedBox(height: Insets.xl),
@@ -66,17 +66,17 @@ class PlayerScreen extends StatelessWidget {
               ActionButtonCard([
                 ActionButton(
                   onTap: () {},
-                  label: "Add to team",
+                  label: 'Add to team',
                   icon: Icons.add_rounded,
                 ),
                 ActionButton(
                   onTap: () {},
-                  label: "View active lineups",
+                  label: 'View active lineups',
                   icon: Icons.library_books_rounded,
                 ),
                 ActionButton(
                   onTap: () {},
-                  label: "Delete",
+                  label: 'Delete',
                   icon: Icons.delete_rounded,
                 ),
               ]),
@@ -98,22 +98,22 @@ class PlayerStatTable extends StatelessWidget {
     return LabeledTable(
       rows: [
         LabeledTableRow(
-          labels: ["Weight", "Gender"],
+          labels: ['Weight', 'Gender'],
           stats: [
             Text.rich(TextSpan(children: [
               TextSpan(
-                text: "${player.weight}",
+                text: '${player.weight}',
                 style: TextStyles.title1,
               ),
-              const TextSpan(text: " lbs", style: TextStyles.body2),
+              const TextSpan(text: ' lbs', style: TextStyles.body2),
             ])),
-            Text("${player.gender}", style: TextStyles.title1),
+            Text('${player.gender}', style: TextStyles.title1),
           ],
         ),
         LabeledTableRow(
-          labels: ["Side Preference", "Age Group"],
+          labels: ['Side Preference', 'Age Group'],
           stats: [
-            Text("${player.sidePreference}", style: TextStyles.title1),
+            Text('${player.sidePreference}', style: TextStyles.title1),
             Text(player.ageGroup, style: TextStyles.title1),
           ],
         ),

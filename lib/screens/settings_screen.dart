@@ -14,10 +14,12 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(FirebaseAuth.instance.currentUser!.displayName ??
-                "No Display Name"),
+            Text(
+              FirebaseAuth.instance.currentUser!.displayName ??
+                  'No Display Name',
+            ),
             Text(FirebaseAuth.instance.currentUser!.uid),
-            Text(FirebaseAuth.instance.currentUser!.email ?? "No Email"),
+            Text(FirebaseAuth.instance.currentUser!.email ?? 'No Email'),
             const SizedBox(height: Insets.med),
             ResponsiveButton.large(
               onTap: FirebaseAuth.instance.signOut,
@@ -34,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      "Log Out",
+                      'Log Out',
                       style: TextStyles.body1.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,

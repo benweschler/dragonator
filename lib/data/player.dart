@@ -37,9 +37,9 @@ enum SidePreference {
   String toString() {
     switch (this) {
       case SidePreference.left:
-        return "L";
+        return 'L';
       case SidePreference.right:
-        return "R";
+        return 'R';
     }
   }
 }
@@ -53,11 +53,11 @@ enum Gender {
   String toString() {
     switch (this) {
       case Gender.M:
-        return "M";
+        return 'M';
       case Gender.F:
-        return "F";
+        return 'F';
       case Gender.X:
-        return "X";
+        return 'X';
     }
   }
 }

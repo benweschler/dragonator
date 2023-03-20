@@ -34,7 +34,7 @@ class PlayerPreviewCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${player.firstName} ${player.lastName}",
+                '${player.firstName} ${player.lastName}',
                 style: TextStyles.title1.copyWith(
                   color: AppColors.of(context).accent,
                 ),
@@ -42,10 +42,10 @@ class PlayerPreviewCard extends StatelessWidget {
               const SizedBox(height: Insets.xs),
               Text.rich(TextSpan(children: [
                 TextSpan(
-                  text: "${player.weight}",
+                  text: '${player.weight}',
                   style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
                 ),
-                const TextSpan(text: " lbs", style: TextStyles.body2),
+                const TextSpan(text: ' lbs', style: TextStyles.body2),
               ])),
             ],
           ),
@@ -54,12 +54,12 @@ class PlayerPreviewCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Gender",
+                'Gender',
                 style: TextStyles.caption.copyWith(
                   color: AppColors.of(context).neutralContent,
                 ),
               ),
-              Text("${player.gender}", style: TextStyles.title1),
+              Text('${player.gender}', style: TextStyles.title1),
             ],
           ),
         ),
@@ -67,12 +67,12 @@ class PlayerPreviewCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Side",
+                'Side',
                 style: TextStyles.caption.copyWith(
                   color: AppColors.of(context).neutralContent,
                 ),
               ),
-              Text("${player.sidePreference}", style: TextStyles.title1),
+              Text('${player.sidePreference}', style: TextStyles.title1),
             ],
           ),
         ),

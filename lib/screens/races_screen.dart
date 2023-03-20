@@ -5,6 +5,6 @@ class RacesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Races")));
+    return const Scaffold(body: Center(child: Text('Races')));
   }
 }
