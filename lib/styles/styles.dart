@@ -44,7 +44,6 @@ abstract class TextStyles {
   static const TextStyle h2 = TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
   static const TextStyle title1 = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   static const TextStyle body1 = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  //TODO: currently only being used as a suffix
   static const TextStyle body2 = TextStyle(fontSize: 14, fontWeight: FontWeight.normal);
   //TODO: make AppColors.neutralContent the default color
   static const TextStyle caption = TextStyle(fontSize: 12, fontWeight: FontWeight.normal);

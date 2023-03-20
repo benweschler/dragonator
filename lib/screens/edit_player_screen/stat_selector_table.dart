@@ -1,8 +1,8 @@
 import 'package:dragonator/data/player.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/screens/edit_player_screen/validators.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/labeled_table.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +32,7 @@ class StatSelectorTable extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: Validators.hasText,
+      validator: Validators.isInt(),
       decoration: CustomInputDecoration(
         AppColors.of(context),
         suffix: const Text("lbs", style: TextStyles.body2),
@@ -42,7 +42,7 @@ class StatSelectorTable extends StatelessWidget {
     final genderSelector = FormBuilderField<Gender>(
       name: EditPlayerFieldNames.gender,
       initialValue: player?.gender,
-      validator: Validators.hasSelection,
+      validator: Validators.required(),
       builder: (state) {
         return SizedBox(
           width: double.infinity,
@@ -67,7 +67,7 @@ class StatSelectorTable extends StatelessWidget {
     final sidePreferenceSelector = FormBuilderField<SidePreference>(
       name: EditPlayerFieldNames.sidePreference,
       initialValue: player?.sidePreference,
-      validator: Validators.hasSelection,
+      validator: Validators.required(),
       builder: (state) {
         return SizedBox(
           width: double.infinity,
@@ -105,7 +105,7 @@ class StatSelectorTable extends StatelessWidget {
           borderRadius: Corners.smBorderRadius,
           initialValue: player?.ageGroup,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: Validators.hasText,
+          validator: Validators.required(),
           items: [
             for (final group in ageGroups)
               DropdownMenuItem(

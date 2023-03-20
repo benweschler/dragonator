@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     textInputAction: TextInputAction.go,
                     onChanged: (_) => updateAreCredentialsEntered(),
-                    onSubmitted: (_) => _loginButtonKey.currentState!.onTap(),
+                    onSubmitted: (_) => _loginButtonKey.currentState!.executeAction(),
                     autofillHints: const [AutofillHints.password],
                     decoration: CustomInputDecoration(
                       appColors,
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: _loginButtonKey,
                     label: "Log In",
                     isEnabled: areCredentialsEntered,
-                    onTap: logIn,
+                    action: logIn,
                     catchError: catchLoginError,
                   ),
                   const SizedBox(height: Insets.sm),

@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 class AsyncActionButton<T extends Object> extends StatefulWidget {
   final String label;
   final bool isEnabled;
-  final Future Function() onTap;
+  final Future Function() action;
   final void Function(T error)? catchError;
 
   const AsyncActionButton({
     Key? key,
     required this.label,
     required this.isEnabled,
-    required this.onTap,
+    required this.action,
     required this.catchError,
   }) : super(key: key);
 
@@ -25,17 +25,19 @@ class AsyncActionButton<T extends Object> extends StatefulWidget {
 }
 
 //TODO: ask stackoverflow question about why tf I have to do this absolute baboonery of tightening State<AsyncActionButton> to State<AsyncActionButton<T>>. T should be passed correctly through createState.
+// Allow onTap to be called programmatically through a GlobalKey by making the
+// State class public.
 class AsyncActionButtonState<T extends Object>
     extends State<AsyncActionButton<T>> {
   bool isLoading = false;
 
-  void onTap() async {
+  void executeAction() async {
     setState(() => isLoading = true);
 
 
     try {
       await widget
-          .onTap()
+          .action()
           .whenComplete(() => setState(() => isLoading = false));
     } on T catch (error) {
       widget.catchError?.call(error);
@@ -49,7 +51,7 @@ class AsyncActionButtonState<T extends Object>
     return IgnorePointer(
       ignoring: !widget.isEnabled || isLoading,
       child: ResponsiveButton.large(
-        onTap: onTap,
+        onTap: executeAction,
         builder: (overlay) => Container(
           padding: const EdgeInsets.all(Insets.med),
           decoration: BoxDecoration(

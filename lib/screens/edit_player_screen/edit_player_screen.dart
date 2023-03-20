@@ -2,7 +2,7 @@ import 'package:dragonator/data/player.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/edit_player_screen/preference_selector.dart';
 import 'package:dragonator/screens/edit_player_screen/stat_selector_table.dart';
-import 'package:dragonator/screens/edit_player_screen/validators.dart';
+import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -94,8 +94,8 @@ class EditPlayerScreen extends StatelessWidget {
                   initialValue: player?.firstName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: Validators.hasText,
                   keyboardType: TextInputType.name,
+                  validator: Validators.required(),
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -107,7 +107,7 @@ class EditPlayerScreen extends StatelessWidget {
                   initialValue: player?.lastName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: Validators.hasText,
+                  validator: Validators.required(),
                   keyboardType: TextInputType.name,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),

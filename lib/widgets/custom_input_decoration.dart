@@ -5,11 +5,19 @@ import 'package:flutter/material.dart';
 class CustomInputDecoration extends InputDecoration {
   final AppColors colors;
 
-  CustomInputDecoration(this.colors, {super.suffix, super.hintText})
-      : super(
+  CustomInputDecoration(
+    this.colors, {
+    bool showEmptyErrorText = false,
+    super.suffix,
+    super.hintText,
+  }) : super(
           filled: true,
           fillColor: colors.largeSurface,
-          errorStyle: const TextStyle(height: 0),
+          errorStyle: TextStyles.caption.copyWith(
+            color: colors.accent,
+            fontWeight: FontWeight.w500,
+            height: showEmptyErrorText ? null : 0,
+          ),
           contentPadding: const EdgeInsets.symmetric(
             vertical: Insets.sm,
             horizontal: Insets.med,

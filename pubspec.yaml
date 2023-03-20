@@ -45,6 +45,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
   cloud_firestore: ^4.4.5
+  form_builder_validators: ^8.5.0
 
 dev_dependencies:
   flutter_test:
