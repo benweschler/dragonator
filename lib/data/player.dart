@@ -1,4 +1,3 @@
-//TODO: isn't AgeGroup a team-level attribute?
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:equatable/equatable.dart';
 

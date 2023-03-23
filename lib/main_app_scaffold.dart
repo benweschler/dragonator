@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+const double _kNavBarIconSize = 24;
+
 class MainAppScaffold extends StatefulWidget {
   final Widget body;
 
@@ -154,8 +156,6 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
   late final _scaleAnimation =
       Tween<double>(begin: 1.5, end: 1).animate(_controller);
 
-  final double _iconSize = 24;
-
   @override
   void initState() {
     if (widget.isActive) {
@@ -186,8 +186,8 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
       transform: Matrix4.skewX(0.35),
       alignment: Alignment.center,
       child: Container(
-        width: 1.1 * _iconSize,
-        height: 1.1 * _iconSize,
+        width: 1.1 * _kNavBarIconSize,
+        height: 1.1 * _kNavBarIconSize,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: AppColors.of(context).accent.withOpacity(0.2),
@@ -212,7 +212,7 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
                   ),
                 ),
               ),
-              Icon(widget.icon, size: _iconSize),
+              Icon(widget.icon, size: _kNavBarIconSize),
             ],
           ),
           const SizedBox(height: Insets.xs),

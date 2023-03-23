@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dragonator/main_app_scaffold.dart';
+import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
@@ -8,8 +9,8 @@ import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
 import 'package:dragonator/screens/races_screen.dart';
+import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,18 +37,24 @@ abstract class RoutePaths {
 }
 
 class AppRouter {
+  final AppModel appModel;
   final _rootNavigatorKey = GlobalKey<NavigatorState>();
   final _navBarNavigatorKey = GlobalKey<NavigatorState>();
+
+  AppRouter(this.appModel);
 
   GoRouter get router {
     return GoRouter(
       initialLocation: RoutePaths.roster,
       navigatorKey: _rootNavigatorKey,
-      refreshListenable: GoRouterRefreshStream(
-        FirebaseAuth.instance.authStateChanges(),
-      ),
+      refreshListenable: appModel.routerRefreshNotifier,
       redirect: redirectNavigation,
       routes: [
+        AppRoute(
+          path: RoutePaths.splash,
+          isNavBarTab: true,
+          builder: (_) => const SplashScreen(),
+        ),
         AppRoute(
           path: RoutePaths.login,
           isNavBarTab: true,
@@ -101,13 +108,19 @@ class AppRouter {
   }
 
   String? redirectNavigation(BuildContext context, GoRouterState state) {
-    if (FirebaseAuth.instance.currentUser == null &&
-        state.subloc != RoutePaths.login &&
-        state.subloc != RoutePaths.signUp) {
+    final path = state.subloc;
+
+    if (!appModel.isLoggedIn &&
+        path != RoutePaths.login &&
+        path != RoutePaths.signUp) {
       return RoutePaths.login;
-    } else if (FirebaseAuth.instance.currentUser != null &&
-        state.subloc == RoutePaths.login) {
-      return RoutePaths.roster;
+    } else if (appModel.isLoggedIn) {
+      if (!appModel.isInitialized && path != RoutePaths.splash) {
+        appModel.initializeApp();
+        return RoutePaths.splash;
+      } else if (appModel.isInitialized && path == RoutePaths.splash) {
+        return RoutePaths.roster;
+      }
     }
 
     return null;
@@ -180,9 +193,7 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
-    _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
+    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
   }
 
   late final StreamSubscription<dynamic> _subscription;

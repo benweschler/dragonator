@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +15,7 @@ import 'package:dragonator/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(AppRouter().router));
+    await tester.pumpWidget(MyApp(AppRouter(AppModel()).router));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -1,18 +1,34 @@
+import 'package:dragonator/commands/users/create_user_command.dart';
+import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/signup_screen/field_names.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
-import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/buttons/async_action_button.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   SignUpScreen({Key? key}) : super(key: key);
+
+  Future<void> signUp(AppModel appModel) async {
+    final formData = _formKey.currentState!.value;
+
+    await CreateUserCommand.run(
+      firstName: formData[SignUpFieldNames.firstName],
+      lastName: formData[SignUpFieldNames.lastName],
+      email: formData[SignUpFieldNames.email],
+      password: formData[SignUpFieldNames.password],
+    );
+  }
 
   /// Removes an error from both name fields when either name field is edited in
   /// an error state.
@@ -58,7 +74,10 @@ class SignUpScreen extends StatelessWidget {
     final appColors = AppColors.of(context);
 
     return CustomScaffold(
-      leading: const CustomBackButton(),
+      leading: ResponsiveStrokeButton(
+        onTap: () => context.go(RoutePaths.login),
+        child: const Icon(Icons.arrow_back_ios_rounded),
+      ),
       child: Center(
         child: SingleChildScrollView(
           child: FormBuilder(
@@ -181,10 +200,13 @@ class SignUpScreen extends StatelessWidget {
                     label: 'Sign Up',
                     isEnabled: true,
                     action: () async {
-                      await Future.delayed(const Duration(seconds: 1));
-                      _formKey.currentState!.saveAndValidate();
+                      if (!_formKey.currentState!.saveAndValidate()) {
+                        return;
+                      }
+                      return signUp(context.read<AppModel>());
                     },
-                    catchError: (_) {},
+                    //TODO: add error handling
+                    catchError: (e) => print(e),
                   ),
                 ],
               ),

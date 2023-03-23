@@ -31,12 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<dynamic> logIn() async {
+  Future<void> logIn() async {
     // Do not allow a login attempt if credentials have not been
     // entered.
     if (!areCredentialsEntered) return;
 
-    return FirebaseAuth.instance.signInWithEmailAndPassword(
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
@@ -94,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     textInputAction: TextInputAction.go,
                     onChanged: (_) => updateAreCredentialsEntered(),
-                    onSubmitted: (_) => _loginButtonKey.currentState!.executeAction(),
+                    onSubmitted: (_) =>
+                        _loginButtonKey.currentState!.executeAction(),
                     autofillHints: const [AutofillHints.password],
                     decoration: CustomInputDecoration(
                       appColors,

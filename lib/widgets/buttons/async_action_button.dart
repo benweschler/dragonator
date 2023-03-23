@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class AsyncActionButton<T extends Object> extends StatefulWidget {
   final String label;
   final bool isEnabled;
-  final Future Function() action;
+  final Future? Function() action;
   final void Function(T error)? catchError;
 
   const AsyncActionButton({
@@ -34,11 +34,14 @@ class AsyncActionButtonState<T extends Object>
   void executeAction() async {
     setState(() => isLoading = true);
 
-
     try {
-      await widget
-          .action()
-          .whenComplete(() => setState(() => isLoading = false));
+      await widget.action()?.whenComplete(() {
+        // This widget may have been removed from the tree while or after its
+        // async action completes.
+        if (mounted) {
+          setState(() => isLoading = false);
+        }
+      });
     } on T catch (error) {
       widget.catchError?.call(error);
     }

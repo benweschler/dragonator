@@ -27,7 +27,7 @@ void main() async {
       ChangeNotifierProvider.value(value: rosterModel),
       ChangeNotifierProvider.value(value: appModel),
     ],
-    child: MyApp(AppRouter().router),
+    child: MyApp(AppRouter(appModel).router),
   ));
 }
 
