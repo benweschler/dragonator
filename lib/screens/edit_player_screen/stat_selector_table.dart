@@ -89,7 +89,7 @@ class StatSelectorTable extends StatelessWidget {
     );
 
     final ageGroupDropDown = Theme(
-      data: ThemeData(
+      data: Theme.of(context).copyWith(
         splashColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,

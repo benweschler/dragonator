@@ -29,8 +29,12 @@ class CustomInputDecoration extends InputDecoration {
             ),
             borderRadius: Corners.medBorderRadius,
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(width: 1),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
+              //TODO: change to use text color
+              color: colors.primaryContainer,
+            ),
             borderRadius: Corners.medBorderRadius,
           ),
           errorBorder: OutlineInputBorder(
