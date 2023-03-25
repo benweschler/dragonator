@@ -17,9 +17,7 @@ class Bootstrapper {
   }
 
   Future<void> _loadUser() async {
-    print('loading user');
     final User user = firebaseAuth.currentUser!;
     appModel.user = await GetUserCommand.run(user);
-    print('user loaded');
   }
 }

@@ -4,6 +4,7 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/async_action_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
+import 'package:dragonator/widgets/error_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ErrorCard(errorMessage!),
                   ],
                   const SizedBox(height: Insets.xl * 1.2),
-                  AsyncActionButton(
+                  AsyncActionButton<FirebaseAuthException>(
                     key: _loginButtonKey,
                     label: 'Log In',
                     isEnabled: areCredentialsEntered,
@@ -143,33 +144,6 @@ class GoToSignUpButton extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class ErrorCard extends StatelessWidget {
-  final String message;
-
-  const ErrorCard(this.message, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final errorColor = AppColors.of(context).accent;
-
-    return Container(
-      padding: const EdgeInsets.all(Insets.sm),
-      decoration: BoxDecoration(
-        borderRadius: Corners.medBorderRadius,
-        color: errorColor.withOpacity(0.08),
-        border: Border.all(color: errorColor.withOpacity(0.65)),
-      ),
-      child: Text(
-        message,
-        style: TextStyles.body2.copyWith(
-          fontWeight: FontWeight.w500,
-          color: errorColor.withOpacity(0.65),
         ),
       ),
     );

@@ -9,6 +9,8 @@ import 'package:dragonator/widgets/buttons/async_action_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/error_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +18,8 @@ import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
+  final ValueNotifier<String?> _errorNotifier = ValueNotifier(null);
+  final GlobalKey<AsyncActionButtonState> _signUpButtonKey = GlobalKey();
 
   SignUpScreen({Key? key}) : super(key: key);
 
@@ -181,6 +185,8 @@ class SignUpScreen extends StatelessWidget {
                     textInputAction: TextInputAction.go,
                     autofillHints: const [AutofillHints.newPassword],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onSubmitted: (_) =>
+                        _signUpButtonKey.currentState!.executeAction(),
                     // Wrap the validator inside of the callback to pass an
                     // up-to-date password value.
                     validator: (value) {
@@ -195,8 +201,18 @@ class SignUpScreen extends StatelessWidget {
                       hintText: 'Confirm Password',
                     ),
                   ),
-                  const SizedBox(height: Insets.xl * 1.5),
-                  AsyncActionButton(
+                  ValueListenableBuilder<String?>(
+                    valueListenable: _errorNotifier,
+                    builder: (_, error, __) => Column(
+                      children: error == null ? [] : [
+                        const SizedBox(height: Insets.lg),
+                        ErrorCard(error),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Insets.xl * 1.2),
+                  AsyncActionButton<FirebaseAuthException>(
+                    key: _signUpButtonKey,
                     label: 'Sign Up',
                     isEnabled: true,
                     action: () async {
@@ -206,7 +222,7 @@ class SignUpScreen extends StatelessWidget {
                       return signUp(context.read<AppModel>());
                     },
                     //TODO: add error handling
-                    catchError: (e) => print(e),
+                    catchError: (error) => _errorNotifier.value = error.message,
                   ),
                 ],
               ),
