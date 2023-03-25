@@ -9,7 +9,7 @@ import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
-import 'package:dragonator/widgets/custom_fab.dart';
+import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +36,7 @@ class _RosterScreenState extends State<RosterScreen> {
 
         return CustomScaffold(
           floatingActionButton: CustomFAB(
-            color: Colors.black,
-            child: const Icon(Icons.add_rounded, color: Colors.white),
+            child: const Icon(Icons.add_rounded),
             onTap: () => context.go(RoutePaths.editPlayer(
               teamID: teams[selectedTeamIndex].id,
             )),

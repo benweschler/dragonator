@@ -19,15 +19,19 @@ class PreferenceSelector extends StatelessWidget {
     return FormBuilderField<bool>(
       name: name,
       initialValue: initialValue,
-      builder: (state) => Row(
-        children: [
-          Checkbox(
-            value: state.value,
-            onChanged: (newValue) => state.didChange(newValue),
-          ),
-          const SizedBox(width: Insets.med),
-          Text(label),
-        ],
+      builder: (state) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => state.didChange(!state.value!),
+        child: Row(
+          children: [
+            Checkbox(
+              value: state.value,
+              onChanged: (newValue) => state.didChange(newValue),
+            ),
+            const SizedBox(width: Insets.med),
+            Text(label),
+          ],
+        ),
       ),
     );
   }

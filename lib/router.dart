@@ -8,7 +8,7 @@ import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen.dart';
-import 'package:dragonator/screens/races_screen.dart';
+import 'package:dragonator/screens/lineup_screen.dart';
 import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +22,7 @@ import 'package:go_router/go_router.dart';
 abstract class RoutePaths {
   static String splash = '/';
   static String roster = '/roster';
-  static String races = '/races';
+  static String lineup = '/lineup';
   static String profile = '/profile';
   static String login = '/logIn';
   static String signUp = '/signUp';
@@ -92,9 +92,9 @@ class AppRouter {
               ],
             ),
             AppRoute(
-              path: RoutePaths.races,
+              path: RoutePaths.lineup,
               isNavBarTab: true,
-              builder: (_) => const RacesScreen(),
+              builder: (_) => const LineupScreen(),
             ),
             AppRoute(
               path: RoutePaths.profile,

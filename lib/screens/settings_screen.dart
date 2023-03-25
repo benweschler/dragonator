@@ -2,6 +2,7 @@ import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/widgets/buttons/option_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,18 +44,35 @@ class SettingsScreen extends StatelessWidget {
         child: Selector<AppModel, AppUser?>(
           selector: (_, model) => model.user,
           builder: (context, user, child) {
-            if(user == null) {
+            if (user == null) {
               return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                child!,
-              ],
-            );
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  child!,
+                ],
+              );
             }
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OptionButton(
+                      onTap: () =>
+                      context.read<AppModel>().themeType = ThemeType.light,
+                      icon: Icons.light_mode_rounded,
+                    ),
+                    const SizedBox(width: Insets.med),
+                    OptionButton(
+                      onTap: () =>
+                      context.read<AppModel>().themeType = ThemeType.dark,
+                      icon: Icons.dark_mode_rounded,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Insets.med),
                 Text('${user.lastName}, ${user.firstName}'),
                 Text('ID: ${user.id}'),
                 Text('Email: ${user.email}'),

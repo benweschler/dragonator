@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 enum ThemeType {
   light,
+  dark,
 }
 
 class AppColors extends ThemeExtension<AppColors> {
@@ -13,6 +14,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color largeSurface;
   final Color errorSurface;
   final Color neutralContent;
+  final Color primaryContainer;
+  final Color onPrimaryContainer;
+  final Color tabHighlightColor;
   final bool isDark;
 
   const AppColors._({
@@ -21,6 +25,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.largeSurface,
     required this.errorSurface,
     required this.neutralContent,
+    required this.primaryContainer,
+    required this.onPrimaryContainer,
+    required this.tabHighlightColor,
     required this.isDark,
   });
 
@@ -33,7 +40,22 @@ class AppColors extends ThemeExtension<AppColors> {
           largeSurface: Colors.black.withOpacity(0.04),
           errorSurface: _primaryRed.withOpacity(0.25),
           neutralContent: Colors.black.withOpacity(0.5),
+          primaryContainer: Colors.black,
+          onPrimaryContainer: Colors.white,
+          tabHighlightColor: _primaryRed.withOpacity(0.2),
           isDark: false,
+        );
+      case ThemeType.dark:
+        return AppColors._(
+          accent: _primaryRed,
+          smallSurface: Colors.white.withOpacity(0.07),
+          largeSurface: Colors.white.withOpacity(0.04),
+          errorSurface: _primaryRed.withOpacity(0.25),
+          neutralContent: Colors.white.withOpacity(0.5),
+          primaryContainer: Colors.white,
+          onPrimaryContainer: Colors.black,
+          tabHighlightColor: _primaryRed.withOpacity(0.5),
+          isDark: true,
         );
     }
   }
@@ -49,9 +71,12 @@ class AppColors extends ThemeExtension<AppColors> {
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
     return themeData.copyWith(
-        colorScheme: themeData.colorScheme.copyWith(
-      primary: accent,
-    ));
+      colorScheme: themeData.colorScheme.copyWith(
+        primary: accent,
+        primaryContainer: primaryContainer,
+        onPrimaryContainer: onPrimaryContainer,
+      ),
+    );
   }
 
   static AppColors of(BuildContext context) =>
@@ -64,6 +89,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? largeSurface,
     Color? errorSurface,
     Color? neutralContent,
+    Color? primaryContainer,
+    Color? onPrimaryContainer,
+    Color? tabHighlightColor,
     bool? isDark,
   }) {
     return AppColors._(
@@ -72,6 +100,9 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: largeSurface ?? this.largeSurface,
       errorSurface: errorSurface ?? this.errorSurface,
       neutralContent: neutralContent ?? this.neutralContent,
+      primaryContainer: primaryContainer ?? this.primaryContainer,
+      onPrimaryContainer: onPrimaryContainer ?? this.onPrimaryContainer,
+      tabHighlightColor: tabHighlightColor ?? this.tabHighlightColor,
       isDark: isDark ?? this.isDark,
     );
   }
@@ -86,6 +117,9 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       errorSurface: Color.lerp(errorSurface, other.errorSurface, t)!,
       neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
+      primaryContainer: Color.lerp(primaryContainer, other.primaryContainer, t)!,
+      onPrimaryContainer: Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
+      tabHighlightColor: Color.lerp(tabHighlightColor, other.tabHighlightColor, t)!,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }

@@ -1,5 +1,12 @@
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/widgets.dart';
+
+/// A light-colored overlay that is used when the theme is light.
+const _kLightOverlayColor = Color(0x80FFFFFF);
+
+/// A dark-colored overlay that is used when the theme is light.
+const _kDarkOverlayColor = Color(0x80000000);
 
 /// A button that plays a scale animation and exposes an animated overlay color,
 /// both of which animate when the button is pressed.
@@ -10,7 +17,6 @@ import 'package:flutter/widgets.dart';
 class ResponsiveButton extends StatefulWidget {
   final GestureTapCallback? onTap;
   final Widget Function(Color overlayColor) builder;
-  final Color _overlayColor = const Color(0x80FFFFFF);
   final double _scaleLowerBound;
 
   /// A button that adds a light overlay when tapped.
@@ -37,6 +43,8 @@ class ResponsiveButton extends StatefulWidget {
 
 class _ResponsiveButtonState extends State<ResponsiveButton>
     with SingleTickerProviderStateMixin {
+  late final _overlayColor =
+      AppColors.of(context).isDark ? _kDarkOverlayColor : _kLightOverlayColor;
   late final _controller = AnimationController(
     duration: Timings.short,
     vsync: this,
@@ -89,8 +97,8 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
           onPressed: onPressed,
           child: widget.builder(
             Color.lerp(
-              widget._overlayColor.withOpacity(0),
-              widget._overlayColor,
+              _overlayColor.withOpacity(0),
+              _overlayColor,
               _controller.value,
             )!,
           ),

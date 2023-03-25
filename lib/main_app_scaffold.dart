@@ -19,9 +19,9 @@ class MainAppScaffold extends StatefulWidget {
       label: 'Roster',
     ),
     NavigationTab(
-      rootLocation: RoutePaths.races,
-      icon: Icons.analytics_outlined,
-      label: 'Races',
+      rootLocation: RoutePaths.lineup,
+      icon: Icons.library_books_outlined,
+      label: 'Lineups',
     ),
     NavigationTab(
       rootLocation: RoutePaths.profile,
@@ -48,7 +48,9 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
          * and reference AppColors instead. This default text style should only be used
          * as the underlying default.
          */
-        style: TextStyles.body1,
+        style: TextStyles.body1.copyWith(
+          color: AppColors.of(context).isDark ? Colors.white : Colors.black,
+        ),
         // Use a Stack to allow the body to extend behind the navigation bar,
         // ensuring that each page's Scaffold is the full height of the screen.
         // Scaffolds that aren't the full height of the display cause errors,
@@ -186,11 +188,9 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
       transform: Matrix4.skewX(0.35),
       alignment: Alignment.center,
       child: Container(
-        width: 1.1 * _kNavBarIconSize,
-        height: 1.1 * _kNavBarIconSize,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.of(context).accent.withOpacity(0.2),
+          color: AppColors.of(context).tabHighlightColor,
         ),
       ),
     );
@@ -212,14 +212,18 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
                   ),
                 ),
               ),
-              Icon(widget.icon, size: _kNavBarIconSize),
+              // Add padding around the icon to make the active tab highlight
+              // larger.
+              Padding(
+                padding: const EdgeInsets.all(1),
+                child: Icon(widget.icon, size: _kNavBarIconSize),
+              ),
             ],
           ),
           const SizedBox(height: Insets.xs),
           Text(
             widget.label,
             style: TextStyles.caption.copyWith(
-              color: Colors.black,
               fontWeight: FontWeight.w600,
             ),
           ),

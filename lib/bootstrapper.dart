@@ -9,10 +9,7 @@ class Bootstrapper {
   Bootstrapper(this.appModel) : firebaseAuth = FirebaseAuth.instance;
 
   Future<void> initializeApp() async {
-    await Future.delayed(const Duration(seconds: 2));
-
     await _loadUser();
-
     appModel.isInitialized = true;
   }
 
