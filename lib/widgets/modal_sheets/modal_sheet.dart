@@ -2,12 +2,10 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class ModalSheet extends StatelessWidget {
-  final Color backgroundColor;
   final Widget child;
 
   const ModalSheet({
     Key? key,
-    required this.backgroundColor,
     required this.child,
   }) : super(key: key);
 
@@ -23,7 +21,7 @@ class ModalSheet extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(Insets.sm),
               decoration: BoxDecoration(
-                color: backgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: Corners.medBorderRadius,
               ),
               child: child,

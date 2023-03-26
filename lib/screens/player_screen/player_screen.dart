@@ -4,7 +4,7 @@ import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/widgets/buttons/action_button_card.dart';
 import 'package:dragonator/widgets/buttons/custom_back_button.dart';
-import 'package:dragonator/widgets/buttons/option_button.dart';
+import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/labeled_table.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class PlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       leading: const CustomBackButton(),
-      trailing: OptionButton(
+      trailing: CustomIconButton(
         onTap: () => context.push(RoutePaths.editPlayer(playerID: playerID)),
         icon: Icons.edit_rounded,
       ),

@@ -2,7 +2,7 @@ import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/widgets/buttons/option_button.dart';
+import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,13 +59,13 @@ class SettingsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    OptionButton(
+                    CustomIconButton(
                       onTap: () =>
                       context.read<AppModel>().themeType = ThemeType.light,
                       icon: Icons.light_mode_rounded,
                     ),
                     const SizedBox(width: Insets.med),
-                    OptionButton(
+                    CustomIconButton(
                       onTap: () =>
                       context.read<AppModel>().themeType = ThemeType.dark,
                       icon: Icons.dark_mode_rounded,

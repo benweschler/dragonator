@@ -2,12 +2,11 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
-//TODO: this is probably a bad way to encapsulate this widget. Also, add documentation.
-class OptionButton extends StatelessWidget {
+class CustomIconButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final IconData icon;
 
-  const OptionButton({
+  const CustomIconButton({
     Key? key,
     required this.onTap,
     required this.icon,

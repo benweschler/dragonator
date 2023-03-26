@@ -6,7 +6,7 @@ import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/widgets/buttons/option_button.dart';
+import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -68,12 +68,12 @@ class EditPlayerScreen extends StatelessWidget {
     final player = rosterModel.getPlayer(playerID);
 
     return CustomScaffold(
-      leading: OptionButton(onTap: context.pop, icon: Icons.close_rounded),
+      leading: CustomIconButton(onTap: context.pop, icon: Icons.close_rounded),
       center: Text(
         playerID == null ? 'Create Player' : 'Edit Player',
         style: TextStyles.title1,
       ),
-      trailing: OptionButton(
+      trailing: CustomIconButton(
         onTap: () {
           if (!_formKey.currentState!.saveAndValidate()) return;
           _savePlayer(rosterModel, player);

@@ -29,7 +29,6 @@ class _SelectionMenuState extends State<SelectionMenu> {
   @override
   Widget build(BuildContext context) {
     return ModalSheet(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Scrollbar(
         thumbVisibility: true,
         child: SingleChildScrollView(

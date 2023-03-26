@@ -10,7 +10,6 @@ class RosterModel extends EasyNotifier {
 
   final Set<String> _ageGroups = {};
 
-  //TODO: check if these will allow modification of the underlying models
   Iterable<Player> get players => _playerIDMap.values;
 
   Iterable<Team> get teams => _teamIDMap.values;

@@ -7,7 +7,8 @@ import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
-import 'package:dragonator/widgets/buttons/option_button.dart';
+import 'package:dragonator/utils/player_sorting.dart';
+import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -35,6 +36,7 @@ class _RosterScreenState extends State<RosterScreen> {
         final teams = rosterModel.teams.toList();
 
         return CustomScaffold(
+          addScreenInset: false,
           floatingActionButton: CustomFAB(
             child: const Icon(Icons.add_rounded),
             onTap: () => context.go(RoutePaths.editPlayer(
@@ -75,7 +77,7 @@ class _RosterScreenState extends State<RosterScreen> {
   }
 }
 
-class _RosterContent extends StatelessWidget {
+class _RosterContent extends StatefulWidget {
   final Team team;
   final RosterModel rosterModel;
 
@@ -85,45 +87,120 @@ class _RosterContent extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  int alphabeticalSort(a, b) => a.firstName.compareTo(b.firstName);
+  @override
+  State<_RosterContent> createState() => _RosterContentState();
+}
+
+class _RosterContentState extends State<_RosterContent> {
+  var sortingStrategy = PlayerSort.sortingStrategyLabels.keys.first;
+  bool reverseSort = false;
 
   @override
   Widget build(BuildContext context) {
     final List<Player> players = [
-      for (String id in team.playerIDs) rosterModel.getPlayer(id)!
+      for (String id in widget.team.playerIDs) widget.rosterModel.getPlayer(id)!
     ];
 
-    if (team.playerIDs.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Roster', style: TextStyles.h1),
-          Expanded(
-            child: Center(
-              child: Text(
-                'No players in ${team.name}',
+    if (widget.team.playerIDs.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Roster', style: TextStyles.h1),
+            Expanded(
+              child: Center(
+                child: Text(
+                  'No players in ${widget.team.name}',
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
 
-    final Widget heading = Row(
-      children: [
-        const Text('Roster', style: TextStyles.h1),
-        const Spacer(),
-        OptionButton(onTap: () => {}, icon: Icons.sort_rounded),
-        const SizedBox(width: Insets.med),
-        OptionButton(onTap: () {}, icon: Icons.filter_alt_rounded),
-      ],
+    final Widget filterRow = SingleChildScrollView(
+      padding: EdgeInsets.zero,
+      scrollDirection: Axis.horizontal,
+      clipBehavior: Clip.none,
+      child: Row(
+        children: <Widget>[
+          ChipButton(
+            isActive: true,
+            onTap: () => context.showModal(SelectionMenu(
+              items: PlayerSort.sortingStrategyLabels.keys.toList(),
+              initiallySelectedIndex: PlayerSort.sortingStrategyLabels.keys
+                  .toList()
+                  .indexOf(sortingStrategy),
+              onItemTap: (index) => setState(() => sortingStrategy =
+                  PlayerSort.sortingStrategyLabels.keys.toList()[index]),
+            )),
+            child: Row(
+              children: const [
+                Icon(Icons.sort_rounded),
+                SizedBox(width: Insets.xs),
+                Text('Sort'),
+              ],
+            ),
+          ),
+          ChipButton(
+            onTap: () {},
+            child: Row(
+              children: [
+                const Text('Gender'),
+                const SizedBox(width: Insets.xs),
+                Transform.rotate(
+                  angle: pi/2,
+                  child: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          ),
+          ChipButton(
+            onTap: () {},
+            child: Row(
+              children: [
+                const Text('Side Preference'),
+                const SizedBox(width: Insets.xs),
+                Transform.rotate(
+                  angle: pi/2,
+                  child: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          ),
+          ChipButton(
+            onTap: () {},
+            child: Row(
+              children: [
+                const Text('Age Group'),
+                const SizedBox(width: Insets.xs),
+                Transform.rotate(
+                  angle: pi/2,
+                  child: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          ),
+        ].separate(const SizedBox(width: Insets.sm)).toList(),
+      ),
     );
 
-    final sortedPlayers = players..sort(alphabeticalSort);
+    Iterable<Player> sortedPlayers = players
+      ..sort(PlayerSort.sortingStrategyLabels[sortingStrategy]);
+
+    if (reverseSort) {
+      sortedPlayers = players.reversed;
+    }
 
     return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
       children: [
-        heading,
+        const Text('Roster', style: TextStyles.h1),
+        const SizedBox(height: Insets.xs),
+        filterRow,
+        const SizedBox(height: Insets.sm),
         ...sortedPlayers
             .map<Widget>((player) => PlayerPreviewCard(player))
             //TODO: used divider
@@ -132,13 +209,4 @@ class _RosterContent extends StatelessWidget {
       ],
     );
   }
-}
-
-enum SortingStrategy {
-  firstName,
-  lastName,
-  weight,
-  gender,
-  sidePreference,
-  ageGroup,
 }

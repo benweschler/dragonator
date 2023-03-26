@@ -9,6 +9,11 @@ class CustomScaffold extends StatelessWidget {
   final Widget? center;
   final Widget? trailing;
   final Widget? floatingActionButton;
+
+  /// Whether the scaffold should horizontally inset its body from the edge of
+  /// the display.
+  final bool addScreenInset;
+
   final Widget child;
 
   const CustomScaffold({
@@ -17,6 +22,7 @@ class CustomScaffold extends StatelessWidget {
     this.trailing,
     this.center,
     this.floatingActionButton,
+    this.addScreenInset = true,
     required this.child,
   }) : super(key: key);
 
@@ -24,7 +30,9 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget body = SafeArea(
       bottom: false,
-      minimum: const EdgeInsets.symmetric(horizontal: Insets.offset),
+      minimum: addScreenInset
+          ? const EdgeInsets.symmetric(horizontal: Insets.offset)
+          : EdgeInsets.zero,
       child: child,
     );
 
@@ -147,4 +155,3 @@ class _DummyNavigationBar extends StatelessWidget {
     );
   }
 }
-

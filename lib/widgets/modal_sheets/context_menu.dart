@@ -16,7 +16,6 @@ class ContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ModalSheet(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Scrollbar(
         thumbVisibility: true,
         child: SingleChildScrollView(
