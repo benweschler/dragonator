@@ -42,7 +42,7 @@ class ChipButton extends StatelessWidget {
               );
 
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           decoration: decoration,
           child: DefaultTextStyle.merge(
             style: TextStyle(color: contentColor, fontWeight: FontWeight.w500),

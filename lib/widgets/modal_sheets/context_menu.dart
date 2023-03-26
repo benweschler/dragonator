@@ -34,14 +34,14 @@ class ContextMenu extends StatelessWidget {
 
 class ContextMenuAction extends StatelessWidget {
   final IconData icon;
-  final String label;
   final GestureTapCallback onTap;
+  final String label;
 
   const ContextMenuAction({
     Key? key,
     required this.icon,
-    required this.label,
     required this.onTap,
+    required this.label,
   }) : super(key: key);
 
   @override
@@ -60,12 +60,7 @@ class ContextMenuAction extends StatelessWidget {
           children: [
             Icon(icon),
             const SizedBox(width: Insets.lg),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyles.body1.copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
+            Expanded(child: Text(label)),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:dragonator/data/player.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/roster_screen/sorting_options_menu.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
@@ -35,6 +36,31 @@ class _RosterScreenState extends State<RosterScreen> {
       builder: (context, rosterModel, _) {
         final teams = rosterModel.teams.toList();
 
+        final changeTeamButton = ResponsiveStrokeButton(
+          onTap: () => context.showModal(SelectionMenu(
+            items: teams.map((team) => team.name).toList(),
+            initiallySelectedIndex: selectedTeamIndex,
+            onItemTap: (newTeamIndex) {
+              if (selectedTeamIndex != newTeamIndex) {
+                setState(() => selectedTeamIndex = newTeamIndex);
+              }
+            },
+          )),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${teams[selectedTeamIndex].name} ',
+                style: TextStyles.title1,
+              ),
+              Transform.rotate(
+                angle: pi / 2,
+                child: const Icon(Icons.chevron_right_rounded),
+              ),
+            ],
+          ),
+        );
+
         return CustomScaffold(
           addScreenInset: false,
           floatingActionButton: CustomFAB(
@@ -43,40 +69,21 @@ class _RosterScreenState extends State<RosterScreen> {
               teamID: teams[selectedTeamIndex].id,
             )),
           ),
-          center: ResponsiveStrokeButton(
-            onTap: () => context.showModal(SelectionMenu(
-              items: teams.map((team) => team.name).toList(),
-              initiallySelectedIndex: selectedTeamIndex,
-              onItemTap: (newTeamIndex) {
-                if (selectedTeamIndex != newTeamIndex) {
-                  setState(() => selectedTeamIndex = newTeamIndex);
-                }
-              },
-            )),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${teams[selectedTeamIndex].name} ',
-                  style: TextStyles.title1,
+          center: changeTeamButton,
+          child: teams[selectedTeamIndex].playerIDs.isEmpty
+              ? _EmptyRoster(teamName: teams[selectedTeamIndex].name)
+              : _RosterContent(
+                  team: teams[selectedTeamIndex],
+                  rosterModel: rosterModel,
                 ),
-                Transform.rotate(
-                  angle: pi / 2,
-                  child: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
-            ),
-          ),
-          child: _RosterContent(
-            team: teams[selectedTeamIndex],
-            rosterModel: rosterModel,
-          ),
         );
       },
     );
   }
 }
 
+//TODO: naming of state variables needs to be improved
+//TODO: state management should be moved to a provider
 class _RosterContent extends StatefulWidget {
   final Team team;
   final RosterModel rosterModel;
@@ -93,32 +100,13 @@ class _RosterContent extends StatefulWidget {
 
 class _RosterContentState extends State<_RosterContent> {
   var sortingStrategy = PlayerSort.sortingStrategyLabels.keys.first;
-  bool reverseSort = false;
+  bool sortIncreasing = true;
 
   @override
   Widget build(BuildContext context) {
     final List<Player> players = [
       for (String id in widget.team.playerIDs) widget.rosterModel.getPlayer(id)!
     ];
-
-    if (widget.team.playerIDs.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Roster', style: TextStyles.h1),
-            Expanded(
-              child: Center(
-                child: Text(
-                  'No players in ${widget.team.name}',
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
 
     final Widget filterRow = SingleChildScrollView(
       padding: EdgeInsets.zero,
@@ -128,13 +116,14 @@ class _RosterContentState extends State<_RosterContent> {
         children: <Widget>[
           ChipButton(
             isActive: true,
-            onTap: () => context.showModal(SelectionMenu(
-              items: PlayerSort.sortingStrategyLabels.keys.toList(),
-              initiallySelectedIndex: PlayerSort.sortingStrategyLabels.keys
-                  .toList()
-                  .indexOf(sortingStrategy),
-              onItemTap: (index) => setState(() => sortingStrategy =
-                  PlayerSort.sortingStrategyLabels.keys.toList()[index]),
+            onTap: () => context.showModal(SortingOptionsMenu(
+              sortingStrategies: PlayerSort.sortingStrategyLabels.keys,
+              initiallySelectedStrategy: sortingStrategy,
+              sortIncreasing: sortIncreasing,
+              onSave: (newStrategy, isIncreasing) => setState(() {
+                sortingStrategy = newStrategy;
+                sortIncreasing = isIncreasing;
+              }),
             )),
             child: Row(
               children: const [
@@ -144,45 +133,20 @@ class _RosterContentState extends State<_RosterContent> {
               ],
             ),
           ),
-          ChipButton(
-            onTap: () {},
-            child: Row(
-              children: [
-                const Text('Gender'),
-                const SizedBox(width: Insets.xs),
-                Transform.rotate(
-                  angle: pi/2,
-                  child: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
+          for(String label in ['Gender', 'Side Preference', 'Age Group'])
+            ChipButton(
+              onTap: () {},
+              child: Row(
+                children: [
+                  Text(label),
+                  const SizedBox(width: Insets.xs),
+                  Transform.rotate(
+                    angle: pi / 2,
+                    child: const Icon(Icons.chevron_right_rounded),
+                  ),
+                ],
+              ),
             ),
-          ),
-          ChipButton(
-            onTap: () {},
-            child: Row(
-              children: [
-                const Text('Side Preference'),
-                const SizedBox(width: Insets.xs),
-                Transform.rotate(
-                  angle: pi/2,
-                  child: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
-            ),
-          ),
-          ChipButton(
-            onTap: () {},
-            child: Row(
-              children: [
-                const Text('Age Group'),
-                const SizedBox(width: Insets.xs),
-                Transform.rotate(
-                  angle: pi/2,
-                  child: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
-            ),
-          ),
         ].separate(const SizedBox(width: Insets.sm)).toList(),
       ),
     );
@@ -190,7 +154,7 @@ class _RosterContentState extends State<_RosterContent> {
     Iterable<Player> sortedPlayers = players
       ..sort(PlayerSort.sortingStrategyLabels[sortingStrategy]);
 
-    if (reverseSort) {
+    if (!sortIncreasing) {
       sortedPlayers = players.reversed;
     }
 
@@ -207,6 +171,32 @@ class _RosterContentState extends State<_RosterContent> {
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
       ],
+    );
+  }
+}
+
+class _EmptyRoster extends StatelessWidget {
+  final String teamName;
+
+  const _EmptyRoster({Key? key, required this.teamName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Roster', style: TextStyles.h1),
+          Expanded(
+            child: Center(
+              child: Text(
+                'No players in $teamName',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

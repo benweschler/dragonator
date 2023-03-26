@@ -70,6 +70,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
   /// Otherwise, the animation reverses. If the button is pressed while the
   /// animation is reversing, it plays forward.
   void onPressed(bool isPressed) {
+    //TODO: consider only calling onTap when the button's forward animation is completed
     if (isPressed) {
       pressedState = true;
       if (_controller.isDismissed ||

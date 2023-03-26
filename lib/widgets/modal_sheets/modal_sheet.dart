@@ -11,23 +11,26 @@ class ModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const _ModalSheetHandle(),
-          const SizedBox(height: Insets.xs),
-          Flexible(
-            child: Container(
-              margin: const EdgeInsets.all(Insets.sm),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: Corners.medBorderRadius,
+    return DefaultTextStyle.merge(
+      style: TextStyles.body1.copyWith(fontWeight: FontWeight.w600),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _ModalSheetHandle(),
+            const SizedBox(height: Insets.xs),
+            Flexible(
+              child: Container(
+                margin: const EdgeInsets.all(Insets.sm),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: Corners.medBorderRadius,
+                ),
+                child: child,
               ),
-              child: child,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -36,7 +36,7 @@ class _SelectionMenuState extends State<SelectionMenu> {
             mainAxisSize: MainAxisSize.min,
             children: List<Widget>.generate(
               widget.items.length,
-              (index) => _SelectionMenuItem(
+              (index) => SelectionMenuTile(
                 label: widget.items[index],
                 isSelected: index == selectedItemIndex,
                 onTap: () {
@@ -59,12 +59,13 @@ class _SelectionMenuState extends State<SelectionMenu> {
   }
 }
 
-class _SelectionMenuItem extends StatelessWidget {
+//TODO: use ResponsiveStrokeButton
+class SelectionMenuTile extends StatelessWidget {
   final String label;
   final bool isSelected;
   final GestureTapCallback onTap;
 
-  const _SelectionMenuItem({
+  const SelectionMenuTile({
     Key? key,
     required this.label,
     required this.isSelected,
@@ -75,19 +76,16 @@ class _SelectionMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Insets.offset,
-          vertical: Insets.lg,
-        ),
+        padding: const EdgeInsets.all(Insets.lg),
         child: Row(
           children: [
             Expanded(
               child: Text(
                 label,
-                style: TextStyles.body1.copyWith(
+                style: TextStyle(
                   color: isSelected ? AppColors.of(context).accent : null,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
