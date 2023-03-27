@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
+import 'package:dragonator/screens/forgot_password_screen/forgot_password_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
@@ -24,14 +25,15 @@ abstract class RoutePaths {
   static String roster = '/roster';
   static String lineup = '/lineup';
   static String profile = '/profile';
-  static String login = '/logIn';
-  static String signUp = '/signUp';
+  static String logIn = '/log-in';
+  static String forgotPassword = '$logIn/forgot-password';
+  static String signUp = '/sign-up';
 
-  static String player(String id) => '/roster/player/$id';
+  static String player(String id) => '$roster/player/$id';
 
   static String editPlayer({String? playerID, String? teamID}) =>
       _appendQueryParams(
-        '/roster/edit-player',
+        '$roster/edit-player',
         {'playerID': playerID, 'teamID': teamID},
       );
 }
@@ -56,13 +58,18 @@ class AppRouter {
           builder: (_) => const SplashScreen(),
         ),
         AppRoute(
-          path: RoutePaths.login,
+          path: RoutePaths.logIn,
           isNavBarTab: true,
           builder: (_) => const LoginScreen(),
+          routes: [
+            AppRoute(
+              path: 'forgot-password',
+              builder: (_) => const ForgotPasswordScreen(),
+            ),
+          ],
         ),
         AppRoute(
           path: RoutePaths.signUp,
-          isNavBarTab: true,
           builder: (_) => SignUpScreen(),
         ),
         ShellRoute(
@@ -111,9 +118,10 @@ class AppRouter {
     final path = state.subloc;
 
     if (!appModel.isLoggedIn &&
-        path != RoutePaths.login &&
-        path != RoutePaths.signUp) {
-      return RoutePaths.login;
+        path != RoutePaths.logIn &&
+        path != RoutePaths.signUp &&
+        path != RoutePaths.forgotPassword) {
+      return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isInitialized && path != RoutePaths.splash) {
         appModel.initializeApp();

@@ -60,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final appColors = AppColors.of(context);
 
+    // No need for a [CustomScaffold] since neither the app bar nor a screen
+    // offset is used.
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: Insets.xl),
@@ -67,14 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Center(
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Center(
-                    child: Text(
-                      'Log In',
-                      style: TextStyles.h2,
-                    ),
-                  ),
+                  const Text('Log In', style: TextStyles.h2),
                   const SizedBox(height: Insets.xl),
                   TextField(
                     controller: _emailController,
@@ -101,6 +97,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: CustomInputDecoration(
                       appColors,
                       hintText: 'Password',
+                    ),
+                  ),
+                  const SizedBox(height: Insets.sm),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ResponsiveStrokeButton(
+                      onTap: () => context.go(RoutePaths.forgotPassword),
+                      child: Text(
+                        'Forgot Password',
+                        style: TextStyles.body2.copyWith(
+                          color: AppColors.of(context).accent,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                   if (errorMessage != null) ...[
@@ -132,15 +142,17 @@ class GoToSignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveButton.large(
+    return ResponsiveStrokeButton(
+      // Go must be used in order to play a page transition animation when
+      // navigating back to the login screen.
       onTap: () => context.push(RoutePaths.signUp),
-      builder: (overlay) => Center(
+      child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.med),
           child: Text(
             'Sign Up',
             style: TextStyles.body1.copyWith(
-              color: Color.alphaBlend(overlay, AppColors.of(context).accent),
+              color: AppColors.of(context).accent,
               fontWeight: FontWeight.w600,
             ),
           ),

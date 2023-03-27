@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 /// A button that should be used to execute asynchronous actions that can
 /// display a loading indicator.
 class AsyncActionButton<T extends Object> extends StatefulWidget {
-  final String label;
   final bool isEnabled;
+  final String label;
   final Future? Function() action;
   final void Function(T error)? catchError;
 
   const AsyncActionButton({
     Key? key,
+    this.isEnabled = true,
     required this.label,
-    required this.isEnabled,
     required this.action,
     required this.catchError,
   }) : super(key: key);

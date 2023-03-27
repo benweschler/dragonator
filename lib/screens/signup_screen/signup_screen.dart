@@ -77,7 +77,7 @@ class SignUpScreen extends StatelessWidget {
 
     return CustomScaffold(
       leading: ResponsiveStrokeButton(
-        onTap: () => context.go(RoutePaths.login),
+        onTap: () => context.go(RoutePaths.logIn),
         child: const Icon(Icons.arrow_back_ios_rounded),
       ),
       child: Center(
@@ -212,7 +212,6 @@ class SignUpScreen extends StatelessWidget {
                   AsyncActionButton<FirebaseAuthException>(
                     key: _signUpButtonKey,
                     label: 'Sign Up',
-                    isEnabled: true,
                     action: () async {
                       if (!_formKey.currentState!.saveAndValidate()) {
                         return;
