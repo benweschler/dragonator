@@ -43,8 +43,6 @@ class ResponsiveButton extends StatefulWidget {
 
 class _ResponsiveButtonState extends State<ResponsiveButton>
     with SingleTickerProviderStateMixin {
-  late final _overlayColor =
-      AppColors.of(context).isDark ? _kDarkOverlayColor : _kLightOverlayColor;
   late final _controller = AnimationController(
     duration: Timings.short,
     vsync: this,
@@ -89,6 +87,9 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
 
   @override
   Widget build(BuildContext context) {
+    final overlayColor =
+        AppColors.of(context).isDark ? _kDarkOverlayColor : _kLightOverlayColor;
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, __) => ScaleTransition(
@@ -98,8 +99,8 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
           onPressed: onPressed,
           child: widget.builder(
             Color.lerp(
-              _overlayColor.withOpacity(0),
-              _overlayColor,
+              overlayColor.withOpacity(0),
+              overlayColor,
               _controller.value,
             )!,
           ),
