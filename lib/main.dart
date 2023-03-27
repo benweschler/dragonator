@@ -1,8 +1,10 @@
+//TODO: set preferred device orientation on android
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'data/dummy_data.dart';
@@ -13,8 +15,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  //TODO: set preferred device orientation on android
 
   final appModel = AppModel();
 
@@ -36,16 +36,20 @@ class MyApp extends StatelessWidget {
 
   const MyApp(this.router, {super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Dragonator',
-      debugShowCheckedModeBanner: false,
-      theme: AppColors.fromType(
-        context.watch<AppModel>().themeType,
-      ).toThemeData(),
-      routerConfig: router,
+    final appColors = AppColors.fromType(context.watch<AppModel>().themeType);
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: appColors.isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: MaterialApp.router(
+        title: 'Dragonator',
+        debugShowCheckedModeBanner: false,
+        theme: appColors.toThemeData(),
+        routerConfig: router,
+      ),
     );
   }
 }

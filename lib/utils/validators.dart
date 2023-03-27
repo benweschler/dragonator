@@ -22,6 +22,7 @@ abstract class Validators {
           : null;
 
   /// Checks if the field value is an email and is non-empty.
+  //TODO: this validator is not as rigorous as firebase's validator
   static String? Function(String?) email({String? errorText}) => (value) {
         if (required().call(value) != null) return errorText ?? '';
         return FormBuilderValidators.email(errorText: errorText ?? '')
