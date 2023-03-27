@@ -60,13 +60,11 @@ class SignUpScreen extends StatelessWidget {
         ? SignUpFieldNames.lastName
         : SignUpFieldNames.firstName;
 
-    final pairedFieldIsFilled = null ==
-        Validators.required().call(
-          _formKey.currentState!.fields[pairedFieldName]!.value,
-        );
+    final pairedFieldHasError =
+        _formKey.currentState!.fields[pairedFieldName]!.hasError;
 
     String? errorText =
-        pairedFieldIsFilled ? unPairedErrorText : pairedErrorText;
+        pairedFieldHasError ? pairedErrorText : unPairedErrorText;
 
     return Validators.required(
       errorText: errorText,
