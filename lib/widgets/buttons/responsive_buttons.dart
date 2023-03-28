@@ -2,12 +2,6 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/widgets.dart';
 
-/// A light-colored overlay that is used when the theme is light.
-const _kLightOverlayColor = Color(0x80FFFFFF);
-
-/// A dark-colored overlay that is used when the theme is light.
-const _kDarkOverlayColor = Color(0x80000000);
-
 /// A button that plays a scale animation and exposes an animated overlay color,
 /// both of which animate when the button is pressed.
 ///
@@ -87,8 +81,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor =
-        AppColors.of(context).isDark ? _kDarkOverlayColor : _kLightOverlayColor;
+    final overlayColor = AppColors.of(context).responsiveOverlayColor;
 
     return AnimatedBuilder(
       animation: _controller,

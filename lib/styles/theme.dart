@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 //TODO: add divider theme equal to divider at top of nav bar
 
-enum ThemeType {
-  light,
-  dark,
-}
+enum ThemeType { light, dark }
 
 class AppColors extends ThemeExtension<AppColors> {
   static const _primaryRed = Color(0xFFE55C45);
@@ -17,6 +14,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color primaryContainer;
   final Color onPrimaryContainer;
   final Color tabHighlightColor;
+  final Color responsiveOverlayColor;
   final bool isDark;
 
   const AppColors._({
@@ -28,6 +26,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.primaryContainer,
     required this.onPrimaryContainer,
     required this.tabHighlightColor,
+    required this.responsiveOverlayColor,
     required this.isDark,
   });
 
@@ -43,6 +42,7 @@ class AppColors extends ThemeExtension<AppColors> {
           primaryContainer: Colors.black,
           onPrimaryContainer: Colors.white,
           tabHighlightColor: _primaryRed.withOpacity(0.2),
+          responsiveOverlayColor: Colors.white.withOpacity(0.5),
           isDark: false,
         );
       case ThemeType.dark:
@@ -55,6 +55,7 @@ class AppColors extends ThemeExtension<AppColors> {
           primaryContainer: Colors.white,
           onPrimaryContainer: Colors.black,
           tabHighlightColor: _primaryRed.withOpacity(0.5),
+          responsiveOverlayColor: Colors.black.withOpacity(0.5),
           isDark: true,
         );
     }
@@ -92,6 +93,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? primaryContainer,
     Color? onPrimaryContainer,
     Color? tabHighlightColor,
+    Color? responsiveOverlayColor,
     bool? isDark,
   }) {
     return AppColors._(
@@ -103,6 +105,7 @@ class AppColors extends ThemeExtension<AppColors> {
       primaryContainer: primaryContainer ?? this.primaryContainer,
       onPrimaryContainer: onPrimaryContainer ?? this.onPrimaryContainer,
       tabHighlightColor: tabHighlightColor ?? this.tabHighlightColor,
+      responsiveOverlayColor: responsiveOverlayColor ?? this.responsiveOverlayColor,
       isDark: isDark ?? this.isDark,
     );
   }
@@ -120,6 +123,7 @@ class AppColors extends ThemeExtension<AppColors> {
       primaryContainer: Color.lerp(primaryContainer, other.primaryContainer, t)!,
       onPrimaryContainer: Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
       tabHighlightColor: Color.lerp(tabHighlightColor, other.tabHighlightColor, t)!,
+      responsiveOverlayColor: Color.lerp(responsiveOverlayColor, other.responsiveOverlayColor, t)!,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }
