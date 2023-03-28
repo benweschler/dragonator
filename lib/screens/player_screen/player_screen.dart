@@ -111,7 +111,7 @@ class PlayerStatTable extends StatelessWidget {
           ],
         ),
         LabeledTableRow(
-          labels: ['Side Preference', 'Age Group'],
+          labels: ['Side', 'Age Group'],
           stats: [
             Text('${player.sidePreference}', style: TextStyles.title1),
             Text(player.ageGroup, style: TextStyles.title1),

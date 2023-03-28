@@ -125,7 +125,7 @@ class StatSelectorTable extends StatelessWidget {
           stats: [weightField, genderSelector],
         ),
         LabeledTableRow(
-          labels: ['Side Preference', 'Age Group'],
+          labels: ['Side', 'Age Group'],
           stats: [sidePreferenceSelector, ageGroupDropDown],
         ),
       ],

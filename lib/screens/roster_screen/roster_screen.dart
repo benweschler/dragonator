@@ -133,7 +133,7 @@ class _RosterContentState extends State<_RosterContent> {
               ],
             ),
           ),
-          for(String label in ['Gender', 'Side Preference', 'Age Group'])
+          for (String label in ['Gender', 'Side', 'Age Group'])
             ChipButton(
               onTap: () {},
               child: Row(
