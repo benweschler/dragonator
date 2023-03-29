@@ -16,15 +16,11 @@ class ChangeThemeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final appModel = context.read<AppModel>();
     final String label;
-    final bool isSelected;
-    final GestureTapCallback onThemeChange;
     final Widget themeWindow;
 
     switch (themeMode) {
       case ThemeMode.light:
         label = 'Light';
-        onThemeChange = (() => appModel.themeType = ThemeType.light);
-        isSelected = appModel.themeType == ThemeType.light;
         themeWindow = Theme(
           data: AppColors.fromType(ThemeType.light).toThemeData(),
           child: const ThemeWindow(),
@@ -32,8 +28,6 @@ class ChangeThemeButton extends StatelessWidget {
         break;
       case ThemeMode.dark:
         label = 'Dark';
-        onThemeChange = (() => appModel.themeType = ThemeType.dark);
-        isSelected = appModel.themeType == ThemeType.dark;
         themeWindow = Theme(
           data: AppColors.fromType(ThemeType.dark).toThemeData(),
           child: const ThemeWindow(),
@@ -41,18 +35,16 @@ class ChangeThemeButton extends StatelessWidget {
         break;
       case ThemeMode.system:
         label = 'System';
-        onThemeChange = (() => appModel.themeType = ThemeType.dark);
-        isSelected = appModel.themeType == ThemeType.dark;
         themeWindow = Stack(
           children: [
             Theme(
-              data: AppColors.fromType(ThemeType.dark).toThemeData(),
+              data: AppColors.fromType(ThemeType.light).toThemeData(),
               child: const ThemeWindow(),
             ),
             ClipPath(
               clipper: DiagonalClipper(),
               child: Theme(
-                data: AppColors.fromType(ThemeType.light).toThemeData(),
+                data: AppColors.fromType(ThemeType.dark).toThemeData(),
                 child: const ThemeWindow(),
               ),
             ),
@@ -62,7 +54,7 @@ class ChangeThemeButton extends StatelessWidget {
     }
 
     return ResponsiveButton.large(
-      onTap: onThemeChange,
+      onTap: () => appModel.themeMode = themeMode,
       builder: (overlay) => AspectRatio(
         aspectRatio: 0.65,
         child: Stack(
@@ -72,7 +64,7 @@ class ChangeThemeButton extends StatelessWidget {
                 borderRadius: Corners.lgBorderRadius,
                 color: AppColors.of(context).largeSurface,
                 border: Border.all(
-                  color: isSelected
+                  color: appModel.themeMode == themeMode
                       ? AppColors.of(context).accent
                       : Colors.transparent,
                 ),

@@ -38,18 +38,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = AppColors.fromType(context.watch<AppModel>().themeType);
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: appColors.isDark
+      value: _resolveIsDark(context)
           ? SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: MaterialApp.router(
         title: 'Dragonator',
         debugShowCheckedModeBanner: false,
-        theme: appColors.toThemeData(),
+        theme: AppColors.fromType(
+          context.read<AppModel>().lightThemeType,
+        ).toThemeData(),
+        darkTheme: AppColors.fromType(
+          context.read<AppModel>().darkThemeType,
+        ).toThemeData(),
         routerConfig: router,
       ),
     );
+  }
+
+  /// Whether the app's current theme is dark.
+  bool _resolveIsDark(BuildContext context) {
+    switch (context.read<AppModel>().themeMode) {
+      case ThemeMode.system:
+        return MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+      case ThemeMode.light:
+        return false;
+      case ThemeMode.dark:
+        return true;
+    }
   }
 }
