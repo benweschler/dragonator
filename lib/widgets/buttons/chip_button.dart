@@ -3,14 +3,16 @@ import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 class ChipButton extends StatelessWidget {
+  final Color? fillColor;
+  final Color? contentColor;
   final GestureTapCallback onTap;
   final Widget child;
-  final bool isActive;
 
   const ChipButton({
     Key? key,
+    this.fillColor,
+    this.contentColor,
     required this.onTap,
-    this.isActive = false,
     required this.child,
   }) : super(key: key);
 
@@ -19,27 +21,18 @@ class ChipButton extends StatelessWidget {
     return ResponsiveButton(
       onTap: onTap,
       builder: (overlay) {
-        final contentColor = isActive
-            ? Colors.white
-            : Color.alphaBlend(
-                overlay,
-                AppColors.of(context).neutralContent,
-              );
+        final contentColor = this.contentColor ??
+            Color.alphaBlend(overlay, AppColors.of(context).neutralContent);
 
-        final decoration = isActive
-            ? ShapeDecoration(
-                shape: const StadiumBorder(),
-                color: AppColors.of(context).accent,
-              )
-            : ShapeDecoration(
-                shape: StadiumBorder(
-                  side: BorderSide(
-                    //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                  ),
-                ),
-                color: AppColors.of(context).smallSurface,
-              );
+        final decoration = ShapeDecoration(
+          shape: StadiumBorder(
+            side: BorderSide(
+              //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
+              color: fillColor ?? Theme.of(context).colorScheme.outlineVariant,
+            ),
+          ),
+          color: fillColor ?? AppColors.of(context).smallSurface,
+        );
 
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),

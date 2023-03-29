@@ -8,7 +8,7 @@ import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/player_screen/player_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
-import 'package:dragonator/screens/settings_screen.dart';
+import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineup_screen.dart';
 import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';

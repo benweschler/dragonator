@@ -40,7 +40,7 @@ class _SelectionMenuState extends State<SelectionMenu> {
                 label: widget.items[index],
                 isSelected: index == selectedItemIndex,
                 onTap: () {
-                  if(selectedItemIndex != index) {
+                  if (selectedItemIndex != index) {
                     widget.onItemTap(index);
                     setState(() => selectedItemIndex = index);
                     HapticFeedback.lightImpact();
@@ -90,8 +90,12 @@ class SelectionMenuTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: Insets.lg),
-            if (isSelected)
-              Icon(Icons.check_rounded, color: AppColors.of(context).accent),
+            Icon(
+              Icons.check_rounded,
+              color: isSelected
+                  ? AppColors.of(context).accent
+                  : Colors.transparent,
+            ),
           ],
         ),
       ),

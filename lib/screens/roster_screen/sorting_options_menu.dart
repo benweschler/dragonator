@@ -128,12 +128,12 @@ class _ApplyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveButton(
+    return ResponsiveButton.large(
       onTap: () {
         onTap();
         context.pop();
       },
-      builder: (_) => Padding(
+      builder: (overlay) => Padding(
         padding: const EdgeInsets.only(
           top: Insets.xs,
           left: Insets.offset,
@@ -144,7 +144,7 @@ class _ApplyButton extends StatelessWidget {
           padding: const EdgeInsets.all(Insets.med),
           decoration: BoxDecoration(
             borderRadius: Corners.medBorderRadius,
-            color: AppColors.of(context).accent,
+            color: Color.alphaBlend(overlay, AppColors.of(context).accent),
           ),
           child: const Center(
             child: Text(

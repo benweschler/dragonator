@@ -73,8 +73,6 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = AppColors.of(context);
-
     return CustomScaffold(
       leading: ResponsiveStrokeButton(
         onTap: () => context.go(RoutePaths.logIn),
@@ -115,7 +113,7 @@ class SignUpScreen extends StatelessWidget {
                             SignUpFieldNames.firstName,
                           ),
                           decoration: CustomInputDecoration(
-                            appColors,
+                            AppColors.of(context),
                             hintText: 'First Name',
                           ),
                         ),
@@ -138,7 +136,7 @@ class SignUpScreen extends StatelessWidget {
                             pairedErrorText: null,
                           ),
                           decoration: CustomInputDecoration(
-                            appColors,
+                            AppColors.of(context),
                             hintText: 'Last Name',
                             showEmptyErrorText: true,
                           ),
@@ -157,7 +155,7 @@ class SignUpScreen extends StatelessWidget {
                       errorText: 'Enter a valid email',
                     ),
                     decoration: CustomInputDecoration(
-                      appColors,
+                      AppColors.of(context),
                       hintText: 'Email',
                     ),
                   ),
@@ -172,7 +170,7 @@ class SignUpScreen extends StatelessWidget {
                       errorText: 'Enter a password',
                     ),
                     decoration: CustomInputDecoration(
-                      appColors,
+                      AppColors.of(context),
                       hintText: 'Password',
                     ),
                   ),
@@ -195,7 +193,7 @@ class SignUpScreen extends StatelessWidget {
                       ).call(value);
                     },
                     decoration: CustomInputDecoration(
-                      appColors,
+                      AppColors.of(context),
                       hintText: 'Confirm Password',
                     ),
                   ),

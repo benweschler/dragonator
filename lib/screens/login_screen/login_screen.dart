@@ -58,8 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = AppColors.of(context);
-
     // No need for a [CustomScaffold] since neither the app bar nor a screen
     // offset is used.
     return Scaffold(
@@ -81,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onChanged: (_) => updateAreCredentialsEntered(),
                     autofillHints: const [AutofillHints.email],
                     decoration: CustomInputDecoration(
-                      appColors,
+                      AppColors.of(context),
                       hintText: 'Email',
                     ),
                   ),
@@ -95,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _loginButtonKey.currentState!.executeAction(),
                     autofillHints: const [AutofillHints.password],
                     decoration: CustomInputDecoration(
-                      appColors,
+                      AppColors.of(context),
                       hintText: 'Password',
                     ),
                   ),
