@@ -1,15 +1,19 @@
 import 'package:dragonator/data/app_user.dart';
+import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/settings_screen/change_theme_button.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/widgets/buttons/async_action_button.dart';
+import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+//TODO: using divider
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -21,10 +25,15 @@ class SettingsScreen extends StatelessWidget {
           builder: (_, model, themeButtonRow) {
             final user = model.user;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return ListView(
               children: [
-                const Text('Profile', style: TextStyles.h2),
+                Row(
+                  children: [
+                    const Text('Profile', style: TextStyles.h2),
+                    const Spacer(),
+                    CustomIconButton(onTap: () {}, icon: Icons.edit_rounded),
+                  ],
+                ),
                 const SizedBox(height: Insets.sm),
                 ProfileInfo(user),
                 const SizedBox(height: Insets.xl),
@@ -32,14 +41,41 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: Insets.sm),
                 themeButtonRow!,
                 const SizedBox(height: Insets.lg),
-                const Text('Teams', style: TextStyles.h2),
-                const SizedBox(height: Insets.med),
-                AsyncActionButton(
-                  label: 'Log Out',
-                  action: FirebaseAuth.instance.signOut,
-                  //TODO: implement error handling? not sure if it's needed
-                  catchError: (_) {},
+                Row(
+                  children: [
+                    const Text('Teams', style: TextStyles.h2),
+                    const Spacer(),
+                    CustomIconButton(onTap: () {}, icon: Icons.add_rounded),
+                  ],
                 ),
+                const SizedBox(height: Insets.sm),
+                const TeamCard(),
+                const SizedBox(height: Insets.xl),
+                const Divider(height: 0.5, thickness: 0.5),
+                const SizedBox(height: Insets.xl),
+                ResponsiveStrokeButton(
+                  onTap: () => showLicensePage(
+                    context: context,
+                    useRootNavigator: true,
+                  ),
+                  child: const Text(
+                    'About Dragonator',
+                    style: TextStyles.body1,
+                  ),
+                ),
+                const SizedBox(height: Insets.med),
+                ResponsiveStrokeButton(
+                  onTap: FirebaseAuth.instance.signOut,
+                  child: const Text('Log Out', style: TextStyles.body1),
+                ),
+                const SizedBox(height: Insets.lg),
+                Text(
+                  'v1.0.0 — Made with ❤️ and zero calculus',
+                  style: TextStyles.caption.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: Insets.lg),
               ],
             );
           },
@@ -108,6 +144,72 @@ class ProfileInfo extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TeamCard extends StatelessWidget {
+  const TeamCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<RosterModel>(
+      builder: (_, rosterModel, __) {
+        return Container(
+          padding: const EdgeInsets.all(Insets.med),
+          decoration: BoxDecoration(
+            borderRadius: Corners.medBorderRadius,
+            color: AppColors.of(context).largeSurface,
+          ),
+          child: Column(
+            children: <Widget>[
+              for (Team team in rosterModel.teams)
+                TeamTile(
+                  teamName: team.name,
+                  playerNames: team.playerIDs
+                      .map((id) => rosterModel.getPlayer(id)!)
+                      .map(
+                        (player) => '${player.firstName} ${player.lastName}',
+                      )
+                      .toList()
+                    ..sort(),
+                ),
+            ]
+                .separate(const Divider(height: Insets.med * 2, thickness: 0.5))
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class TeamTile extends StatelessWidget {
+  final String teamName;
+  final Iterable<String> playerNames;
+
+  const TeamTile({Key? key, required this.teamName, required this.playerNames})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(teamName, style: TextStyles.body1),
+            Text(
+              playerNames.join(', '),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyles.caption.copyWith(
+                color: AppColors.of(context).neutralContent,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
