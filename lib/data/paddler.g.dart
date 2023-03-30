@@ -1,3 +1,4 @@
+// ignore_for_file: type=lint
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'paddler.dart';
@@ -14,7 +15,7 @@ _$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
       gender: $enumDecode(_$GenderEnumMap, json['gender']),
       sidePreference:
           $enumDecode(_$SidePreferenceEnumMap, json['sidePreference']),
-      ageGroup: json['ageGroup'] as String,
+      ageGroup: $enumDecode(_$AgeGroupEnumMap, json['ageGroup']),
       drummerPreference: json['drummerPreference'] as bool,
       steersPersonPreference: json['steersPersonPreference'] as bool,
       strokePreference: json['strokePreference'] as bool,
@@ -28,7 +29,7 @@ Map<String, dynamic> _$$_PaddlerToJson(_$_Paddler instance) =>
       'weight': instance.weight,
       'gender': _$GenderEnumMap[instance.gender]!,
       'sidePreference': _$SidePreferenceEnumMap[instance.sidePreference]!,
-      'ageGroup': instance.ageGroup,
+      'ageGroup': _$AgeGroupEnumMap[instance.ageGroup]!,
       'drummerPreference': instance.drummerPreference,
       'steersPersonPreference': instance.steersPersonPreference,
       'strokePreference': instance.strokePreference,
@@ -43,4 +44,13 @@ const _$GenderEnumMap = {
 const _$SidePreferenceEnumMap = {
   SidePreference.left: 'left',
   SidePreference.right: 'right',
+};
+
+const _$AgeGroupEnumMap = {
+  AgeGroup.youth: 'youth',
+  AgeGroup.underForty: 'underForty',
+  AgeGroup.forties: 'forties',
+  AgeGroup.fifties: 'fifties',
+  AgeGroup.sixties: 'sixties',
+  AgeGroup.aboveSeventies: 'aboveSeventies',
 };

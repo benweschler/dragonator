@@ -38,30 +38,29 @@ class _RosterScreenState extends State<RosterScreen> {
       builder: (context, rosterModel, _) {
         final teams = rosterModel.teams.toList();
 
-        final changeTeamButton = ResponsiveStrokeButton(
-          onTap: () => context.showModal(SelectionMenu(
-            items: teams.map((team) => team.name).toList(),
-            initiallySelectedIndex: selectedTeamIndex,
-            onItemTap: (newTeamIndex) {
-              if (selectedTeamIndex != newTeamIndex) {
-                setState(() => selectedTeamIndex = newTeamIndex);
-              }
-            },
-          )),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${teams[selectedTeamIndex].name} ',
-                style: TextStyles.title1,
-              ),
-              Transform.rotate(
-                angle: pi / 2,
-                child: const Icon(Icons.chevron_right_rounded),
-              ),
-            ],
-          ),
-        );
+        final hasPaddlers = teams.isNotEmpty
+            ? teams[selectedTeamIndex].paddlerIDs.isNotEmpty
+            : false;
+
+        final appBarCenter = teams.isNotEmpty
+            ? _ChangeTeamButton(
+                teams: teams,
+                selectedTeamIndex: selectedTeamIndex,
+                updateSelectedTeamIndex: (newTeamIndex) =>
+                    setState(() => selectedTeamIndex = newTeamIndex),
+              )
+            : null;
+
+        final content = teams.isNotEmpty && hasPaddlers
+            ? _RosterContent(
+                team: teams[selectedTeamIndex],
+                rosterModel: rosterModel,
+              )
+            : _EmptyRoster(
+                content: hasPaddlers
+                    ? 'No paddlers in ${teams[selectedTeamIndex].name}'
+                    : 'You haven\'t created any teams yet. Head to settings to create your first team.',
+              );
 
         return CustomScaffold(
           addScreenInset: false,
@@ -71,15 +70,51 @@ class _RosterScreenState extends State<RosterScreen> {
               teamID: teams[selectedTeamIndex].id,
             )),
           ),
-          center: changeTeamButton,
-          child: teams[selectedTeamIndex].paddlerIDs.isEmpty
-              ? _EmptyRoster(teamName: teams[selectedTeamIndex].name)
-              : _RosterContent(
-                  team: teams[selectedTeamIndex],
-                  rosterModel: rosterModel,
-                ),
+          center: appBarCenter,
+          child: content,
         );
       },
+    );
+  }
+}
+
+class _ChangeTeamButton extends StatelessWidget {
+  final List<Team> teams;
+  final int selectedTeamIndex;
+  final ValueChanged<int> updateSelectedTeamIndex;
+
+  const _ChangeTeamButton({
+    Key? key,
+    required this.teams,
+    required this.selectedTeamIndex,
+    required this.updateSelectedTeamIndex,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveStrokeButton(
+      onTap: () => context.showModal(SelectionMenu(
+        items: teams.map((team) => team.name).toList(),
+        initiallySelectedIndex: selectedTeamIndex,
+        onItemTap: (newTeamIndex) {
+          if (selectedTeamIndex != newTeamIndex) {
+            updateSelectedTeamIndex(newTeamIndex);
+          }
+        },
+      )),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${teams[selectedTeamIndex].name} ',
+            style: TextStyles.title1,
+          ),
+          Transform.rotate(
+            angle: pi / 2,
+            child: const Icon(Icons.chevron_right_rounded),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -107,7 +142,8 @@ class _RosterContentState extends State<_RosterContent> {
   @override
   Widget build(BuildContext context) {
     final List<Paddler> paddlers = [
-      for (String id in widget.team.paddlerIDs) widget.rosterModel.getPaddler(id)!
+      for (String id in widget.team.paddlerIDs)
+        widget.rosterModel.getPaddler(id)!
     ];
 
     final Widget filterRow = SingleChildScrollView(
@@ -171,9 +207,9 @@ class _RosterContentState extends State<_RosterContent> {
 }
 
 class _EmptyRoster extends StatelessWidget {
-  final String teamName;
+  final String content;
 
-  const _EmptyRoster({Key? key, required this.teamName}) : super(key: key);
+  const _EmptyRoster({Key? key, required this.content}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,12 +218,9 @@ class _EmptyRoster extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Roster', style: TextStyles.h1),
           Expanded(
             child: Center(
-              child: Text(
-                'No paddlers in $teamName',
-              ),
+              child: Text(content, textAlign: TextAlign.center),
             ),
           ),
         ],

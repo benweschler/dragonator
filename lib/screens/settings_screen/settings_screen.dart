@@ -155,29 +155,34 @@ class TeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<RosterModel>(
       builder: (_, rosterModel, __) {
+        final List<Widget> content;
+        if (rosterModel.teams.isEmpty) {
+          content = const [Text('You don\'t have any teams yet')];
+        } else {
+          content = <Widget>[
+            for (Team team in rosterModel.teams)
+              TeamTile(
+                teamName: team.name,
+                paddlerNames: team.paddlerIDs
+                    .map((id) => rosterModel.getPaddler(id)!)
+                    .map(
+                      (paddler) => '${paddler.firstName} ${paddler.lastName}',
+                    )
+                    .toList()
+                  ..sort(),
+              ),
+          ]
+              .separate(const Divider(height: Insets.med * 2, thickness: 0.5))
+              .toList();
+        }
+
         return Container(
           padding: const EdgeInsets.all(Insets.med),
           decoration: BoxDecoration(
             borderRadius: Corners.medBorderRadius,
             color: AppColors.of(context).largeSurface,
           ),
-          child: Column(
-            children: <Widget>[
-              for (Team team in rosterModel.teams)
-                TeamTile(
-                  teamName: team.name,
-                  paddlerNames: team.paddlerIDs
-                      .map((id) => rosterModel.getPaddler(id)!)
-                      .map(
-                        (paddler) => '${paddler.firstName} ${paddler.lastName}',
-                      )
-                      .toList()
-                    ..sort(),
-                ),
-            ]
-                .separate(const Divider(height: Insets.med * 2, thickness: 0.5))
-                .toList(),
-          ),
+          child: Column(children: content),
         );
       },
     );
@@ -200,7 +205,7 @@ class TeamTile extends StatelessWidget {
           children: [
             Text(teamName, style: TextStyles.body1),
             Text(
-              paddlerNames.join(', '),
+              paddlerNames.isNotEmpty ? paddlerNames.join(', ') : 'No paddlers',
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyles.caption.copyWith(

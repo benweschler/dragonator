@@ -26,7 +26,7 @@ mixin _$Paddler {
   int get weight => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
   SidePreference get sidePreference => throw _privateConstructorUsedError;
-  String get ageGroup => throw _privateConstructorUsedError;
+  AgeGroup get ageGroup => throw _privateConstructorUsedError;
   bool get drummerPreference => throw _privateConstructorUsedError;
   bool get steersPersonPreference => throw _privateConstructorUsedError;
   bool get strokePreference => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $PaddlerCopyWith<$Res> {
       int weight,
       Gender gender,
       SidePreference sidePreference,
-      String ageGroup,
+      AgeGroup ageGroup,
       bool drummerPreference,
       bool steersPersonPreference,
       bool strokePreference});
@@ -106,7 +106,7 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
       ageGroup: null == ageGroup
           ? _value.ageGroup
           : ageGroup // ignore: cast_nullable_to_non_nullable
-              as String,
+              as AgeGroup,
       drummerPreference: null == drummerPreference
           ? _value.drummerPreference
           : drummerPreference // ignore: cast_nullable_to_non_nullable
@@ -137,7 +137,7 @@ abstract class _$$_PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
       int weight,
       Gender gender,
       SidePreference sidePreference,
-      String ageGroup,
+      AgeGroup ageGroup,
       bool drummerPreference,
       bool steersPersonPreference,
       bool strokePreference});
@@ -192,7 +192,7 @@ class __$$_PaddlerCopyWithImpl<$Res>
       ageGroup: null == ageGroup
           ? _value.ageGroup
           : ageGroup // ignore: cast_nullable_to_non_nullable
-              as String,
+              as AgeGroup,
       drummerPreference: null == drummerPreference
           ? _value.drummerPreference
           : drummerPreference // ignore: cast_nullable_to_non_nullable
@@ -241,7 +241,7 @@ class _$_Paddler extends _Paddler {
   @override
   final SidePreference sidePreference;
   @override
-  final String ageGroup;
+  final AgeGroup ageGroup;
   @override
   final bool drummerPreference;
   @override
@@ -271,7 +271,7 @@ abstract class _Paddler extends Paddler {
       required final int weight,
       required final Gender gender,
       required final SidePreference sidePreference,
-      required final String ageGroup,
+      required final AgeGroup ageGroup,
       required final bool drummerPreference,
       required final bool steersPersonPreference,
       required final bool strokePreference}) = _$_Paddler;
@@ -292,7 +292,7 @@ abstract class _Paddler extends Paddler {
   @override
   SidePreference get sidePreference;
   @override
-  String get ageGroup;
+  AgeGroup get ageGroup;
   @override
   bool get drummerPreference;
   @override

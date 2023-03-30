@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'data/dummy_data.dart';
 import 'firebase_options.dart';
 import 'models/roster_model.dart';
 
@@ -19,8 +18,6 @@ void main() async {
   final appModel = AppModel();
 
   final rosterModel = RosterModel();
-
-  assignDummyData(rosterModel);
 
   runApp(MultiProvider(
     providers: [

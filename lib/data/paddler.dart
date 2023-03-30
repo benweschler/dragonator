@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:equatable/equatable.dart';
 
 part 'paddler.freezed.dart';
+
 part 'paddler.g.dart';
 
 @Freezed(equal: false)
@@ -15,13 +16,14 @@ class Paddler extends Equatable with _$Paddler {
     required int weight,
     required Gender gender,
     required SidePreference sidePreference,
-    required String ageGroup,
+    required AgeGroup ageGroup,
     required bool drummerPreference,
     required bool steersPersonPreference,
     required bool strokePreference,
   }) = _Paddler;
 
-  factory Paddler.fromJson(Map<String, Object?> json) => _$PaddlerFromJson(json);
+  factory Paddler.fromJson(Map<String, Object?> json) =>
+      _$PaddlerFromJson(json);
 
   @override
   List<Object?> get props => [id];
@@ -56,6 +58,33 @@ enum Gender {
         return 'F';
       case Gender.X:
         return 'X';
+    }
+  }
+}
+
+enum AgeGroup {
+  youth,
+  underForty,
+  forties,
+  fifties,
+  sixties,
+  aboveSeventies;
+
+  @override
+  String toString() {
+    switch (this) {
+      case AgeGroup.youth:
+        return 'Youth';
+      case AgeGroup.underForty:
+        return 'Under 40';
+      case AgeGroup.forties:
+        return '40-49';
+      case AgeGroup.fifties:
+        return '50-59';
+      case AgeGroup.sixties:
+        return '60-69';
+      case AgeGroup.aboveSeventies:
+        return '70+';
     }
   }
 }

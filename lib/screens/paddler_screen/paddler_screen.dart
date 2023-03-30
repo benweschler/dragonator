@@ -114,7 +114,7 @@ class PaddlerStatTable extends StatelessWidget {
           labels: ['Side', 'Age Group'],
           stats: [
             Text('${paddler.sidePreference}', style: TextStyles.title1),
-            Text(paddler.ageGroup, style: TextStyles.title1),
+            Text(paddler.ageGroup.toString(), style: TextStyles.title1),
           ],
         ),
       ],

@@ -1,4 +1,3 @@
-import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/easy_notifier.dart';
@@ -63,6 +62,4 @@ class AppModel extends EasyNotifier {
   }
 
   set user(AppUser? user) => notify(() => _user = user);
-
-  Future<void> initializeApp() => Bootstrapper(this).initializeApp();
 }

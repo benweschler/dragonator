@@ -1,5 +1,4 @@
 import 'package:dragonator/data/paddler.dart';
-import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
 
 import 'field_names.dart';
 
@@ -95,25 +93,22 @@ class StatSelectorTable extends StatelessWidget {
         highlightColor: Colors.transparent,
         canvasColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      child: Selector<RosterModel, Iterable<String>>(
-        selector: (_, model) => model.ageGroups,
-        builder: (_, ageGroups, __) => FormBuilderDropdown<String>(
-          name: EditPaddlerFieldNames.ageGroup,
-          isExpanded: false,
-          elevation: 2,
-          borderRadius: Corners.smBorderRadius,
-          initialValue: paddler?.ageGroup,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: Validators.required(),
-          items: [
-            for (final group in ageGroups)
-              DropdownMenuItem(
-                value: group,
-                child: Text(group),
-              ),
-          ],
-          decoration: CustomInputDecoration(AppColors.of(context)),
-        ),
+      child: FormBuilderDropdown<AgeGroup>(
+        name: EditPaddlerFieldNames.ageGroup,
+        isExpanded: false,
+        elevation: 2,
+        borderRadius: Corners.smBorderRadius,
+        initialValue: paddler?.ageGroup,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: Validators.required(),
+        items: [
+          for (final ageGroup in AgeGroup.values)
+            DropdownMenuItem(
+              value: ageGroup,
+              child: Text(ageGroup.toString()),
+            ),
+        ],
+        decoration: CustomInputDecoration(AppColors.of(context)),
       ),
     );
 

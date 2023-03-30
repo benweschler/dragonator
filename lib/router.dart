@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
@@ -14,6 +15,9 @@ import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'models/roster_model.dart';
 
 //TODO: UNCOMMENTING THIS WILL CRASH THE DART COMPILER
 //TODO: adding <T> generic may fix crash
@@ -124,7 +128,10 @@ class AppRouter {
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isInitialized && path != RoutePaths.splash) {
-        appModel.initializeApp();
+        Bootstrapper(
+          appModel: appModel,
+          rosterModel: context.read<RosterModel>(),
+        ).initializeApp();
         return RoutePaths.splash;
       } else if (appModel.isInitialized && path == RoutePaths.splash) {
         return RoutePaths.roster;
