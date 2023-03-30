@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dragonator/commands/create_paddler_command.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
@@ -47,8 +48,6 @@ class RosterModel extends EasyNotifier {
   void assignTeamID(String id, Team team) =>
       notify(() => _teamIDMap[id] = team);
 
-  void addToTeam(String teamID, String paddlerID) =>
-      _teamIDMap[teamID]!.copyWith(
-        paddlerIDs: Set.from(_teamIDMap[teamID]!.paddlerIDs)..add(paddlerID),
-      );
+  void createPaddler(String teamID, Paddler paddler) =>
+      CreatePaddlerCommand.run(teamID, paddler);
 }

@@ -57,8 +57,7 @@ class EditPaddlerScreen extends StatelessWidget {
         steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
-      model.assignPaddlerID(newPaddler.id, newPaddler);
-      model.addToTeam(teamID!, newPaddler.id);
+      model.createPaddler(teamID!, newPaddler);
     }
   }
 
