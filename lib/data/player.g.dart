@@ -1,5 +1,5 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'player.dart';
 

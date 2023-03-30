@@ -1,13 +1,20 @@
 import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Team extends Equatable {
-  final String id;
-  final String name;
+part 'team.freezed.dart';
+part 'team.g.dart';
 
-  /// A set of the player ID's of the players on this team.
-  final Set<String> playerIDs;
+@Freezed(equal: false)
+class Team extends Equatable with _$Team {
+  const Team._();
 
-  const Team({required this.id, required this.name, this.playerIDs = const {}});
+  const factory Team({
+    required String id,
+    required String name,
+    required Set<String> playerIDs,
+  }) = _Team;
+
+  factory Team.fromJson(Map<String, Object?> json) => _$TeamFromJson(json);
 
   @override
   List<Object?> get props => [id];

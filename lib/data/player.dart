@@ -21,8 +21,7 @@ class Player extends Equatable with _$Player {
     required bool strokePreference,
   }) = _Player;
 
-  factory Player.fromJson(Map<String, Object?> json)
-    => _$PlayerFromJson(json);
+  factory Player.fromJson(Map<String, Object?> json) => _$PlayerFromJson(json);
 
   @override
   List<Object?> get props => [id];
