@@ -23,14 +23,14 @@ class ChangeThemeButton extends StatelessWidget {
         label = 'Light';
         themeWindow = Theme(
           data: AppColors.fromType(ThemeType.light).toThemeData(),
-          child: const ThemeWindow(),
+          child: const _ThemeWindow(),
         );
         break;
       case ThemeMode.dark:
         label = 'Dark';
         themeWindow = Theme(
           data: AppColors.fromType(ThemeType.dark).toThemeData(),
-          child: const ThemeWindow(),
+          child: const _ThemeWindow(),
         );
         break;
       case ThemeMode.system:
@@ -39,13 +39,13 @@ class ChangeThemeButton extends StatelessWidget {
           children: [
             Theme(
               data: AppColors.fromType(ThemeType.light).toThemeData(),
-              child: const ThemeWindow(),
+              child: const _ThemeWindow(),
             ),
             ClipPath(
-              clipper: DiagonalClipper(),
+              clipper: _DiagonalClipper(),
               child: Theme(
                 data: AppColors.fromType(ThemeType.dark).toThemeData(),
-                child: const ThemeWindow(),
+                child: const _ThemeWindow(),
               ),
             ),
           ],
@@ -114,7 +114,8 @@ class ChangeThemeButton extends StatelessWidget {
   }
 }
 
-class DiagonalClipper extends CustomClipper<Path> {
+/// Clips along the diagonal from bottom left to top right.
+class _DiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
@@ -126,11 +127,11 @@ class DiagonalClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(DiagonalClipper oldClipper) => false;
+  bool shouldReclip(_DiagonalClipper oldClipper) => false;
 }
 
-class ThemeWindow extends StatelessWidget {
-  const ThemeWindow({Key? key}) : super(key: key);
+class _ThemeWindow extends StatelessWidget {
+  const _ThemeWindow({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -46,10 +46,10 @@ class MyApp extends StatelessWidget {
         title: 'Dragonator',
         debugShowCheckedModeBanner: false,
         theme: AppColors.fromType(
-          context.read<AppModel>().lightThemeType,
+          context.select<AppModel, ThemeType>((model) => model.lightThemeType),
         ).toThemeData(),
         darkTheme: AppColors.fromType(
-          context.read<AppModel>().darkThemeType,
+          context.select<AppModel, ThemeType>((model) => model.darkThemeType),
         ).toThemeData(),
         routerConfig: router,
       ),
