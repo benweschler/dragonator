@@ -5,10 +5,10 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class PaddlerPreviewCard extends StatelessWidget {
+class PaddlerPreviewTile extends StatelessWidget {
   final Paddler paddler;
 
-  const PaddlerPreviewCard(this.paddler, {Key? key}) : super(key: key);
+  const PaddlerPreviewTile(this.paddler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,12 @@ class PaddlerPreviewCard extends StatelessWidget {
           horizontal: Insets.sm,
           vertical: Insets.med,
         ),
-        child: _buildCardContent(context),
+        child: _buildContent(AppColors.of(context)),
       ),
     );
   }
 
-  Widget? _buildCardContent(BuildContext context) {
+  Widget? _buildContent(AppColors appColors) {
     return Row(
       children: [
         Expanded(
@@ -35,9 +35,7 @@ class PaddlerPreviewCard extends StatelessWidget {
             children: [
               Text(
                 '${paddler.firstName} ${paddler.lastName}',
-                style: TextStyles.title1.copyWith(
-                  color: AppColors.of(context).accent,
-                ),
+                style: TextStyles.title1.copyWith(color: appColors.accent),
               ),
               const SizedBox(height: Insets.xs),
               Text.rich(TextSpan(children: [
@@ -56,7 +54,7 @@ class PaddlerPreviewCard extends StatelessWidget {
               Text(
                 'Gender',
                 style: TextStyles.caption.copyWith(
-                  color: AppColors.of(context).neutralContent,
+                  color: appColors.neutralContent,
                 ),
               ),
               Text('${paddler.gender}', style: TextStyles.title1),
@@ -69,7 +67,7 @@ class PaddlerPreviewCard extends StatelessWidget {
               Text(
                 'Side',
                 style: TextStyles.caption.copyWith(
-                  color: AppColors.of(context).neutralContent,
+                  color: appColors.neutralContent,
                 ),
               ),
               Text('${paddler.sidePreference}', style: TextStyles.title1),
@@ -78,7 +76,7 @@ class PaddlerPreviewCard extends StatelessWidget {
         ),
         Icon(
           Icons.chevron_right_rounded,
-          color: AppColors.of(context).neutralContent,
+          color: appColors.neutralContent,
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dragonator/commands/create_paddler_command.dart';
 import 'package:dragonator/data/app_user.dart';
+import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/utils/easy_notifier.dart';
@@ -50,4 +51,15 @@ class RosterModel extends EasyNotifier {
 
   void createPaddler(String teamID, Paddler paddler) =>
       CreatePaddlerCommand.run(teamID, paddler);
+
+  //TODO: dummy Data
+  late final Map<String, Lineup> _lineupIDMap = {
+    '1': Lineup(name: 'Lineup One', paddlers: paddlers.take(22)),
+    '2': Lineup(name: 'Lineup Two', paddlers: paddlers.take(22)),
+  };
+
+  Iterable<Lineup> get lineups => _lineupIDMap.values;
+
+  void setLineup(String lineupID, Lineup lineup) =>
+      notify(() => _lineupIDMap[lineupID] = lineup);
 }
