@@ -144,7 +144,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _DummyNavigationBar extends StatelessWidget {
-  final double _navBarHeight = 54;
+  final double _navBarHeight = 59;
 
   const _DummyNavigationBar({Key? key}) : super(key: key);
 

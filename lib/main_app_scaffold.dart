@@ -37,38 +37,27 @@ class MainAppScaffold extends StatefulWidget {
 class _MainAppScaffoldState extends State<MainAppScaffold> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
-      //TODO: add correct color for text, because right now color of default text style is null.
-      /*
-       * Then hunt down anywhere text color is hardcoded or default text style is used,
-       * and reference AppColors instead. This default text style should only be used
-       * as the underlying default.
-       */
-      style: TextStyles.body1.copyWith(
-        color: AppColors.of(context).isDark ? Colors.white : Colors.black,
-      ),
-      // Use a Stack to allow the body to extend behind the navigation bar,
-      // ensuring that each page's Scaffold is the full height of the screen.
-      // Scaffolds that aren't the full height of the display cause errors,
-      // such as adding padding to avoid on-screen keyboards incorrectly.
-      // However, this workaround can cause issues since the app's body isn't
-      // aware of the bottom navigation bar.
-      // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
-      // See: https://github.com/flutter/flutter/issues/24768
-      child: Stack(
-        children: [
-          widget.body,
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: CustomNavigationBar(
-              tabs: widget._bottomNavigationTabs,
-              selectedRoutePath: GoRouter.of(context).location,
-            ),
+    // Use a Stack to allow the body to extend behind the navigation bar,
+    // ensuring that each page's Scaffold is the full height of the screen.
+    // Scaffolds that aren't the full height of the display cause errors,
+    // such as adding padding to avoid on-screen keyboards incorrectly.
+    // However, this workaround can cause issues since the app's body isn't
+    // aware of the bottom navigation bar.
+    // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
+    // See: https://github.com/flutter/flutter/issues/24768
+    return Stack(
+      children: [
+        widget.body,
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: CustomNavigationBar(
+            tabs: widget._bottomNavigationTabs,
+            selectedRoutePath: GoRouter.of(context).location,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -85,8 +74,11 @@ class CustomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
+    // The nav bar does not have a scaffold as an ancestor and so is
+    // missing a DefaultTextStyle. The Material provides the same
+    // DefaultTextStyle as a scaffold, and also backs the navbar with the
+    // scaffold background color.
+    return Material(
       child: Column(
         children: [
           Container(
