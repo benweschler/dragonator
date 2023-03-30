@@ -1,3 +1,4 @@
+import 'package:dragonator/commands/delete_paddler_command.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
@@ -75,7 +76,15 @@ class PaddlerScreen extends StatelessWidget {
                   icon: Icons.library_books_rounded,
                 ),
                 ActionButton(
-                  onTap: () {},
+                  onTap: () async {
+                    final pop = context.pop;
+                    await DeletePaddlerCommand.run(
+                      //TODO: hardcoded team ID. change once state management with provider is implemented.
+                      'gCyi30iKgjw11wk1Fvgn',
+                      paddlerID,
+                    );
+                    pop();
+                  },
                   label: 'Delete',
                   icon: Icons.delete_rounded,
                 ),
