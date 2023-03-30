@@ -1,7 +1,7 @@
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/screens/edit_player_screen/preference_selector.dart';
-import 'package:dragonator/screens/edit_player_screen/stat_selector_table.dart';
+import 'package:dragonator/screens/edit_paddler_screen/preference_selector.dart';
+import 'package:dragonator/screens/edit_paddler_screen/stat_selector_table.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
@@ -17,66 +17,66 @@ import 'package:uuid/uuid.dart';
 import 'field_names.dart';
 import 'labeled_text_field.dart';
 
-class EditPlayerScreen extends StatelessWidget {
-  final String? playerID;
+class EditPaddlerScreen extends StatelessWidget {
+  final String? paddlerID;
   final String? teamID;
 
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
   static const _uuid = Uuid();
 
-  EditPlayerScreen({this.playerID, this.teamID, Key? key})
-      : assert((playerID == null) ^ (teamID == null)),
+  EditPaddlerScreen({this.paddlerID, this.teamID, Key? key})
+      : assert((paddlerID == null) ^ (teamID == null)),
         super(key: key);
 
-  void _savePlayer(RosterModel model, Player? player) {
+  void _savePaddler(RosterModel model, Paddler? paddler) {
     final formData = _formKey.currentState!.value;
 
-    if (player != null) {
-      final updatedPlayer = player.copyWith(
-        firstName: formData[EditPlayerFieldNames.firstName],
-        lastName: formData[EditPlayerFieldNames.lastName],
-        weight: int.parse(formData[EditPlayerFieldNames.weight]),
-        gender: formData[EditPlayerFieldNames.gender],
-        sidePreference: formData[EditPlayerFieldNames.sidePreference],
-        ageGroup: formData[EditPlayerFieldNames.ageGroup],
-        drummerPreference: formData[EditPlayerFieldNames.drummerPreference],
-        steersPersonPreference: formData[EditPlayerFieldNames.steersPersonPreference],
-        strokePreference: formData[EditPlayerFieldNames.strokePreference],
+    if (paddler != null) {
+      final updatedPaddler = paddler.copyWith(
+        firstName: formData[EditPaddlerFieldNames.firstName],
+        lastName: formData[EditPaddlerFieldNames.lastName],
+        weight: int.parse(formData[EditPaddlerFieldNames.weight]),
+        gender: formData[EditPaddlerFieldNames.gender],
+        sidePreference: formData[EditPaddlerFieldNames.sidePreference],
+        ageGroup: formData[EditPaddlerFieldNames.ageGroup],
+        drummerPreference: formData[EditPaddlerFieldNames.drummerPreference],
+        steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
+        strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
-      model.assignPlayerID(updatedPlayer.id, updatedPlayer);
+      model.assignPaddlerID(updatedPaddler.id, updatedPaddler);
     } else {
-      final newPlayer = Player(
+      final newPaddler = Paddler(
         id: _uuid.v4(),
-        firstName: formData[EditPlayerFieldNames.firstName],
-        lastName: formData[EditPlayerFieldNames.lastName],
-        weight: int.parse(formData[EditPlayerFieldNames.weight]),
-        gender: formData[EditPlayerFieldNames.gender],
-        sidePreference: formData[EditPlayerFieldNames.sidePreference],
-        ageGroup: formData[EditPlayerFieldNames.ageGroup],
-        drummerPreference: formData[EditPlayerFieldNames.drummerPreference],
-        steersPersonPreference: formData[EditPlayerFieldNames.steersPersonPreference],
-        strokePreference: formData[EditPlayerFieldNames.strokePreference],
+        firstName: formData[EditPaddlerFieldNames.firstName],
+        lastName: formData[EditPaddlerFieldNames.lastName],
+        weight: int.parse(formData[EditPaddlerFieldNames.weight]),
+        gender: formData[EditPaddlerFieldNames.gender],
+        sidePreference: formData[EditPaddlerFieldNames.sidePreference],
+        ageGroup: formData[EditPaddlerFieldNames.ageGroup],
+        drummerPreference: formData[EditPaddlerFieldNames.drummerPreference],
+        steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
+        strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
-      model.assignPlayerID(newPlayer.id, newPlayer);
-      model.addToTeam(teamID!, newPlayer.id);
+      model.assignPaddlerID(newPaddler.id, newPaddler);
+      model.addToTeam(teamID!, newPaddler.id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final rosterModel = context.read<RosterModel>();
-    final player = rosterModel.getPlayer(playerID);
+    final paddler = rosterModel.getPaddler(paddlerID);
 
     return CustomScaffold(
       leading: CustomIconButton(onTap: context.pop, icon: Icons.close_rounded),
       center: Text(
-        playerID == null ? 'Create Player' : 'Edit Player',
+        paddlerID == null ? 'Create Paddler' : 'Edit Paddler',
         style: TextStyles.title1,
       ),
       trailing: CustomIconButton(
         onTap: () {
           if (!_formKey.currentState!.saveAndValidate()) return;
-          _savePlayer(rosterModel, player);
+          _savePaddler(rosterModel, paddler);
           context.pop();
         },
         icon: Icons.check_rounded,
@@ -90,8 +90,8 @@ class EditPlayerScreen extends StatelessWidget {
               LabeledTextField(
                 label: 'First Name',
                 child: FormBuilderTextField(
-                  name: EditPlayerFieldNames.firstName,
-                  initialValue: player?.firstName,
+                  name: EditPaddlerFieldNames.firstName,
+                  initialValue: paddler?.firstName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.name,
@@ -103,8 +103,8 @@ class EditPlayerScreen extends StatelessWidget {
               LabeledTextField(
                 label: 'Last Name',
                 child: FormBuilderTextField(
-                  name: EditPlayerFieldNames.lastName,
-                  initialValue: player?.lastName,
+                  name: EditPaddlerFieldNames.lastName,
+                  initialValue: paddler?.lastName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: Validators.required(),
@@ -113,7 +113,7 @@ class EditPlayerScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: Insets.xl),
-              StatSelectorTable(player),
+              StatSelectorTable(paddler),
               const SizedBox(height: Insets.xl),
               // No need to add padding between preference buttons since each
               // button's checkbox has default padding, which is controlled by
@@ -121,21 +121,21 @@ class EditPlayerScreen extends StatelessWidget {
               Row(
                 children: [
                   PreferenceSelector(
-                    name: EditPlayerFieldNames.drummerPreference,
+                    name: EditPaddlerFieldNames.drummerPreference,
                     label: 'Drummer',
-                    initialValue: player?.drummerPreference ?? false,
+                    initialValue: paddler?.drummerPreference ?? false,
                   ),
                   PreferenceSelector(
-                    name: EditPlayerFieldNames.steersPersonPreference,
+                    name: EditPaddlerFieldNames.steersPersonPreference,
                     label: 'Steers Person',
-                    initialValue: player?.steersPersonPreference ?? false,
+                    initialValue: paddler?.steersPersonPreference ?? false,
                   ),
                 ].map((e) => Expanded(child: e)).toList(),
               ),
               PreferenceSelector(
-                name: EditPlayerFieldNames.strokePreference,
+                name: EditPaddlerFieldNames.strokePreference,
                 label: 'Stroke',
-                initialValue: player?.strokePreference ?? false,
+                initialValue: paddler?.strokePreference ?? false,
               ),
             ],
           ),

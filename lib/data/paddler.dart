@@ -1,14 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:equatable/equatable.dart';
 
-part 'player.freezed.dart';
-part 'player.g.dart';
+part 'paddler.freezed.dart';
+part 'paddler.g.dart';
 
 @Freezed(equal: false)
-class Player extends Equatable with _$Player {
-  const Player._();
+class Paddler extends Equatable with _$Paddler {
+  const Paddler._();
 
-  const factory Player({
+  const factory Paddler({
     required String id,
     required String firstName,
     required String lastName,
@@ -19,9 +19,9 @@ class Player extends Equatable with _$Player {
     required bool drummerPreference,
     required bool steersPersonPreference,
     required bool strokePreference,
-  }) = _Player;
+  }) = _Paddler;
 
-  factory Player.fromJson(Map<String, Object?> json) => _$PlayerFromJson(json);
+  factory Paddler.fromJson(Map<String, Object?> json) => _$PaddlerFromJson(json);
 
   @override
   List<Object?> get props => [id];

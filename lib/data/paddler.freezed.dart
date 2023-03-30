@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'player.dart';
+part of 'paddler.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Player _$PlayerFromJson(Map<String, dynamic> json) {
-  return _Player.fromJson(json);
+Paddler _$PaddlerFromJson(Map<String, dynamic> json) {
+  return _Paddler.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Player {
+mixin _$Paddler {
   String get id => throw _privateConstructorUsedError;
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
@@ -33,13 +33,13 @@ mixin _$Player {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $PlayerCopyWith<Player> get copyWith => throw _privateConstructorUsedError;
+  $PaddlerCopyWith<Paddler> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PlayerCopyWith<$Res> {
-  factory $PlayerCopyWith(Player value, $Res Function(Player) then) =
-      _$PlayerCopyWithImpl<$Res, Player>;
+abstract class $PaddlerCopyWith<$Res> {
+  factory $PaddlerCopyWith(Paddler value, $Res Function(Paddler) then) =
+      _$PaddlerCopyWithImpl<$Res, Paddler>;
   @useResult
   $Res call(
       {String id,
@@ -55,9 +55,9 @@ abstract class $PlayerCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PlayerCopyWithImpl<$Res, $Val extends Player>
-    implements $PlayerCopyWith<$Res> {
-  _$PlayerCopyWithImpl(this._value, this._then);
+class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
+    implements $PaddlerCopyWith<$Res> {
+  _$PaddlerCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -124,9 +124,10 @@ class _$PlayerCopyWithImpl<$Res, $Val extends Player>
 }
 
 /// @nodoc
-abstract class _$$_PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
-  factory _$$_PlayerCopyWith(_$_Player value, $Res Function(_$_Player) then) =
-      __$$_PlayerCopyWithImpl<$Res>;
+abstract class _$$_PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
+  factory _$$_PaddlerCopyWith(
+          _$_Paddler value, $Res Function(_$_Paddler) then) =
+      __$$_PaddlerCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -143,10 +144,10 @@ abstract class _$$_PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_PlayerCopyWithImpl<$Res>
-    extends _$PlayerCopyWithImpl<$Res, _$_Player>
-    implements _$$_PlayerCopyWith<$Res> {
-  __$$_PlayerCopyWithImpl(_$_Player _value, $Res Function(_$_Player) _then)
+class __$$_PaddlerCopyWithImpl<$Res>
+    extends _$PaddlerCopyWithImpl<$Res, _$_Paddler>
+    implements _$$_PaddlerCopyWith<$Res> {
+  __$$_PaddlerCopyWithImpl(_$_Paddler _value, $Res Function(_$_Paddler) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -163,7 +164,7 @@ class __$$_PlayerCopyWithImpl<$Res>
     Object? steersPersonPreference = null,
     Object? strokePreference = null,
   }) {
-    return _then(_$_Player(
+    return _then(_$_Paddler(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -210,8 +211,8 @@ class __$$_PlayerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Player extends _Player {
-  const _$_Player(
+class _$_Paddler extends _Paddler {
+  const _$_Paddler(
       {required this.id,
       required this.firstName,
       required this.lastName,
@@ -224,8 +225,8 @@ class _$_Player extends _Player {
       required this.strokePreference})
       : super._();
 
-  factory _$_Player.fromJson(Map<String, dynamic> json) =>
-      _$$_PlayerFromJson(json);
+  factory _$_Paddler.fromJson(Map<String, dynamic> json) =>
+      _$$_PaddlerFromJson(json);
 
   @override
   final String id;
@@ -251,19 +252,19 @@ class _$_Player extends _Player {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PlayerCopyWith<_$_Player> get copyWith =>
-      __$$_PlayerCopyWithImpl<_$_Player>(this, _$identity);
+  _$$_PaddlerCopyWith<_$_Paddler> get copyWith =>
+      __$$_PaddlerCopyWithImpl<_$_Paddler>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PlayerToJson(
+    return _$$_PaddlerToJson(
       this,
     );
   }
 }
 
-abstract class _Player extends Player {
-  const factory _Player(
+abstract class _Paddler extends Paddler {
+  const factory _Paddler(
       {required final String id,
       required final String firstName,
       required final String lastName,
@@ -273,10 +274,10 @@ abstract class _Player extends Player {
       required final String ageGroup,
       required final bool drummerPreference,
       required final bool steersPersonPreference,
-      required final bool strokePreference}) = _$_Player;
-  const _Player._() : super._();
+      required final bool strokePreference}) = _$_Paddler;
+  const _Paddler._() : super._();
 
-  factory _Player.fromJson(Map<String, dynamic> json) = _$_Player.fromJson;
+  factory _Paddler.fromJson(Map<String, dynamic> json) = _$_Paddler.fromJson;
 
   @override
   String get id;
@@ -300,6 +301,6 @@ abstract class _Player extends Player {
   bool get strokePreference;
   @override
   @JsonKey(ignore: true)
-  _$$_PlayerCopyWith<_$_Player> get copyWith =>
+  _$$_PaddlerCopyWith<_$_Paddler> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -166,10 +166,10 @@ class TeamCard extends StatelessWidget {
               for (Team team in rosterModel.teams)
                 TeamTile(
                   teamName: team.name,
-                  playerNames: team.playerIDs
-                      .map((id) => rosterModel.getPlayer(id)!)
+                  paddlerNames: team.paddlerIDs
+                      .map((id) => rosterModel.getPaddler(id)!)
                       .map(
-                        (player) => '${player.firstName} ${player.lastName}',
+                        (paddler) => '${paddler.firstName} ${paddler.lastName}',
                       )
                       .toList()
                     ..sort(),
@@ -186,9 +186,9 @@ class TeamCard extends StatelessWidget {
 
 class TeamTile extends StatelessWidget {
   final String teamName;
-  final Iterable<String> playerNames;
+  final Iterable<String> paddlerNames;
 
-  const TeamTile({Key? key, required this.teamName, required this.playerNames})
+  const TeamTile({Key? key, required this.teamName, required this.paddlerNames})
       : super(key: key);
 
   @override
@@ -200,7 +200,7 @@ class TeamTile extends StatelessWidget {
           children: [
             Text(teamName, style: TextStyles.body1),
             Text(
-              playerNames.join(', '),
+              paddlerNames.join(', '),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyles.caption.copyWith(

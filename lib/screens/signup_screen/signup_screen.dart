@@ -1,4 +1,4 @@
-import 'package:dragonator/commands/users/create_user_command.dart';
+import 'package:dragonator/commands/create_user_command.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/signup_screen/field_names.dart';

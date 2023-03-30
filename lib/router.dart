@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
-import 'package:dragonator/screens/edit_player_screen/edit_player_screen.dart';
+import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
 import 'package:dragonator/screens/forgot_password_screen/forgot_password_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
-import 'package:dragonator/screens/player_screen/player_screen.dart';
+import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineup_screen.dart';
@@ -29,12 +29,12 @@ abstract class RoutePaths {
   static String forgotPassword = '$logIn/forgot-password';
   static String signUp = '/sign-up';
 
-  static String player(String id) => '$roster/player/$id';
+  static String paddler(String id) => '$roster/paddler/$id';
 
-  static String editPlayer({String? playerID, String? teamID}) =>
+  static String editPaddler({String? paddlerID, String? teamID}) =>
       _appendQueryParams(
-        '$roster/edit-player',
-        {'playerID': playerID, 'teamID': teamID},
+        '$roster/edit-paddler',
+        {'paddlerID': paddlerID, 'teamID': teamID},
       );
 }
 
@@ -84,14 +84,14 @@ class AppRouter {
               isNavBarTab: true,
               routes: [
                 AppRoute(
-                  path: 'player/:id',
-                  builder: (state) => PlayerScreen(state.params['id']!),
+                  path: 'paddler/:id',
+                  builder: (state) => PaddlerScreen(state.params['id']!),
                 ),
                 AppRoute(
-                  path: 'edit-player',
+                  path: 'edit-paddler',
                   pageBuilder: (state) => FadeTransitionPage(
-                    child: EditPlayerScreen(
-                      playerID: state.queryParams['playerID'],
+                    child: EditPaddlerScreen(
+                      paddlerID: state.queryParams['paddlerID'],
                       teamID: state.queryParams['teamID'],
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
@@ -9,7 +9,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
-import 'package:dragonator/utils/player_sorting.dart';
+import 'package:dragonator/utils/paddler_sorting.dart';
 import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/custom_filter_chip.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'player_preview_card.dart';
+import 'paddler_preview_card.dart';
 
 class RosterScreen extends StatefulWidget {
   const RosterScreen({Key? key}) : super(key: key);
@@ -67,12 +67,12 @@ class _RosterScreenState extends State<RosterScreen> {
           addScreenInset: false,
           floatingActionButton: CustomFAB(
             child: const Icon(Icons.add_rounded),
-            onTap: () => context.go(RoutePaths.editPlayer(
+            onTap: () => context.go(RoutePaths.editPaddler(
               teamID: teams[selectedTeamIndex].id,
             )),
           ),
           center: changeTeamButton,
-          child: teams[selectedTeamIndex].playerIDs.isEmpty
+          child: teams[selectedTeamIndex].paddlerIDs.isEmpty
               ? _EmptyRoster(teamName: teams[selectedTeamIndex].name)
               : _RosterContent(
                   team: teams[selectedTeamIndex],
@@ -101,13 +101,13 @@ class _RosterContent extends StatefulWidget {
 }
 
 class _RosterContentState extends State<_RosterContent> {
-  var sortingStrategy = PlayerSort.sortingStrategyLabels.keys.first;
+  var sortingStrategy = PaddlerSort.sortingStrategyLabels.keys.first;
   bool sortIncreasing = true;
 
   @override
   Widget build(BuildContext context) {
-    final List<Player> players = [
-      for (String id in widget.team.playerIDs) widget.rosterModel.getPlayer(id)!
+    final List<Paddler> paddlers = [
+      for (String id in widget.team.paddlerIDs) widget.rosterModel.getPaddler(id)!
     ];
 
     final Widget filterRow = SingleChildScrollView(
@@ -120,7 +120,7 @@ class _RosterContentState extends State<_RosterContent> {
             fillColor: AppColors.of(context).accent,
             contentColor: Colors.white,
             onTap: () => context.showModal(SortingOptionsMenu(
-              sortingStrategies: PlayerSort.sortingStrategyLabels.keys,
+              sortingStrategies: PaddlerSort.sortingStrategyLabels.keys,
               initiallySelectedStrategy: sortingStrategy,
               sortIncreasing: sortIncreasing,
               onSave: (newStrategy, isIncreasing) => setState(() {
@@ -146,11 +146,11 @@ class _RosterContentState extends State<_RosterContent> {
       ),
     );
 
-    Iterable<Player> sortedPlayers = players
-      ..sort(PlayerSort.sortingStrategyLabels[sortingStrategy]);
+    Iterable<Paddler> sortedPaddlers = paddlers
+      ..sort(PaddlerSort.sortingStrategyLabels[sortingStrategy]);
 
     if (!sortIncreasing) {
-      sortedPlayers = players.reversed;
+      sortedPaddlers = paddlers.reversed;
     }
 
     return ListView(
@@ -160,8 +160,8 @@ class _RosterContentState extends State<_RosterContent> {
         const SizedBox(height: Insets.xs),
         filterRow,
         const SizedBox(height: Insets.sm),
-        ...sortedPlayers
-            .map<Widget>((player) => PlayerPreviewCard(player))
+        ...sortedPaddlers
+            .map<Widget>((paddler) => PaddlerPreviewCard(paddler))
             //TODO: used divider
             .separate(const Divider(height: 0.5, thickness: 0.5))
             .toList(),
@@ -186,7 +186,7 @@ class _EmptyRoster extends StatelessWidget {
           Expanded(
             child: Center(
               child: Text(
-                'No players in $teamName',
+                'No paddlers in $teamName',
               ),
             ),
           ),

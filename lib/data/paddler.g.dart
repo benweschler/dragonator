@@ -1,13 +1,12 @@
-// ignore_for_file: type=lint
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'player.dart';
+part of 'paddler.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Player _$$_PlayerFromJson(Map<String, dynamic> json) => _$_Player(
+_$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
       id: json['id'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
@@ -21,7 +20,8 @@ _$_Player _$$_PlayerFromJson(Map<String, dynamic> json) => _$_Player(
       strokePreference: json['strokePreference'] as bool,
     );
 
-Map<String, dynamic> _$$_PlayerToJson(_$_Player instance) => <String, dynamic>{
+Map<String, dynamic> _$$_PaddlerToJson(_$_Paddler instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'firstName': instance.firstName,
       'lastName': instance.lastName,

@@ -1,4 +1,4 @@
-abstract class EditPlayerFieldNames {
+abstract class EditPaddlerFieldNames {
   static const firstName = 'first';
   static const lastName = 'last';
   static const weight = 'weight';

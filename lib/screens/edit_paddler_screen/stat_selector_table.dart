@@ -1,4 +1,4 @@
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -19,15 +19,15 @@ import 'field_names.dart';
 const _kSegmentedControlPadding = Insets.sm * 1.2;
 
 class StatSelectorTable extends StatelessWidget {
-  final Player? player;
+  final Paddler? paddler;
 
-  const StatSelectorTable(this.player, {Key? key}) : super(key: key);
+  const StatSelectorTable(this.paddler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final weightField = FormBuilderTextField(
-      name: EditPlayerFieldNames.weight,
-      initialValue: player?.weight.toString(),
+      name: EditPaddlerFieldNames.weight,
+      initialValue: paddler?.weight.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -39,8 +39,8 @@ class StatSelectorTable extends StatelessWidget {
     );
 
     final genderSelector = FormBuilderField<Gender>(
-      name: EditPlayerFieldNames.gender,
-      initialValue: player?.gender,
+      name: EditPaddlerFieldNames.gender,
+      initialValue: paddler?.gender,
       validator: Validators.required(),
       builder: (state) {
         return SizedBox(
@@ -64,8 +64,8 @@ class StatSelectorTable extends StatelessWidget {
     );
 
     final sidePreferenceSelector = FormBuilderField<SidePreference>(
-      name: EditPlayerFieldNames.sidePreference,
-      initialValue: player?.sidePreference,
+      name: EditPaddlerFieldNames.sidePreference,
+      initialValue: paddler?.sidePreference,
       validator: Validators.required(),
       builder: (state) {
         return SizedBox(
@@ -98,11 +98,11 @@ class StatSelectorTable extends StatelessWidget {
       child: Selector<RosterModel, Iterable<String>>(
         selector: (_, model) => model.ageGroups,
         builder: (_, ageGroups, __) => FormBuilderDropdown<String>(
-          name: EditPlayerFieldNames.ageGroup,
+          name: EditPaddlerFieldNames.ageGroup,
           isExpanded: false,
           elevation: 2,
           borderRadius: Corners.smBorderRadius,
-          initialValue: player?.ageGroup,
+          initialValue: paddler?.ageGroup,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: Validators.required(),
           items: [

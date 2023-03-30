@@ -1,19 +1,19 @@
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class PlayerPreviewCard extends StatelessWidget {
-  final Player player;
+class PaddlerPreviewCard extends StatelessWidget {
+  final Paddler paddler;
 
-  const PlayerPreviewCard(this.player, {Key? key}) : super(key: key);
+  const PaddlerPreviewCard(this.paddler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(RoutePaths.player(player.id)),
+      onTap: () => context.go(RoutePaths.paddler(paddler.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -34,7 +34,7 @@ class PlayerPreviewCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${player.firstName} ${player.lastName}',
+                '${paddler.firstName} ${paddler.lastName}',
                 style: TextStyles.title1.copyWith(
                   color: AppColors.of(context).accent,
                 ),
@@ -42,7 +42,7 @@ class PlayerPreviewCard extends StatelessWidget {
               const SizedBox(height: Insets.xs),
               Text.rich(TextSpan(children: [
                 TextSpan(
-                  text: '${player.weight}',
+                  text: '${paddler.weight}',
                   style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const TextSpan(text: ' lbs', style: TextStyles.body2),
@@ -59,7 +59,7 @@ class PlayerPreviewCard extends StatelessWidget {
                   color: AppColors.of(context).neutralContent,
                 ),
               ),
-              Text('${player.gender}', style: TextStyles.title1),
+              Text('${paddler.gender}', style: TextStyles.title1),
             ],
           ),
         ),
@@ -72,7 +72,7 @@ class PlayerPreviewCard extends StatelessWidget {
                   color: AppColors.of(context).neutralContent,
                 ),
               ),
-              Text('${player.sidePreference}', style: TextStyles.title1),
+              Text('${paddler.sidePreference}', style: TextStyles.title1),
             ],
           ),
         ),

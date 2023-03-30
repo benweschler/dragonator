@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:uuid/uuid.dart';
@@ -13,17 +13,17 @@ void assignDummyData(RosterModel rosterModel) {
     rosterModel.addAgeGroup(ageGroup);
   }
 
-  final dummyRoster = [for (int i = 0; i < 22 * 2; i++) _randomPlayer()];
+  final dummyRoster = [for (int i = 0; i < 22 * 2; i++) _randomPaddler()];
 
-  for (final player in dummyRoster) {
-    rosterModel.assignPlayerID(player.id, player);
+  for (final paddler in dummyRoster) {
+    rosterModel.assignPaddlerID(paddler.id, paddler);
   }
 
   final teamOne = Team(
     id: _uuid.v4(),
     name: 'Team One',
-    playerIDs: dummyRoster
-        .map((player) => player.id)
+    paddlerIDs: dummyRoster
+        .map((paddler) => paddler.id)
         .take(dummyRoster.length ~/ 2)
         .toSet(),
   );
@@ -31,8 +31,8 @@ void assignDummyData(RosterModel rosterModel) {
   final teamTwo = Team(
     id: _uuid.v4(),
     name: 'Team Two',
-    playerIDs: dummyRoster
-        .map((player) => player.id)
+    paddlerIDs: dummyRoster
+        .map((paddler) => paddler.id)
         .toList()
         .sublist(dummyRoster.length ~/ 2)
         .toSet(),
@@ -42,8 +42,8 @@ void assignDummyData(RosterModel rosterModel) {
   rosterModel.assignTeamID(teamTwo.id, teamTwo);
 }
 
-Player _randomPlayer() {
-  return Player(
+Paddler _randomPaddler() {
+  return Paddler(
     id: _uuid.v4(),
     firstName: _firstNames[_random.nextInt(_firstNames.length - 1)],
     lastName: _lastNames[_random.nextInt(_lastNames.length - 1)],

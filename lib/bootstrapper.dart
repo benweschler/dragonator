@@ -1,4 +1,4 @@
-import 'package:dragonator/commands/users/get_user_command.dart';
+import 'package:dragonator/commands/get_user_command.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -1,4 +1,4 @@
-import 'package:dragonator/data/player.dart';
+import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
@@ -13,45 +13,45 @@ import 'package:provider/provider.dart';
 
 import 'preference_row.dart';
 
-class PlayerScreen extends StatelessWidget {
-  final String playerID;
+class PaddlerScreen extends StatelessWidget {
+  final String paddlerID;
 
-  const PlayerScreen(this.playerID, {Key? key}) : super(key: key);
+  const PaddlerScreen(this.paddlerID, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       leading: const CustomBackButton(),
       trailing: CustomIconButton(
-        onTap: () => context.push(RoutePaths.editPlayer(playerID: playerID)),
+        onTap: () => context.push(RoutePaths.editPaddler(paddlerID: paddlerID)),
         icon: Icons.edit_rounded,
       ),
       child: SingleChildScrollView(
-        child: Selector<RosterModel, Player>(
-          selector: (_, model) => model.getPlayer(playerID)!,
-          builder: (_, player, __) => Column(
+        child: Selector<RosterModel, Paddler>(
+          selector: (_, model) => model.getPaddler(paddlerID)!,
+          builder: (_, paddler, __) => Column(
             children: [
               Center(
                 child: Text(
-                  '${player.firstName} ${player.lastName}',
+                  '${paddler.firstName} ${paddler.lastName}',
                   style: TextStyles.h2.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: Insets.xl),
-              PlayerStatTable(player),
+              PaddlerStatTable(paddler),
               const SizedBox(height: Insets.xl),
               Row(
                 children: [
                   Expanded(
                     child: PreferenceRow(
                       label: 'Drummer',
-                      hasPreference: player.drummerPreference,
+                      hasPreference: paddler.drummerPreference,
                     ),
                   ),
                   Expanded(
                     child: PreferenceRow(
                       label: 'Steers Person',
-                      hasPreference: player.steersPersonPreference,
+                      hasPreference: paddler.steersPersonPreference,
                     ),
                   ),
                 ],
@@ -59,7 +59,7 @@ class PlayerScreen extends StatelessWidget {
               const SizedBox(height: Insets.med),
               PreferenceRow(
                 label: 'Stroke',
-                hasPreference: player.strokePreference,
+                hasPreference: paddler.strokePreference,
               ),
               const SizedBox(height: Insets.xl),
               //TODO: implement actions
@@ -88,10 +88,10 @@ class PlayerScreen extends StatelessWidget {
   }
 }
 
-class PlayerStatTable extends StatelessWidget {
-  final Player player;
+class PaddlerStatTable extends StatelessWidget {
+  final Paddler paddler;
 
-  const PlayerStatTable(this.player, {Key? key}) : super(key: key);
+  const PaddlerStatTable(this.paddler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,19 +102,19 @@ class PlayerStatTable extends StatelessWidget {
           stats: [
             Text.rich(TextSpan(children: [
               TextSpan(
-                text: '${player.weight}',
+                text: '${paddler.weight}',
                 style: TextStyles.title1,
               ),
               const TextSpan(text: ' lbs', style: TextStyles.body2),
             ])),
-            Text('${player.gender}', style: TextStyles.title1),
+            Text('${paddler.gender}', style: TextStyles.title1),
           ],
         ),
         LabeledTableRow(
           labels: ['Side', 'Age Group'],
           stats: [
-            Text('${player.sidePreference}', style: TextStyles.title1),
-            Text(player.ageGroup, style: TextStyles.title1),
+            Text('${paddler.sidePreference}', style: TextStyles.title1),
+            Text(paddler.ageGroup, style: TextStyles.title1),
           ],
         ),
       ],
