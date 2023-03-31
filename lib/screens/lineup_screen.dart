@@ -1,5 +1,6 @@
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
@@ -57,7 +58,7 @@ class LineupTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(''),
+      onTap: () => context.go(RoutePaths.editLineup(lineup.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -71,7 +72,8 @@ class LineupTile extends StatelessWidget {
 
   Widget _buildContent(AppColors appColors) {
     final paddlerNames = lineup.paddlers
-        .map((paddler) => '${paddler.firstName} ${paddler.lastName}')
+        .where((paddler) => paddler != null)
+        .map((paddler) => '${paddler!.firstName} ${paddler.lastName}')
         .join(', ');
 
     return Row(
