@@ -9,6 +9,7 @@ part of 'paddler.dart';
 
 _$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
       id: json['id'] as String,
+      teamID: json['teamID'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       weight: json['weight'] as int,
@@ -24,6 +25,7 @@ _$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
 Map<String, dynamic> _$$_PaddlerToJson(_$_Paddler instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'teamID': instance.teamID,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'weight': instance.weight,

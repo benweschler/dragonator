@@ -28,11 +28,12 @@ class EditPaddlerScreen extends StatelessWidget {
       : assert((paddlerID == null) ^ (teamID == null)),
         super(key: key);
 
-  void _savePaddler(RosterModel model, Paddler? paddler) {
+  void _savePaddler(RosterModel rosterModel, Paddler? paddler) {
     final formData = _formKey.currentState!.value;
+    final Paddler updatedPaddler;
 
     if (paddler != null) {
-      final updatedPaddler = paddler.copyWith(
+      updatedPaddler = paddler.copyWith(
         firstName: formData[EditPaddlerFieldNames.firstName],
         lastName: formData[EditPaddlerFieldNames.lastName],
         weight: int.parse(formData[EditPaddlerFieldNames.weight]),
@@ -43,10 +44,10 @@ class EditPaddlerScreen extends StatelessWidget {
         steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
-      model.assignPaddlerID(updatedPaddler.id, updatedPaddler);
     } else {
-      final newPaddler = Paddler(
+      updatedPaddler = Paddler(
         id: _uuid.v4(),
+        teamID: teamID!,
         firstName: formData[EditPaddlerFieldNames.firstName],
         lastName: formData[EditPaddlerFieldNames.lastName],
         weight: int.parse(formData[EditPaddlerFieldNames.weight]),
@@ -57,8 +58,9 @@ class EditPaddlerScreen extends StatelessWidget {
         steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
-      model.createPaddler(teamID!, newPaddler);
     }
+
+    rosterModel.updatePaddler(updatedPaddler);
   }
 
   @override

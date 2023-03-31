@@ -11,6 +11,7 @@ class Paddler extends Equatable with _$Paddler {
 
   const factory Paddler({
     required String id,
+    required String teamID,
     required String firstName,
     required String lastName,
     required int weight,

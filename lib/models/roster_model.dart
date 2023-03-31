@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/commands/create_paddler_command.dart';
+import 'package:dragonator/commands/update_paddler_command.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
@@ -25,6 +25,7 @@ class RosterModel extends EasyNotifier {
         for (String paddlerID in paddlerJsons.keys) {
           final paddlerData = paddlerJsons[paddlerID]!;
           paddlerData['id'] = paddlerID;
+          paddlerData['teamID'] = teamID;
 
           _paddlerIDMap[paddlerID] = Paddler.fromJson(paddlerData);
         }
@@ -49,17 +50,28 @@ class RosterModel extends EasyNotifier {
   void assignTeamID(String id, Team team) =>
       notify(() => _teamIDMap[id] = team);
 
-  void createPaddler(String teamID, Paddler paddler) =>
-      CreatePaddlerCommand.run(teamID, paddler);
+  /// If [paddler] already exists, it is updated. If it does not exist,
+  /// it is created.
+  void updatePaddler(Paddler paddler) => UpdatePaddlerCommand.run(paddler);
 
   //TODO: dummy Data
   late final Map<String, Lineup> _lineupIDMap = {
-    '1': Lineup(name: 'Lineup One', paddlers: paddlers.take(22)),
-    '2': Lineup(name: 'Lineup Two', paddlers: paddlers.take(22)),
+    '1': Lineup(
+      id: '1',
+      name: 'Lineup One',
+      paddlers: paddlers.take(22),
+    ),
+    '2': Lineup(
+      id: '2',
+      name: 'Lineup Two',
+      paddlers: paddlers.take(22),
+    ),
   };
 
   Iterable<Lineup> get lineups => _lineupIDMap.values;
 
   void setLineup(String lineupID, Lineup lineup) =>
       notify(() => _lineupIDMap[lineupID] = lineup);
+
+  Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
 }

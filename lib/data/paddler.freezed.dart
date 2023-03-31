@@ -21,6 +21,7 @@ Paddler _$PaddlerFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Paddler {
   String get id => throw _privateConstructorUsedError;
+  String get teamID => throw _privateConstructorUsedError;
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
   int get weight => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $PaddlerCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String teamID,
       String firstName,
       String lastName,
       int weight,
@@ -68,6 +70,7 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
   @override
   $Res call({
     Object? id = null,
+    Object? teamID = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? weight = null,
@@ -82,6 +85,10 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      teamID: null == teamID
+          ? _value.teamID
+          : teamID // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -132,6 +139,7 @@ abstract class _$$_PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String teamID,
       String firstName,
       String lastName,
       int weight,
@@ -154,6 +162,7 @@ class __$$_PaddlerCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? teamID = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? weight = null,
@@ -168,6 +177,10 @@ class __$$_PaddlerCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      teamID: null == teamID
+          ? _value.teamID
+          : teamID // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -214,6 +227,7 @@ class __$$_PaddlerCopyWithImpl<$Res>
 class _$_Paddler extends _Paddler {
   const _$_Paddler(
       {required this.id,
+      required this.teamID,
       required this.firstName,
       required this.lastName,
       required this.weight,
@@ -230,6 +244,8 @@ class _$_Paddler extends _Paddler {
 
   @override
   final String id;
+  @override
+  final String teamID;
   @override
   final String firstName;
   @override
@@ -266,6 +282,7 @@ class _$_Paddler extends _Paddler {
 abstract class _Paddler extends Paddler {
   const factory _Paddler(
       {required final String id,
+      required final String teamID,
       required final String firstName,
       required final String lastName,
       required final int weight,
@@ -281,6 +298,8 @@ abstract class _Paddler extends Paddler {
 
   @override
   String get id;
+  @override
+  String get teamID;
   @override
   String get firstName;
   @override
