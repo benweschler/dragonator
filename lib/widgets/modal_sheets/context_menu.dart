@@ -8,10 +8,7 @@ import 'modal_sheet.dart';
 class ContextMenu extends StatelessWidget {
   final List<ContextMenuAction> actions;
 
-  const ContextMenu({
-    Key? key,
-    required this.actions,
-  }) : super(key: key);
+  const ContextMenu(this.actions, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

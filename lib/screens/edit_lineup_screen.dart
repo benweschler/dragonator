@@ -18,13 +18,13 @@ final double _kTileHeight = Insets.sm * 2 +
     5;
 
 List<String> _getPositionLabels() => [
-  'D',
-  for (int i = 1; i <= 10; i++) ...[
-    '${i}R',
-    '${i}L',
-  ],
-  'S',
-];
+      'D',
+      for (int i = 1; i <= 10; i++) ...[
+        '${i}R',
+        '${i}L',
+      ],
+      'S',
+    ];
 
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
@@ -157,9 +157,7 @@ class _PaddlerTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            width: Insets.med,
-          ),
+          const SizedBox(width: Insets.med),
           Expanded(
             flex: 2,
             child: Align(
@@ -237,8 +235,14 @@ class _AddPaddlerTile extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Add', style: TextStyles.body1.copyWith(color: AppColors.of(context).accent),),
-                const SizedBox(width: Insets.med,),
+                Text(
+                  'Add',
+                  style: TextStyles.body1
+                      .copyWith(color: AppColors.of(context).accent),
+                ),
+                const SizedBox(
+                  width: Insets.med,
+                ),
                 Icon(Icons.add_rounded, color: AppColors.of(context).accent),
               ],
             ),

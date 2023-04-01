@@ -92,6 +92,9 @@ class _RosterContent extends StatefulWidget {
 class _RosterContentState extends State<_RosterContent> {
   var sortingStrategy = PaddlerSort.sortingStrategyLabels.keys.first;
   bool sortIncreasing = true;
+  Gender? genderFilter;
+  SidePreference? sidePreferenceFilter;
+  AgeGroup? ageGroupFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -126,17 +129,38 @@ class _RosterContentState extends State<_RosterContent> {
               ],
             ),
           ),
-          for (String label in ['Gender', 'Side', 'Age Group'])
-            CustomFilterChip<Gender>(
-              label: label,
-              onFiltered: (_) {},
-              options: Gender.values,
-            ),
+          CustomFilterChip<Gender>(
+            label: 'Gender',
+            onFiltered: (gender) => setState(() => genderFilter = gender),
+            options: Gender.values,
+          ),
+          CustomFilterChip<SidePreference>(
+            label: 'Side',
+            onFiltered: (sidePreference) =>
+                setState(() => sidePreferenceFilter = sidePreference),
+            options: SidePreference.values,
+          ),
+          CustomFilterChip<AgeGroup>(
+            label: 'Age Group',
+            onFiltered: (ageGroup) => setState(() => ageGroupFilter = ageGroup),
+            options: AgeGroup.values,
+          ),
         ].separate(const SizedBox(width: Insets.sm)).toList(),
       ),
     );
 
-    Iterable<Paddler> sortedPaddlers = paddlers
+    Iterable<Paddler> sortedPaddlers = paddlers.where((paddler) {
+      if (genderFilter != null && paddler.gender != genderFilter) {
+        return false;
+      } else if (sidePreferenceFilter != null &&
+          paddler.sidePreference != sidePreferenceFilter) {
+        return false;
+      } else if (ageGroupFilter != null && paddler.ageGroup != ageGroupFilter) {
+        return false;
+      }
+
+      return true;
+    }).toList()
       ..sort(PaddlerSort.sortingStrategyLabels[sortingStrategy]);
 
     if (!sortIncreasing) {
