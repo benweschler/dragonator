@@ -149,7 +149,7 @@ class _RosterContentState extends State<_RosterContent> {
       ),
     );
 
-    Iterable<Paddler> sortedPaddlers = paddlers.where((paddler) {
+    List<Paddler> sortedPaddlers = paddlers.where((paddler) {
       if (genderFilter != null && paddler.gender != genderFilter) {
         return false;
       } else if (sidePreferenceFilter != null &&
@@ -164,7 +164,7 @@ class _RosterContentState extends State<_RosterContent> {
       ..sort(PaddlerSort.sortingStrategyLabels[sortingStrategy]);
 
     if (!sortIncreasing) {
-      sortedPaddlers = paddlers.reversed;
+      sortedPaddlers = sortedPaddlers.reversed.toList();
     }
 
     return ListView(
@@ -174,11 +174,22 @@ class _RosterContentState extends State<_RosterContent> {
         const SizedBox(height: Insets.xs),
         filterRow,
         const SizedBox(height: Insets.sm),
-        ...sortedPaddlers
-            .map<Widget>((paddler) => PaddlerPreviewTile(paddler))
-            //TODO: used divider
-            .separate(const Divider(height: 0.5, thickness: 0.5))
-            .toList(),
+        if (sortedPaddlers.isNotEmpty)
+          ...sortedPaddlers
+              .map<Widget>((paddler) => PaddlerPreviewTile(paddler))
+              //TODO: used divider
+              .separate(const Divider(height: 0.5, thickness: 0.5))
+              .toList()
+        else
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: Insets.xl),
+            child: Center(
+              child: Text(
+                'No matching paddlers',
+                style: TextStyle(color: AppColors.of(context).neutralContent),
+              ),
+            ),
+          ),
       ],
     );
   }
