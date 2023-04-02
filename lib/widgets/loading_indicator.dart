@@ -24,8 +24,8 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
 
   @override
   void initState() {
-    _controller.repeat();
     super.initState();
+    _controller.repeat();
   }
 
   @override

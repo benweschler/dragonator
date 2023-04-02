@@ -31,15 +31,22 @@ class _LineupScreenState extends State<LineupScreen> {
           updateSelectedTeamIndex: (newIndex) =>
               setState(() => selectedTeamIndex = newIndex),
         ),
-        floatingActionButton: CustomFAB(
-          onTap: () {},
-          child: const Icon(Icons.add_rounded),
+        floatingActionButton: Builder(
+          builder: (context) {
+            return CustomFAB(
+              //TODO: using imperative navigation
+              onTap: () => context.push(RoutePaths.createLineup),
+              child: const Icon(Icons.add_rounded),
+            );
+          }
         ),
         child: ListView(
           children: [
             const Text('Lineups', style: TextStyles.h1),
             const SizedBox(height: Insets.sm),
-            ...context.read<RosterModel>().lineups
+            ...context
+                .read<RosterModel>()
+                .lineups
                 .map<Widget>((lineup) => LineupTile(lineup))
                 .separate(const Divider(height: 0.5, thickness: 0.5))
                 .toList(),

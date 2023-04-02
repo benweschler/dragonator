@@ -70,8 +70,8 @@ class RosterModel extends EasyNotifier {
 
   Iterable<Lineup> get lineups => _lineupIDMap.values;
 
-  void setLineup(String lineupID, Lineup lineup) =>
-      notify(() => _lineupIDMap[lineupID] = lineup);
+  void setLineup(Lineup lineup) =>
+      notify(() => _lineupIDMap[lineup.id] = lineup);
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
 }

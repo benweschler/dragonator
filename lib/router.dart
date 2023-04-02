@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/screens/create_lineup_screen.dart';
 import 'package:dragonator/screens/edit_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
 import 'package:dragonator/screens/forgot_password_screen/forgot_password_screen.dart';
@@ -43,6 +44,8 @@ abstract class RoutePaths {
       );
 
   static String editLineup(String id) => '$lineup/edit-lineup/$id';
+
+  static String createLineup = '$lineup/create-lineup';
 }
 
 class AppRouter {
@@ -114,6 +117,12 @@ class AppRouter {
                   path: 'edit-lineup/:id',
                   builder: (state) => EditLineupScreen(
                     lineupID: state.params['id']!,
+                  ),
+                ),
+                AppRoute(
+                  path: 'create-lineup',
+                  pageBuilder: (state) => FadeTransitionPage(
+                    child: const CreateLineupScreen(),
                   ),
                 ),
               ],

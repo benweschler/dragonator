@@ -7,7 +7,6 @@ import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
 
-//TODO: this needs to be cleaned up
 class SortingOptionsMenu extends StatefulWidget {
   final Iterable<String> sortingStrategies;
   final String initiallySelectedStrategy;

@@ -147,12 +147,11 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
 
   @override
   void initState() {
+    super.initState();
     if (widget.isActive) {
       // If the button is not active, begin with the selector faded out.
       _controller.value = 1;
     }
-
-    super.initState();
   }
 
   @override
