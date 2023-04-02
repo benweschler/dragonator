@@ -1,11 +1,11 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/widgets/buttons/modal_sheet_expanded_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 //TODO: this needs to be cleaned up
 class SortingOptionsMenu extends StatefulWidget {
@@ -34,7 +34,6 @@ class _SortingOptionsMenuState extends State<SortingOptionsMenu> {
   Widget build(BuildContext context) {
     return ModalSheet(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           ...<Widget>[
@@ -52,8 +51,10 @@ class _SortingOptionsMenuState extends State<SortingOptionsMenu> {
                 .toList(),
             //TODO: using divider here
           ].separate(const Divider(height: 0.5, thickness: 0.5)).toList(),
-          _ApplyButton(
+          ModalSheetButtonTile(
+            color: AppColors.of(context).accent,
             onTap: () => widget.onSave(selectedStrategy, sortIncreasing),
+            label: 'Apply',
           ),
         ],
       ),
@@ -95,7 +96,7 @@ class _SortDirectionSelector extends StatelessWidget {
           Expanded(
             child: Center(
               child: Text(
-                sortIncreasing ? 'Increasing' : 'Decreasing',
+                sortIncreasing ? 'Ascending' : 'Descending',
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
@@ -116,43 +117,6 @@ class _SortDirectionSelector extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ApplyButton extends StatelessWidget {
-  final GestureTapCallback onTap;
-
-  const _ApplyButton({Key? key, required this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ResponsiveButton.large(
-      onTap: () {
-        onTap();
-        context.pop();
-      },
-      builder: (overlay) => Padding(
-        padding: const EdgeInsets.only(
-          top: Insets.xs,
-          left: Insets.offset,
-          right: Insets.offset,
-          bottom: Insets.offset,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(Insets.med),
-          decoration: BoxDecoration(
-            borderRadius: Corners.medBorderRadius,
-            color: Color.alphaBlend(overlay, AppColors.of(context).accent),
-          ),
-          child: const Center(
-            child: Text(
-              'Apply',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
       ),
     );
   }

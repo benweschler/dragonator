@@ -8,7 +8,8 @@ import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import 'modal_sheet_expanded_button.dart';
 
 class CustomFilterChip<T> extends StatefulWidget {
   final String label;
@@ -33,7 +34,7 @@ class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
   @override
   Widget build(BuildContext context) {
     return ChipButton(
-      onTap: () => context.showModal(SelectFilterMenu<T>(
+      onTap: () => context.showModal(_SelectFilterMenu<T>(
         options: widget.options,
         initiallySelectedMenuOption: selectedOption,
         onSave: (option) => setState(() {
@@ -62,12 +63,12 @@ class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
 
 //TODO: change to using apply button like sorting options menu.
 //TODO: move to separate file
-class SelectFilterMenu<T> extends StatefulWidget {
+class _SelectFilterMenu<T> extends StatefulWidget {
   final Iterable<T> options;
   final T? initiallySelectedMenuOption;
   final ValueChanged<T?> onSave;
 
-  const SelectFilterMenu({
+  const _SelectFilterMenu({
     Key? key,
     required this.options,
     required this.initiallySelectedMenuOption,
@@ -75,16 +76,20 @@ class SelectFilterMenu<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SelectFilterMenu> createState() => _SelectFilterMenuState<T>();
+  State<_SelectFilterMenu> createState() => _SelectFilterMenuState<T>();
 }
 
-class _SelectFilterMenuState<T> extends State<SelectFilterMenu<T>> {
+class _SelectFilterMenuState<T> extends State<_SelectFilterMenu<T>> {
   late T? selectedMenuOption = widget.initiallySelectedMenuOption;
 
   void onTap(T? option) {
-    setState(() => selectedMenuOption = option);
-    widget.onSave(option);
-    context.pop();
+    setState(() {
+      if (selectedMenuOption == option) {
+        selectedMenuOption = null;
+      } else {
+        selectedMenuOption = option;
+      }
+    });
   }
 
   @override
@@ -96,33 +101,19 @@ class _SelectFilterMenuState<T> extends State<SelectFilterMenu<T>> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ...widget.options.map((option) => SelectionMenuTile(
-                    label: option.toString(),
-                    isSelected: option == selectedMenuOption,
-                    onTap: () => onTap(option),
-                  )),
-              //TODO: make modal sheet tile
-              GestureDetector(
-                onTap: () => onTap(null),
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.all(Insets.lg),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Clear',
-                          style: TextStyles.body1.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const Icon(Icons.clear_rounded),
-                    ],
-                  ),
-                ),
+              ...widget.options
+                  .map<Widget>((option) => SelectionMenuTile(
+                        label: option.toString(),
+                        isSelected: option == selectedMenuOption,
+                        onTap: () => onTap(option),
+                      ))
+                  .separate(const Divider(height: 0.5, thickness: 0.5)),
+              ModalSheetButtonTile(
+                color: AppColors.of(context).accent,
+                onTap: () => widget.onSave(selectedMenuOption),
+                label: 'Apply',
               ),
-            ].separate(const Divider(height: 0.5, thickness: 0.5)).toList(),
+            ],
           ),
         ),
       ),

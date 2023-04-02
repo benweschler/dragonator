@@ -84,7 +84,6 @@ class SignUpScreen extends StatelessWidget {
             key: _formKey,
             child: AutofillGroup(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Center(
                     child: Text(
