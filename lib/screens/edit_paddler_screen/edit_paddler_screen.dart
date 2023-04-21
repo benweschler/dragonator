@@ -60,7 +60,7 @@ class EditPaddlerScreen extends StatelessWidget {
       );
     }
 
-    rosterModel.updatePaddler(updatedPaddler);
+    rosterModel.setPaddler(updatedPaddler);
   }
 
   @override

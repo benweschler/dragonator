@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/commands/update_paddler_command.dart';
+import 'package:dragonator/commands/set_paddler_command.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
@@ -52,7 +52,7 @@ class RosterModel extends EasyNotifier {
 
   /// If [paddler] already exists, it is updated. If it does not exist,
   /// it is created.
-  void updatePaddler(Paddler paddler) => UpdatePaddlerCommand.run(paddler);
+  void setPaddler(Paddler paddler) => SetPaddlerCommand.run(paddler);
 
   //TODO: dummy Data
   late final Map<String, Lineup> _lineupIDMap = {
@@ -70,8 +70,11 @@ class RosterModel extends EasyNotifier {
 
   Iterable<Lineup> get lineups => _lineupIDMap.values;
 
+  Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
+
   void setLineup(Lineup lineup) =>
       notify(() => _lineupIDMap[lineup.id] = lineup);
 
-  Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
+  void deleteLineup(String lineupID) =>
+      notify(() => _lineupIDMap.remove(lineupID));
 }

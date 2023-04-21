@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dragonator/data/paddler.dart';
 
-abstract class UpdatePaddlerCommand {
+abstract class SetPaddlerCommand {
   static Future<void> run(Paddler paddler) async {
     final teamID = paddler.teamID;
     await FirebaseFirestore.instance.collection('teams').doc(teamID).update({

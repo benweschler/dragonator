@@ -3,16 +3,17 @@ import 'dart:async';
 import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
-import 'package:dragonator/screens/create_lineup_screen.dart';
-import 'package:dragonator/screens/edit_lineup_screen.dart';
+import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
+import 'package:dragonator/screens/lineups/edit_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
 import 'package:dragonator/screens/forgot_password_screen/forgot_password_screen.dart';
+import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen/settings_screen.dart';
-import 'package:dragonator/screens/lineup_screen.dart';
+import 'package:dragonator/screens/lineups/lineup_library_screen.dart';
 import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,7 @@ import 'models/roster_model.dart';
 abstract class RoutePaths {
   static String splash = '/';
   static String roster = '/roster';
-  static String lineup = '/lineup';
+  static String lineupLibrary = '/lineup-library';
   static String profile = '/profile';
   static String logIn = '/log-in';
   static String forgotPassword = '$logIn/forgot-password';
@@ -43,9 +44,15 @@ abstract class RoutePaths {
         {'paddlerID': paddlerID, 'teamID': teamID},
       );
 
-  static String editLineup(String id) => '$lineup/edit-lineup/$id';
+  static String lineup(String lineupID) => '$lineupLibrary/lineup/$lineupID';
 
-  static String createLineup = '$lineup/create-lineup';
+  static String nameLineup([String? lineupID]) => _appendQueryParams(
+        '$lineupLibrary/name-lineup',
+        {'lineupID': lineupID},
+      );
+
+  static String editLineup(String lineupID) =>
+      '$lineupLibrary/edit-lineup/$lineupID';
 }
 
 class AppRouter {
@@ -109,20 +116,28 @@ class AppRouter {
               ],
             ),
             AppRoute(
-              path: RoutePaths.lineup,
+              path: RoutePaths.lineupLibrary,
               isNavBarTab: true,
-              builder: (_) => const LineupScreen(),
+              builder: (_) => const LineupLibraryScreen(),
               routes: [
                 AppRoute(
-                  path: 'edit-lineup/:id',
-                  builder: (state) => EditLineupScreen(
+                  path: 'name-lineup',
+                  pageBuilder: (state) => FadeTransitionPage(
+                    child: NameLineupScreen(
+                      lineupID: state.queryParams['lineupID'],
+                    ),
+                  ),
+                ),
+                AppRoute(
+                  path: 'lineup/:id',
+                  builder: (state) => LineupScreen(
                     lineupID: state.params['id']!,
                   ),
                 ),
                 AppRoute(
-                  path: 'create-lineup',
+                  path: 'edit-lineup/:id',
                   pageBuilder: (state) => FadeTransitionPage(
-                    child: const CreateLineupScreen(),
+                    child: EditLineupScreen(lineupID: state.params['id']!),
                   ),
                 ),
               ],

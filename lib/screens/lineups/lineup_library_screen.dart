@@ -11,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class LineupScreen extends StatefulWidget {
-  const LineupScreen({Key? key}) : super(key: key);
+class LineupLibraryScreen extends StatefulWidget {
+  const LineupLibraryScreen({Key? key}) : super(key: key);
 
   @override
-  State<LineupScreen> createState() => _LineupScreenState();
+  State<LineupLibraryScreen> createState() => _LineupLibraryScreenState();
 }
 
-class _LineupScreenState extends State<LineupScreen> {
+class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
   int selectedTeamIndex = 0;
 
   @override
@@ -31,15 +31,12 @@ class _LineupScreenState extends State<LineupScreen> {
           updateSelectedTeamIndex: (newIndex) =>
               setState(() => selectedTeamIndex = newIndex),
         ),
-        floatingActionButton: Builder(
-          builder: (context) {
-            return CustomFAB(
-              //TODO: using imperative navigation
-              onTap: () => context.push(RoutePaths.createLineup),
-              child: const Icon(Icons.add_rounded),
-            );
-          }
-        ),
+        floatingActionButton: Builder(builder: (context) {
+          return CustomFAB(
+            onTap: () => context.push(RoutePaths.nameLineup()),
+            child: const Icon(Icons.add_rounded),
+          );
+        }),
         child: ListView(
           children: [
             const Text('Lineups', style: TextStyles.h1),
@@ -47,7 +44,7 @@ class _LineupScreenState extends State<LineupScreen> {
             ...context
                 .read<RosterModel>()
                 .lineups
-                .map<Widget>((lineup) => LineupTile(lineup))
+                .map<Widget>((lineup) => LineupPreviewTile(lineup))
                 .separate(const Divider(height: 0.5, thickness: 0.5))
                 .toList(),
           ],
@@ -57,15 +54,15 @@ class _LineupScreenState extends State<LineupScreen> {
   }
 }
 
-class LineupTile extends StatelessWidget {
+class LineupPreviewTile extends StatelessWidget {
   final Lineup lineup;
 
-  const LineupTile(this.lineup, {Key? key}) : super(key: key);
+  const LineupPreviewTile(this.lineup, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(RoutePaths.editLineup(lineup.id)),
+      onTap: () => context.go(RoutePaths.lineup(lineup.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -78,10 +75,12 @@ class LineupTile extends StatelessWidget {
   }
 
   Widget _buildContent(AppColors appColors) {
-    final paddlerNames = lineup.paddlers
-        .where((paddler) => paddler != null)
-        .map((paddler) => '${paddler!.firstName} ${paddler.lastName}')
-        .join(', ');
+    final paddlerNames = lineup.paddlers.isEmpty
+        ? 'No paddlers'
+        : lineup.paddlers
+            .where((paddler) => paddler != null)
+            .map((paddler) => '${paddler!.firstName} ${paddler.lastName}')
+            .join(', ');
 
     return Row(
       children: [

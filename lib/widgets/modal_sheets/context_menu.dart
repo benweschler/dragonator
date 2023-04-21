@@ -1,10 +1,10 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'modal_sheet.dart';
 
-//TODO: this is currently unused
 class ContextMenu extends StatelessWidget {
   final List<ContextMenuAction> actions;
 
@@ -44,9 +44,10 @@ class ContextMenuAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         onTap();
-        Navigator.of(context).pop();
+        context.pop();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -19,7 +19,7 @@ class MainAppScaffold extends StatefulWidget {
       label: 'Roster',
     ),
     NavigationTab(
-      rootLocation: RoutePaths.lineup,
+      rootLocation: RoutePaths.lineupLibrary,
       icon: Icons.library_books_outlined,
       label: 'Lineups',
     ),
