@@ -54,7 +54,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
           bottom: 0,
           child: CustomNavigationBar(
             tabs: widget._bottomNavigationTabs,
-            selectedRoutePath: GoRouter.of(context).location,
+            selectedRoutePath: GoRouterState.of(context).matchedLocation,
           ),
         ),
       ],
@@ -110,7 +110,7 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void _onItemTapped(BuildContext context, String rootLocation) {
-    if (rootLocation == GoRouter.of(context).location) return;
+    if (rootLocation == GoRouterState.of(context).matchedLocation) return;
     HapticFeedback.lightImpact();
     context.go(rootLocation);
   }

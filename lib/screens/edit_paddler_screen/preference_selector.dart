@@ -29,7 +29,7 @@ class PreferenceSelector extends StatelessWidget {
               onChanged: (newValue) => state.didChange(newValue),
             ),
             const SizedBox(width: Insets.med),
-            Text(label),
+            Text(label, style: TextStyles.body1),
           ],
         ),
       ),

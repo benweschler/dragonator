@@ -1,19 +1,16 @@
 import 'package:dragonator/commands/create_user_command.dart';
-import 'package:dragonator/models/app_model.dart';
-import 'package:dragonator/router.dart';
-import 'package:dragonator/screens/signup_screen/field_names.dart';
+import 'package:dragonator/models/app_model.dart';import 'package:dragonator/screens/signup_screen/field_names.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/async_action_button.dart';
-import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
+import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/error_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -74,10 +71,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      leading: ResponsiveStrokeButton(
-        onTap: () => context.go(RoutePaths.logIn),
-        child: const Icon(Icons.arrow_back_ios_rounded),
-      ),
+      leading: const CustomBackButton(),
       child: Center(
         child: SingleChildScrollView(
           child: FormBuilder(

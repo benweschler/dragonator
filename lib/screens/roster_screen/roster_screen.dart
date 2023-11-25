@@ -121,8 +121,8 @@ class _RosterContentState extends State<_RosterContent> {
                 sortIncreasing = isIncreasing;
               }),
             )),
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Icon(Icons.sort_rounded),
                 SizedBox(width: Insets.xs),
                 Text('Sort'),

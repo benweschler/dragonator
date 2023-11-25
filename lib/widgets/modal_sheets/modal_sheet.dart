@@ -19,6 +19,7 @@ class ModalSheet extends StatelessWidget {
           children: [
             const _ModalSheetHandle(),
             const SizedBox(height: Insets.xs),
+            //TODO: why is this Flexible here
             Flexible(
               child: Container(
                 margin: const EdgeInsets.all(Insets.sm),

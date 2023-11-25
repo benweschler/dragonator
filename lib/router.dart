@@ -6,7 +6,7 @@ import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
 import 'package:dragonator/screens/lineups/edit_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
-import 'package:dragonator/screens/forgot_password_screen/forgot_password_screen.dart';
+import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
@@ -64,6 +64,7 @@ class AppRouter {
 
   GoRouter get router {
     return GoRouter(
+      //TODO: get rid of initial location? redirect should handle this
       initialLocation: RoutePaths.roster,
       navigatorKey: _rootNavigatorKey,
       refreshListenable: appModel.routerRefreshNotifier,
@@ -102,14 +103,14 @@ class AppRouter {
               routes: [
                 AppRoute(
                   path: 'paddler/:id',
-                  builder: (state) => PaddlerScreen(state.params['id']!),
+                  builder: (state) => PaddlerScreen(state.pathParameters['id']!),
                 ),
                 AppRoute(
                   path: 'edit-paddler',
                   pageBuilder: (state) => FadeTransitionPage(
                     child: EditPaddlerScreen(
-                      paddlerID: state.queryParams['paddlerID'],
-                      teamID: state.queryParams['teamID'],
+                      paddlerID: state.uri.queryParameters['paddlerID'],
+                      teamID: state.uri.queryParameters['teamID'],
                     ),
                   ),
                 ),
@@ -124,20 +125,20 @@ class AppRouter {
                   path: 'name-lineup',
                   pageBuilder: (state) => FadeTransitionPage(
                     child: NameLineupScreen(
-                      lineupID: state.queryParams['lineupID'],
+                      lineupID: state.uri.queryParameters['lineupID'],
                     ),
                   ),
                 ),
                 AppRoute(
                   path: 'lineup/:id',
                   builder: (state) => LineupScreen(
-                    lineupID: state.params['id']!,
+                    lineupID: state.pathParameters['id']!,
                   ),
                 ),
                 AppRoute(
                   path: 'edit-lineup/:id',
                   pageBuilder: (state) => FadeTransitionPage(
-                    child: EditLineupScreen(lineupID: state.params['id']!),
+                    child: EditLineupScreen(lineupID: state.pathParameters['id']!),
                   ),
                 ),
               ],
@@ -154,7 +155,7 @@ class AppRouter {
   }
 
   String? redirectNavigation(BuildContext context, GoRouterState state) {
-    final path = state.subloc;
+    final path = state.matchedLocation;
 
     if (!appModel.isLoggedIn &&
         path != RoutePaths.logIn &&

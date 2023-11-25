@@ -6,6 +6,7 @@ enum ThemeType { light, dark }
 
 class AppColors extends ThemeExtension<AppColors> {
   static const _primaryRed = Color(0xFFE55C45);
+
   final Color accent;
   final Color smallSurface;
   final Color largeSurface;
