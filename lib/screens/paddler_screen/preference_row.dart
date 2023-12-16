@@ -9,10 +9,10 @@ class PreferenceRow extends StatelessWidget {
   final bool hasPreference;
 
   const PreferenceRow({
-    Key? key,
+    super.key,
     required this.label,
     required this.hasPreference,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

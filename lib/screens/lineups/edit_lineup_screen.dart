@@ -14,7 +14,7 @@ const int _kBoatCapacity = 22;
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
 
-  const EditLineupScreen({Key? key, required this.lineupID}) : super(key: key);
+  const EditLineupScreen({super.key, required this.lineupID});
 
   @override
   State<EditLineupScreen> createState() => _EditLineupScreenState();

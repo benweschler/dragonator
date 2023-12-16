@@ -13,12 +13,12 @@ class SingleFieldFormScreen extends StatefulWidget {
   final String? initialValue;
 
   const SingleFieldFormScreen({
-    Key? key,
+    super.key,
     required this.onSave,
     required this.heading,
     this.hintText,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   State<SingleFieldFormScreen> createState() => _SingleFieldFormScreenState();

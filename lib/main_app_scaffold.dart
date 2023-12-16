@@ -10,7 +10,7 @@ const double _kNavBarIconSize = 24;
 class MainAppScaffold extends StatefulWidget {
   final Widget body;
 
-  MainAppScaffold({Key? key, required this.body}) : super(key: key);
+  MainAppScaffold({super.key, required this.body});
 
   final List<NavigationTab> _bottomNavigationTabs = [
     NavigationTab(
@@ -67,10 +67,10 @@ class CustomNavigationBar extends StatelessWidget {
   final String selectedRoutePath;
 
   const CustomNavigationBar({
-    Key? key,
+    super.key,
     required this.tabs,
     required this.selectedRoutePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -123,12 +123,12 @@ class NavigationBarButton extends StatefulWidget {
   final GestureTapCallback onTap;
 
   const NavigationBarButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.isActive,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<NavigationBarButton> createState() => _NavigationBarButtonState();

@@ -11,10 +11,10 @@ class CustomFAB extends StatelessWidget {
   final GestureTapCallback onTap;
 
   const CustomFAB({
-    Key? key,
+    super.key,
     required this.child,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -196,10 +196,10 @@ class AppRoute extends GoRoute {
   final bool isNavBarTab;
 
   AppRoute({
-    required String path,
+    required super.path,
     Widget Function(GoRouterState state)? builder,
     Page Function(GoRouterState state)? pageBuilder,
-    List<GoRoute> routes = const [],
+    List<GoRoute> super.routes = const [],
     this.isNavBarTab = false,
   })  : assert((builder == null) ^ (pageBuilder == null)),
         assert(
@@ -207,8 +207,6 @@ class AppRoute extends GoRoute {
           'Passing a pageBuilder causes isNavBarTab to have no effect. Offending route: $path.',
         ),
         super(
-          path: path,
-          routes: routes,
           pageBuilder: (context, state) {
             if (pageBuilder != null) return pageBuilder(state);
 

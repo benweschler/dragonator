@@ -8,11 +8,11 @@ class PreferenceSelector extends StatelessWidget {
   final bool initialValue;
 
   const PreferenceSelector({
-    Key? key,
+    super.key,
     required this.name,
     required this.label,
     required this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

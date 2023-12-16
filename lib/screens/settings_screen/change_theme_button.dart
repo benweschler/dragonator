@@ -9,8 +9,7 @@ import 'package:provider/provider.dart';
 class ChangeThemeButton extends StatelessWidget {
   final ThemeMode themeMode;
 
-  const ChangeThemeButton({Key? key, required this.themeMode})
-      : super(key: key);
+  const ChangeThemeButton({super.key, required this.themeMode});
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +130,7 @@ class _DiagonalClipper extends CustomClipper<Path> {
 }
 
 class _ThemeWindow extends StatelessWidget {
-  const _ThemeWindow({Key? key}) : super(key: key);
+  const _ThemeWindow();
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +217,10 @@ class _WindowElement extends StatelessWidget {
   final Widget? child;
 
   const _WindowElement({
-    Key? key,
     this.flex = 1,
     this.child,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

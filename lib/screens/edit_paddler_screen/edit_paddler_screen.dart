@@ -24,9 +24,8 @@ class EditPaddlerScreen extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
   static const _uuid = Uuid();
 
-  EditPaddlerScreen({this.paddlerID, this.teamID, Key? key})
-      : assert((paddlerID == null) ^ (teamID == null)),
-        super(key: key);
+  EditPaddlerScreen({this.paddlerID, this.teamID, super.key})
+      : assert((paddlerID == null) ^ (teamID == null));
 
   void _savePaddler(RosterModel rosterModel, Paddler? paddler) {
     final formData = _formKey.currentState!.value;

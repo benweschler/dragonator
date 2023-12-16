@@ -9,7 +9,7 @@ const double _actionButtonPadding = Insets.med;
 class ActionButtonCard extends StatelessWidget {
   final List<ActionButton> actionButtons;
 
-  const ActionButtonCard(this.actionButtons, {Key? key}) : super(key: key);
+  const ActionButtonCard(this.actionButtons, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,11 @@ class ActionButton extends StatelessWidget {
   final String label;
 
   const ActionButton({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.icon,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

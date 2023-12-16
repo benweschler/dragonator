@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class LineupLibraryScreen extends StatefulWidget {
-  const LineupLibraryScreen({Key? key}) : super(key: key);
+  const LineupLibraryScreen({super.key});
 
   @override
   State<LineupLibraryScreen> createState() => _LineupLibraryScreenState();
@@ -45,8 +45,7 @@ class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
                 .read<RosterModel>()
                 .lineups
                 .map<Widget>((lineup) => LineupPreviewTile(lineup))
-                .separate(const Divider(height: 0.5, thickness: 0.5))
-                .toList(),
+                .separate(const Divider(height: 0.5, thickness: 0.5)),
           ],
         ),
       ),
@@ -57,7 +56,7 @@ class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
 class LineupPreviewTile extends StatelessWidget {
   final Lineup lineup;
 
-  const LineupPreviewTile(this.lineup, {Key? key}) : super(key: key);
+  const LineupPreviewTile(this.lineup, {super.key});
 
   @override
   Widget build(BuildContext context) {

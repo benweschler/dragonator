@@ -9,12 +9,12 @@ class ChipButton extends StatelessWidget {
   final Widget child;
 
   const ChipButton({
-    Key? key,
+    super.key,
     this.fillColor,
     this.contentColor,
     required this.onTap,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

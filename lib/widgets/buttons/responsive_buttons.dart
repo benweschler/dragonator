@@ -15,21 +15,19 @@ class ResponsiveButton extends StatefulWidget {
 
   /// A button that adds a light overlay when tapped.
   const ResponsiveButton({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.builder,
-  })  : _scaleLowerBound = 0.8,
-        super(key: key);
+  })  : _scaleLowerBound = 0.8;
 
   /// A button that adds a light overlay when tapped.
   ///
   /// Uses a smaller shrinking animation, appropriate for large buttons.
   const ResponsiveButton.large({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.builder,
-  })  : _scaleLowerBound = 0.95,
-        super(key: key);
+  })  : _scaleLowerBound = 0.95;
 
   @override
   State<ResponsiveButton> createState() => _ResponsiveButtonState();
@@ -110,10 +108,10 @@ class ResponsiveStrokeButton extends StatefulWidget {
   final Widget child;
 
   const ResponsiveStrokeButton({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<ResponsiveStrokeButton> createState() => _ResponsiveStrokeButtonState();
@@ -157,11 +155,10 @@ class _BaseResponsiveButton extends StatelessWidget {
   final Widget child;
 
   const _BaseResponsiveButton({
-    Key? key,
     required this.onTap,
     required this.onPressed,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

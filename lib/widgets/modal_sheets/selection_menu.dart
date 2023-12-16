@@ -13,11 +13,11 @@ class SelectionMenu extends StatefulWidget {
   final ValueChanged<int> onItemTap;
 
   const SelectionMenu({
-    Key? key,
+    super.key,
     required this.items,
     required this.initiallySelectedIndex,
     required this.onItemTap,
-  }) : super(key: key);
+  });
 
   @override
   State<SelectionMenu> createState() => _SelectionMenuState();
@@ -66,11 +66,11 @@ class SelectionMenuTile extends StatelessWidget {
   final GestureTapCallback onTap;
 
   const SelectionMenuTile({
-    Key? key,
+    super.key,
     required this.label,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

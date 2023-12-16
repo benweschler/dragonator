@@ -17,11 +17,11 @@ class CustomFilterChip<T> extends StatefulWidget {
   final List<T> options;
 
   const CustomFilterChip({
-    Key? key,
+    super.key,
     required this.label,
     required this.onFiltered,
     required this.options,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomFilterChip> createState() => _CustomFilterChipState<T>();
@@ -69,11 +69,11 @@ class _SelectFilterMenu<T> extends StatefulWidget {
   final ValueChanged<T?> onSave;
 
   const _SelectFilterMenu({
-    Key? key,
+    super.key,
     required this.options,
     required this.initiallySelectedMenuOption,
     required this.onSave,
-  }) : super(key: key);
+  });
 
   @override
   State<_SelectFilterMenu> createState() => _SelectFilterMenuState<T>();

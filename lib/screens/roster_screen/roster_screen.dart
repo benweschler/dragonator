@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'paddler_preview_tile.dart';
 
 class RosterScreen extends StatefulWidget {
-  const RosterScreen({Key? key}) : super(key: key);
+  const RosterScreen({super.key});
 
   @override
   State<RosterScreen> createState() => _RosterScreenState();
@@ -82,8 +82,7 @@ class _RosterContent extends StatefulWidget {
   const _RosterContent({
     required this.team,
     required this.rosterModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   State<_RosterContent> createState() => _RosterContentState();
@@ -179,7 +178,6 @@ class _RosterContentState extends State<_RosterContent> {
               .map<Widget>((paddler) => PaddlerPreviewTile(paddler))
               //TODO: used divider
               .separate(const Divider(height: 0.5, thickness: 0.5))
-              .toList()
         else
           Padding(
             padding: const EdgeInsets.symmetric(vertical: Insets.xl),
@@ -198,7 +196,7 @@ class _RosterContentState extends State<_RosterContent> {
 class _EmptyRoster extends StatelessWidget {
   final String content;
 
-  const _EmptyRoster({Key? key, required this.content}) : super(key: key);
+  const _EmptyRoster({required this.content});
 
   @override
   Widget build(BuildContext context) {

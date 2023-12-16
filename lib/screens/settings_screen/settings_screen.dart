@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 //TODO: using divider
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class SettingsScreen extends StatelessWidget {
 class ProfileInfo extends StatelessWidget {
   final AppUser user;
 
-  const ProfileInfo(this.user, {Key? key}) : super(key: key);
+  const ProfileInfo(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class ProfileInfo extends StatelessWidget {
 }
 
 class TeamCard extends StatelessWidget {
-  const TeamCard({Key? key}) : super(key: key);
+  const TeamCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +193,7 @@ class TeamTile extends StatelessWidget {
   final String teamName;
   final Iterable<String> paddlerNames;
 
-  const TeamTile({Key? key, required this.teamName, required this.paddlerNames})
-      : super(key: key);
+  const TeamTile({super.key, required this.teamName, required this.paddlerNames});
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,7 @@ import 'preference_row.dart';
 class PaddlerScreen extends StatelessWidget {
   final String paddlerID;
 
-  const PaddlerScreen(this.paddlerID, {Key? key}) : super(key: key);
+  const PaddlerScreen(this.paddlerID, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class PaddlerScreen extends StatelessWidget {
 class PaddlerStatTable extends StatelessWidget {
   final Paddler paddler;
 
-  const PaddlerStatTable(this.paddler, {Key? key}) : super(key: key);
+  const PaddlerStatTable(this.paddler, {super.key});
 
   @override
   Widget build(BuildContext context) {

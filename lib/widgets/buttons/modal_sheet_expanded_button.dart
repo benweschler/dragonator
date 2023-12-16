@@ -13,11 +13,11 @@ class ModalSheetButtonTile extends StatelessWidget {
   final String label;
 
   const ModalSheetButtonTile({
-    Key? key,
+    super.key,
     required this.color,
     required this.onTap,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

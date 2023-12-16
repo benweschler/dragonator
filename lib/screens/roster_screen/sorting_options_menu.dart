@@ -14,12 +14,12 @@ class SortingOptionsMenu extends StatefulWidget {
   final void Function(String sortingStrategy, bool sortIncreasing) onSave;
 
   const SortingOptionsMenu({
-    Key? key,
+    super.key,
     required this.sortingStrategies,
     required this.initiallySelectedStrategy,
     required this.sortIncreasing,
     required this.onSave,
-  }) : super(key: key);
+  });
 
   @override
   State<SortingOptionsMenu> createState() => _SortingOptionsMenuState();
@@ -47,9 +47,9 @@ class _SortingOptionsMenuState extends State<SortingOptionsMenu> {
                       isSelected: selectedStrategy == strategy,
                       onTap: () => setState(() => selectedStrategy = strategy),
                     ))
-                .toList(),
+                ,
             //TODO: using divider here
-          ].separate(const Divider(height: 0.5, thickness: 0.5)).toList(),
+          ].separate(const Divider(height: 0.5, thickness: 0.5)),
           ModalSheetButtonTile(
             color: AppColors.of(context).accent,
             onTap: () => widget.onSave(selectedStrategy, sortIncreasing),
@@ -66,10 +66,9 @@ class _SortDirectionSelector extends StatelessWidget {
   final ValueChanged<bool> onDirectionChanged;
 
   const _SortDirectionSelector({
-    Key? key,
     required this.sortIncreasing,
     required this.onDirectionChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

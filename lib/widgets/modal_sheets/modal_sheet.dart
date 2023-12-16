@@ -5,9 +5,9 @@ class ModalSheet extends StatelessWidget {
   final Widget child;
 
   const ModalSheet({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +19,13 @@ class ModalSheet extends StatelessWidget {
           children: [
             const _ModalSheetHandle(),
             const SizedBox(height: Insets.xs),
-            //TODO: why is this Flexible here
-            Flexible(
-              child: Container(
-                margin: const EdgeInsets.all(Insets.sm),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: Corners.medBorderRadius,
-                ),
-                child: child,
+            Container(
+              margin: const EdgeInsets.all(Insets.sm),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: Corners.medBorderRadius,
               ),
+              child: child,
             ),
           ],
         ),
@@ -38,7 +35,7 @@ class ModalSheet extends StatelessWidget {
 }
 
 class _ModalSheetHandle extends StatefulWidget {
-  const _ModalSheetHandle({Key? key}) : super(key: key);
+  const _ModalSheetHandle();
 
   @override
   State<_ModalSheetHandle> createState() => _ModalSheetHandleState();

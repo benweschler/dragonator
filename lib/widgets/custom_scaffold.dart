@@ -17,14 +17,14 @@ class CustomScaffold extends StatelessWidget {
   final Widget child;
 
   const CustomScaffold({
-    Key? key,
+    super.key,
     this.leading,
     this.trailing,
     this.center,
     this.floatingActionButton,
     this.addScreenInset = true,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +84,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? trailing;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     this.leading,
     this.center,
     this.trailing,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(40);
@@ -146,7 +146,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 class _DummyNavigationBar extends StatelessWidget {
   final double _navBarHeight = 59;
 
-  const _DummyNavigationBar({Key? key}) : super(key: key);
+  const _DummyNavigationBar();
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'login_errors.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class GoToSignUpButton extends StatelessWidget {
-  const GoToSignUpButton({Key? key}) : super(key: key);
+  const GoToSignUpButton({super.key});
 
   @override
   Widget build(BuildContext context) {

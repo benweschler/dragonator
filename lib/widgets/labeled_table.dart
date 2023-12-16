@@ -16,13 +16,12 @@ class LabeledTable extends StatelessWidget {
   final bool addColumnPadding;
 
   const LabeledTable({
-    Key? key,
+    super.key,
     required this.rows,
     this.elementAlignment = Alignment.center,
     bool? addColumnSeparator,
   })  : addColumnPadding =
-            addColumnSeparator ?? elementAlignment == Alignment.center,
-        super(key: key);
+            addColumnSeparator ?? elementAlignment == Alignment.center;
 
   Widget _wrapElement(Widget element) =>
       Expanded(child: Align(alignment: elementAlignment, child: element));

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class NameLineupScreen extends StatelessWidget {
   final String? lineupID;
 
-  const NameLineupScreen({Key? key, this.lineupID}) : super(key: key);
+  const NameLineupScreen({super.key, this.lineupID});
 
   @override
   Widget build(BuildContext context) {

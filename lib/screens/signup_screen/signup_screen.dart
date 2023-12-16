@@ -18,7 +18,7 @@ class SignUpScreen extends StatelessWidget {
   final ValueNotifier<String?> _errorNotifier = ValueNotifier(null);
   final GlobalKey<AsyncActionButtonState> _signUpButtonKey = GlobalKey();
 
-  SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({super.key});
 
   Future<void> signUp(AppModel appModel) async {
     final formData = _formKey.currentState!.value;

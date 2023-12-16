@@ -8,7 +8,7 @@ import 'modal_sheet.dart';
 class ContextMenu extends StatelessWidget {
   final List<ContextMenuAction> actions;
 
-  const ContextMenu(this.actions, {Key? key}) : super(key: key);
+  const ContextMenu(this.actions, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,11 @@ class ContextMenuAction extends StatelessWidget {
   final String label;
 
   const ContextMenuAction({
-    Key? key,
+    super.key,
     required this.icon,
     required this.onTap,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -19,7 +19,7 @@ const _kSegmentedControlPadding = Insets.sm * 1.2;
 class StatSelectorTable extends StatelessWidget {
   final Paddler? paddler;
 
-  const StatSelectorTable(this.paddler, {Key? key}) : super(key: key);
+  const StatSelectorTable(this.paddler, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -14,18 +14,16 @@ class PaddlerTile extends StatelessWidget {
   final int? index;
   final bool _isReorderable;
 
-  const PaddlerTile(this.paddler, {Key? key})
+  const PaddlerTile(this.paddler, {super.key})
       : _isReorderable = false,
-        index = null,
-        super(key: key);
+        index = null;
 
   /// A paddler tile for use in a [ReorderableListView].
   const PaddlerTile.reorderable({
-    Key? key,
+    super.key,
     required this.paddler,
     required int this.index,
-  })  : _isReorderable = true,
-        super(key: key);
+  })  : _isReorderable = true;
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +119,8 @@ class PaddlerTile extends StatelessWidget {
 class PositionLabelTile extends StatelessWidget {
   final int position;
 
-  const PositionLabelTile({Key? key, required this.position})
-      : assert(0 <= position && position < 22),
-        super(key: key);
+  const PositionLabelTile({super.key, required this.position})
+      : assert(0 <= position && position < 22);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +151,7 @@ class PositionLabelTile extends StatelessWidget {
 }
 
 class AddPaddlerTile extends StatelessWidget {
-  const AddPaddlerTile({Key? key}) : super(key: key);
+  const AddPaddlerTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +188,7 @@ class AddPaddlerTile extends StatelessWidget {
 }
 
 class EmptyPaddlerTile extends StatelessWidget {
-  const EmptyPaddlerTile({Key? key}) : super(key: key);
+  const EmptyPaddlerTile({super.key});
 
   @override
   Widget build(BuildContext context) {

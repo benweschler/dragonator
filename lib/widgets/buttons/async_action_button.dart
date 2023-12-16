@@ -13,12 +13,12 @@ class AsyncActionButton<T extends Object> extends StatefulWidget {
   final void Function(T error)? catchError;
 
   const AsyncActionButton({
-    Key? key,
+    super.key,
     this.isEnabled = true,
     required this.label,
     required this.action,
     required this.catchError,
-  }) : super(key: key);
+  });
 
   @override
   State<AsyncActionButton> createState() => AsyncActionButtonState<T>();
@@ -83,11 +83,10 @@ class _AsyncActionButtonContent extends StatelessWidget {
   final Color loadingIndicatorColor;
 
   const _AsyncActionButtonContent({
-    Key? key,
     required this.labelText,
     required this.isLoading,
     required this.loadingIndicatorColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

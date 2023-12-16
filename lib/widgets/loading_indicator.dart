@@ -5,7 +5,7 @@ class LoadingIndicator extends StatefulWidget {
   final Color color;
   final Size? size;
 
-  const LoadingIndicator(this.color, {Key? key, this.size}) : super(key: key);
+  const LoadingIndicator(this.color, {super.key, this.size});
 
   @override
   State<LoadingIndicator> createState() => _LoadingIndicatorState();

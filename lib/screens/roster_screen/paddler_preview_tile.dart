@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 class PaddlerPreviewTile extends StatelessWidget {
   final Paddler paddler;
 
-  const PaddlerPreviewTile(this.paddler, {Key? key}) : super(key: key);
+  const PaddlerPreviewTile(this.paddler, {super.key});
 
   @override
   Widget build(BuildContext context) {

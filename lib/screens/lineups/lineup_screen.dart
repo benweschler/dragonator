@@ -16,7 +16,7 @@ import 'list_tiles.dart';
 class LineupScreen extends StatelessWidget {
   final String lineupID;
 
-  const LineupScreen({Key? key, required this.lineupID}) : super(key: key);
+  const LineupScreen({super.key, required this.lineupID});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ErrorCard extends StatelessWidget {
   final String message;
 
-  const ErrorCard(this.message, {Key? key}) : super(key: key);
+  const ErrorCard(this.message, {super.key});
 
   @override
   Widget build(BuildContext context) {

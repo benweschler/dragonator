@@ -14,11 +14,11 @@ class ChangeTeamHeading extends StatelessWidget {
   final ValueChanged<int> updateSelectedTeamIndex;
 
   const ChangeTeamHeading({
-    Key? key,
+    super.key,
     required this.teams,
     required this.selectedTeamIndex,
     required this.updateSelectedTeamIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
