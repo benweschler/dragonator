@@ -103,7 +103,8 @@ class AppRouter {
               routes: [
                 AppRoute(
                   path: 'paddler/:id',
-                  builder: (state) => PaddlerScreen(state.pathParameters['id']!),
+                  builder: (state) =>
+                      PaddlerScreen(state.pathParameters['id']!),
                 ),
                 AppRoute(
                   path: 'edit-paddler',
@@ -137,9 +138,13 @@ class AppRouter {
                 ),
                 AppRoute(
                   path: 'edit-lineup/:id',
-                  pageBuilder: (state) => FadeTransitionPage(
-                    child: EditLineupScreen(lineupID: state.pathParameters['id']!),
-                  ),
+                  pageBuilder: (state) {
+                    print('edit');
+                    return FadeTransitionPage(
+                      child: EditLineupScreen(
+                          lineupID: state.pathParameters['id']!),
+                    );
+                  },
                 ),
               ],
             ),

@@ -1,7 +1,6 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'modal_sheet.dart';
 
@@ -47,7 +46,8 @@ class ContextMenuAction extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         onTap();
-        context.pop();
+        // Modal sheets are shown on the root navigator.
+        Navigator.of(context, rootNavigator: true).pop();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
