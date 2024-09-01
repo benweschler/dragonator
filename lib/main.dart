@@ -28,6 +28,47 @@ void main() async {
   ));
 }
 
+class ReorderableApp extends StatefulWidget {
+  const ReorderableApp({super.key});
+
+  @override
+  State<ReorderableApp> createState() => _ReorderableAppState();
+}
+
+class _ReorderableAppState extends State<ReorderableApp> {
+  final data = [
+    for (int i = 0; i < 30; i++)
+      i.toString()
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: SafeArea(
+          child: ReorderableListView(
+            onReorder: (int oldIndex, int newIndex) {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+
+              final s = data.removeAt(oldIndex);
+              data.insert(newIndex, s);
+            },
+            children: [
+              for(var datum in data)
+                ListTile(
+                  key: ValueKey(datum),
+                  title: Text(datum),
+                )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   final RouterConfig<Object> router;
 
