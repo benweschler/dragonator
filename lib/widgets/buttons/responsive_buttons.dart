@@ -18,7 +18,7 @@ class ResponsiveButton extends StatefulWidget {
     super.key,
     required this.onTap,
     required this.builder,
-  })  : _scaleLowerBound = 0.8;
+  })  : _scaleLowerBound = 0.85;
 
   /// A button that adds a light overlay when tapped.
   ///
