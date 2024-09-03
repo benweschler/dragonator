@@ -21,7 +21,7 @@ class CustomIconButton extends StatelessWidget {
         decoration: ShapeDecoration(
           shape: StadiumBorder(
             side: BorderSide(
-              //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
+              //TODO: change this and other instances to divider color once added to AppColors. This is the default M3 divider color.
               color: Theme.of(context).colorScheme.outlineVariant,
             ),
           ),

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dragonator/data/lineup.dart';
@@ -82,11 +83,11 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         rowHeight: rowHeight,
         rowBuilder: (context, index) {
           final CustomPainter painter;
-          const endIndex = _kBowExtent - 1;
-          if (index < endIndex || index > _kBoatCapacity ~/ 2 - endIndex) {
+          const bowIndex = _kBowExtent - 1;
+          if (index < bowIndex || index > _kBoatCapacity ~/ 2 - bowIndex) {
             return SizedBox.fromSize(size: const Size.fromHeight(rowHeight));
-          } else if (endIndex < index &&
-              index < _kBoatCapacity ~/ 2 - endIndex) {
+          } else if (bowIndex < index &&
+              index < _kBoatCapacity ~/ 2 - bowIndex) {
             painter = _BoatSegmentPainter(
               rowNumber: index,
               segmentHeight: rowHeight,
@@ -98,19 +99,14 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
             painter = _BoatEndPainter(
               paintColor: AppColors.of(context).primaryContainer,
               segmentHeight: rowHeight,
-              isBow: index == _kBowExtent - 1,
+              isBow: index == bowIndex,
             );
           }
 
-          return GestureDetector(
-            onTap: () {
-              print('hi!');
-            },
-            child: SizedBox(
-              width: double.infinity,
-              height: rowHeight,
-              child: CustomPaint(painter: painter),
-            ),
+          return SizedBox(
+            width: double.infinity,
+            height: rowHeight,
+            child: CustomPaint(painter: painter),
           );
         },
         keyBuilder: (index) => ValueKey(index),
@@ -281,53 +277,74 @@ class _PaddlerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        ReorderableGridDragListener(
-          index: index,
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: 0.4 * MediaQuery.of(context).size.width,
-            ),
-            padding: const EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              borderRadius: Corners.smBorderRadius,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              border: Border.all(color: AppColors.of(context).primaryContainer),
-            ),
-            child: Text(
-              name,
-              style: TextStyles.body1.copyWith(
-                color: AppColors.of(context).primaryContainer,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        Positioned(
-          top: -11,
-          right: -11,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.black),
-              color: Color.alphaBlend(
-                AppColors.of(context).smallSurface,
-                Colors.white,
+    final moreIcon = Platform.isAndroid ? Icons.more_vert : Icons.more_horiz;
+
+    // The CustomSingleChildLayout needs to take on the width and height of
+    // the tile.
+    return IntrinsicHeight(
+      child: IntrinsicWidth(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ReorderableGridDragListener(
+              index: index,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 0.4 * MediaQuery.of(context).size.width,
+                ),
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  borderRadius: Corners.smBorderRadius,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  border: Border.all(color: AppColors.of(context).primaryContainer),
+                ),
+                child: Text(
+                  name,
+                  style: TextStyles.body1.copyWith(
+                    color: AppColors.of(context).primaryContainer,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-            child: Icon(
-              Icons.close,
-              size: 20,
+            GestureDetector(
+              onTap: () => print('tap'),
+              child: CustomSingleChildLayout(
+                delegate: _PaddlerTileLayoutDelegate(),
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.of(context).neutralContent),
+                    color: Color.alphaBlend(
+                      AppColors.of(context).smallSurface,
+                      Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                  ),
+                  child: Icon(moreIcon, size: 16, color: AppColors.of(context).neutralContent,),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
+
+class _PaddlerTileLayoutDelegate extends SingleChildLayoutDelegate {
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    return Offset(
+      size.width - childSize.width / 2,
+      childSize.height / -2,
+    );
+  }
+
+  @override
+  bool shouldRelayout(_PaddlerTileLayoutDelegate oldDelegate) => false;
 }
 
 class _AddPaddlerTile extends StatelessWidget {
@@ -343,7 +360,7 @@ class _AddPaddlerTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color.alphaBlend(
           AppColors.of(context).errorSurface,
-          Colors.white,
+          Theme.of(context).scaffoldBackgroundColor,
         ),
         borderRadius: Corners.smBorderRadius,
         border: Border.all(color: AppColors.of(context).accent),
