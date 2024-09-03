@@ -4,10 +4,10 @@ import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
-import 'package:dragonator/screens/lineups/edit_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
 import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
+import 'package:dragonator/screens/lineups/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
@@ -24,7 +24,7 @@ import 'models/roster_model.dart';
 
 //TODO: UNCOMMENTING THIS WILL CRASH THE DART COMPILER
 //TODO: adding <T> generic may fix crash
-//typedef AppPage = CupertinoPage;
+typedef AppPage = CupertinoPage;
 
 //TODO: consider using go_router_builder for strongly-typed routing.
 abstract class RoutePaths {
@@ -138,13 +138,11 @@ class AppRouter {
                 ),
                 AppRoute(
                   path: 'edit-lineup/:id',
-                  pageBuilder: (state) {
-                    print('edit');
-                    return FadeTransitionPage(
-                      child: EditLineupScreen(
-                          lineupID: state.pathParameters['id']!),
-                    );
-                  },
+                  pageBuilder: (state) => FadeTransitionPage(
+                    child: EditLineupScreen(
+                      lineupID: state.pathParameters['id']!,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -222,7 +220,7 @@ class AppRoute extends GoRoute {
               );
             }
 
-            return CupertinoPage(child: builder!(state));
+            return AppPage(child: builder!(state));
           },
         );
 }
