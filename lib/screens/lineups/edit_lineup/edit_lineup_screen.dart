@@ -47,7 +47,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     final paddler = _paddlerList[index];
     if (paddler != null) {
       return PaddlerGridTile(
-        name: '${paddler.firstName} ${paddler.lastName}',
+        paddlerID: paddler.id,
         index: index,
         removePaddler: () => setState(() => _paddlerList[index] = null),
       );

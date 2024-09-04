@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:defer_pointer/defer_pointer.dart';
+import 'package:dragonator/data/paddler.dart';
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -9,21 +11,25 @@ import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class PaddlerGridTile extends StatelessWidget {
-  final String name;
+  final String paddlerID;
   final int index;
   final VoidCallback removePaddler;
 
   const PaddlerGridTile({
     super.key,
-    required this.name,
+    required this.paddlerID,
     required this.index,
     required this.removePaddler,
   });
 
   @override
   Widget build(BuildContext context) {
+    final paddler = context
+        .select<RosterModel, Paddler>((model) => model.getPaddler(paddlerID)!);
+
     final tileBody = Container(
       constraints: BoxConstraints(
         maxWidth: 0.4 * MediaQuery.of(context).size.width,
@@ -37,7 +43,7 @@ class PaddlerGridTile extends StatelessWidget {
         ),
       ),
       child: Text(
-        name,
+        '${paddler.firstName} ${paddler.lastName}',
         style: TextStyles.body1.copyWith(
           color: AppColors.of(context).primaryContainer,
         ),
@@ -59,7 +65,14 @@ class PaddlerGridTile extends StatelessWidget {
             right: -13,
             top: -13,
             child: DeferPointer(
-              child: _PaddlerOptionsButton(removePaddler: removePaddler),
+              child: _PaddlerOptionsButton(
+                showPaddlerContextMenu: () => context.showModal(
+                  _PaddlerContextMenu(
+                    paddlerID: paddlerID,
+                    removePaddler: removePaddler,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -69,18 +82,16 @@ class PaddlerGridTile extends StatelessWidget {
 }
 
 class _PaddlerOptionsButton extends StatelessWidget {
-  final VoidCallback removePaddler;
+  final VoidCallback showPaddlerContextMenu;
 
-  const _PaddlerOptionsButton({required this.removePaddler});
+  const _PaddlerOptionsButton({required this.showPaddlerContextMenu});
 
   @override
   Widget build(BuildContext context) {
     final moreIcon = Platform.isAndroid ? Icons.more_vert : Icons.more_horiz;
 
     return GestureDetector(
-      onTap: () => context.showModal(_PaddlerContextMenu(
-        removePaddler: removePaddler,
-      )),
+      onTap: showPaddlerContextMenu,
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
@@ -104,16 +115,20 @@ class _PaddlerOptionsButton extends StatelessWidget {
 }
 
 class _PaddlerContextMenu extends StatelessWidget {
+  final String paddlerID;
   final VoidCallback removePaddler;
 
-  const _PaddlerContextMenu({required this.removePaddler});
+  const _PaddlerContextMenu({
+    required this.paddlerID,
+    required this.removePaddler,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ContextMenu([
       ContextMenuAction(
         icon: Icons.info_outline_rounded,
-        onTap: () => context.push(RoutePaths.paddler('')),
+        onTap: () => context.push(RoutePaths.paddler(paddlerID)),
         label: 'Information',
       ),
       ContextMenuAction(
