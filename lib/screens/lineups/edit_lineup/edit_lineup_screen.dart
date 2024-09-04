@@ -166,18 +166,7 @@ class _BoatSegmentPainter extends CustomPainter {
     );
 
     // Draw row text
-    final rowText = TextPainter(
-      text: TextSpan(
-        text: '$rowNumber',
-        style: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          color: outlineColor,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
+    final rowText = _getRowTextPainter('$rowNumber', outlineColor);
     rowText.layout();
     rowText.paint(
       canvas,
@@ -217,7 +206,7 @@ class _BoatEndPainter extends CustomPainter {
 
     final fillPaint = Paint()..color = fillColor;
 
-    // Draw left outline
+    // Draw left outline.
     canvas.drawArc(
       Rect.fromCircle(
         center: _getLeftCircleCenter(size.width),
@@ -229,7 +218,7 @@ class _BoatEndPainter extends CustomPainter {
       strokePaint,
     );
 
-    // Draw right circle
+    // Draw right outline.
     canvas.drawArc(
       Rect.fromCircle(
         center: _getRightCircleCenter(size.width),
@@ -260,8 +249,30 @@ class _BoatEndPainter extends CustomPainter {
       )
       ..close();
 
-    // Draw left fill
+    // Draw fill.
     canvas.drawPath(fillPath, fillPaint);
+
+    // Draw row text.
+    //
+    // The number of labeled rows is one less than the extent of the bow since
+    // the drummer and steers person rows are unlabeled.
+    for (int i = 0; i < _kBowExtent - 1; i++) {
+      final label = isBow
+          ? _kBowExtent - 1 - i
+          : (_kBoatCapacity - 2) ~/ 2 + i;
+      final rowText = _getRowTextPainter('$label', outlineColor);
+
+      rowText.layout();
+
+      final heightIncrement = (isBow ? -1 : 1) * i * size.height;
+      rowText.paint(
+        canvas,
+        Offset(
+          size.width / 2 - rowText.size.width / 2,
+          size.height / 2 - rowText.size.height / 2 + heightIncrement,
+        ),
+      );
+    }
   }
 
   /*
@@ -301,4 +312,18 @@ class _BoatEndPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BoatEndPainter oldDelegate) => false;
+}
+
+TextPainter _getRowTextPainter(String label, Color color) {
+  return TextPainter(
+    text: TextSpan(
+      text: label,
+      style: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w600,
+        color: color,
+      ),
+    ),
+    textDirection: TextDirection.ltr,
+  );
 }
