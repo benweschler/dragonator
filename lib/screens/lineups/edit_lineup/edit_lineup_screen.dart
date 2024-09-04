@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
@@ -20,6 +20,8 @@ const int _kBoatCapacity = 22;
 
 /// The number of segments that the bow extends through.
 const int _kBowExtent = 3;
+
+const double _kGridRowHeight = 100;
 
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
@@ -41,10 +43,53 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     for (int i = _lineup.paddlers.length; i < _kBoatCapacity; i++) null,
   ];
 
+  Widget _itemBuilder(BuildContext context, int index) {
+    final paddler = _paddlerList[index];
+    if (paddler != null) {
+      return PaddlerGridTile(
+        name: '${paddler.firstName} ${paddler.lastName}',
+        index: index,
+        removePaddler: () => setState(() => _paddlerList[index] = null),
+      );
+    }
+
+    return ReorderableGridDragListener(
+      index: index,
+      child: const _AddPaddlerTile(),
+    );
+  }
+
+  Widget _rowBuilder(BuildContext context, int index) {
+    final CustomPainter painter;
+    const bowIndex = _kBowExtent - 1;
+    if (index < bowIndex || index > _kBoatCapacity ~/ 2 - bowIndex) {
+      return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
+    } else if (bowIndex < index &&
+        index < _kBoatCapacity ~/ 2 - bowIndex) {
+      painter = _BoatSegmentPainter(
+        rowNumber: index,
+        segmentHeight: _kGridRowHeight,
+        boatColor: AppColors.of(context).largeSurface,
+        //TODO: should be onBackground
+        paintColor: Colors.black,
+      );
+    } else {
+      painter = _BoatEndPainter(
+        paintColor: AppColors.of(context).primaryContainer,
+        segmentHeight: _kGridRowHeight,
+        isBow: index == bowIndex,
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      height: _kGridRowHeight,
+      child: CustomPaint(painter: painter),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    const double rowHeight = 100;
-
     return CustomScaffold(
       addScreenInset: false,
       leading: CustomIconButton(
@@ -66,49 +111,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         crossAxisCount: 2,
         overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
         buildDefaultDragDetectors: false,
-        itemBuilder: (_, index) {
-          final paddler = _paddlerList[index];
-          if (paddler != null) {
-            return _PaddlerTile(
-              name: '${paddler.firstName} ${paddler.lastName}',
-              index: index,
-            );
-          }
-
-          return ReorderableGridDragListener(
-            index: index,
-            child: const _AddPaddlerTile(),
-          );
-        },
-        rowHeight: rowHeight,
-        rowBuilder: (context, index) {
-          final CustomPainter painter;
-          const bowIndex = _kBowExtent - 1;
-          if (index < bowIndex || index > _kBoatCapacity ~/ 2 - bowIndex) {
-            return SizedBox.fromSize(size: const Size.fromHeight(rowHeight));
-          } else if (bowIndex < index &&
-              index < _kBoatCapacity ~/ 2 - bowIndex) {
-            painter = _BoatSegmentPainter(
-              rowNumber: index,
-              segmentHeight: rowHeight,
-              boatColor: AppColors.of(context).largeSurface,
-              //TODO: should be onBackground
-              paintColor: Colors.black,
-            );
-          } else {
-            painter = _BoatEndPainter(
-              paintColor: AppColors.of(context).primaryContainer,
-              segmentHeight: rowHeight,
-              isBow: index == bowIndex,
-            );
-          }
-
-          return SizedBox(
-            width: double.infinity,
-            height: rowHeight,
-            child: CustomPaint(painter: painter),
-          );
-        },
+        itemBuilder: _itemBuilder,
+        rowHeight: _kGridRowHeight,
+        rowBuilder: _rowBuilder,
         keyBuilder: (index) => ValueKey(index),
         onReorder: (oldIndex, newIndex) => setState(() {
           final temp = _paddlerList[oldIndex];
@@ -267,84 +272,6 @@ class _BoatEndPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BoatEndPainter oldDelegate) => false;
-}
-
-class _PaddlerTile extends StatelessWidget {
-  final String name;
-  final int index;
-
-  const _PaddlerTile({required this.name, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    final moreIcon = Platform.isAndroid ? Icons.more_vert : Icons.more_horiz;
-
-    // The CustomSingleChildLayout needs to take on the width and height of
-    // the tile.
-    return IntrinsicHeight(
-      child: IntrinsicWidth(
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            ReorderableGridDragListener(
-              index: index,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: 0.4 * MediaQuery.of(context).size.width,
-                ),
-                padding: const EdgeInsets.all(7),
-                decoration: BoxDecoration(
-                  borderRadius: Corners.smBorderRadius,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  border: Border.all(color: AppColors.of(context).primaryContainer),
-                ),
-                child: Text(
-                  name,
-                  style: TextStyles.body1.copyWith(
-                    color: AppColors.of(context).primaryContainer,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => print('tap'),
-              child: CustomSingleChildLayout(
-                delegate: _PaddlerTileLayoutDelegate(),
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.of(context).neutralContent),
-                    color: Color.alphaBlend(
-                      AppColors.of(context).smallSurface,
-                      Theme.of(context).scaffoldBackgroundColor,
-                    ),
-                  ),
-                  child: Icon(moreIcon, size: 16, color: AppColors.of(context).neutralContent,),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PaddlerTileLayoutDelegate extends SingleChildLayoutDelegate {
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    return Offset(
-      size.width - childSize.width / 2,
-      childSize.height / -2,
-    );
-  }
-
-  @override
-  bool shouldRelayout(_PaddlerTileLayoutDelegate oldDelegate) => false;
 }
 
 class _AddPaddlerTile extends StatelessWidget {

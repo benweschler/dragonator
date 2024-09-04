@@ -1,4 +1,5 @@
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -32,16 +33,20 @@ class ContextMenuAction extends StatelessWidget {
   final IconData icon;
   final GestureTapCallback onTap;
   final String label;
+  final bool isDestructiveAction;
 
   const ContextMenuAction({
     super.key,
     required this.icon,
     required this.onTap,
     required this.label,
+    this.isDestructiveAction = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    Color? color = isDestructiveAction ? AppColors.of(context).accent : null;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -56,9 +61,9 @@ class ContextMenuAction extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(icon, color: color),
             const SizedBox(width: Insets.lg),
-            Expanded(child: Text(label)),
+            Expanded(child: Text(label, style: TextStyle(color: color))),
           ],
         ),
       ),

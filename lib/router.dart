@@ -7,7 +7,7 @@ import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
 import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
-import 'package:dragonator/screens/lineups/edit_lineup_screen.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
