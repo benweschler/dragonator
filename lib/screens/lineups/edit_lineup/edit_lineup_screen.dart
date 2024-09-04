@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -55,7 +56,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     return ReorderableGridDragListener(
       index: index,
-      child: const _AddPaddlerTile(),
+      child: AddPaddlerTile(
+        addPaddler: (paddler) => setState(() => _paddlerList[index] = paddler),
+      ),
     );
   }
 
@@ -64,18 +67,18 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     const bowIndex = _kBowExtent - 1;
     if (index < bowIndex || index > _kBoatCapacity ~/ 2 - bowIndex) {
       return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
-    } else if (bowIndex < index &&
-        index < _kBoatCapacity ~/ 2 - bowIndex) {
+    } else if (bowIndex < index && index < _kBoatCapacity ~/ 2 - bowIndex) {
       painter = _BoatSegmentPainter(
         rowNumber: index,
-        segmentHeight: _kGridRowHeight,
-        boatColor: AppColors.of(context).largeSurface,
         //TODO: should be onBackground
-        paintColor: Colors.black,
+        outlineColor: Colors.black,
+        fillColor: AppColors.of(context).largeSurface,
+        segmentHeight: _kGridRowHeight,
       );
     } else {
       painter = _BoatEndPainter(
-        paintColor: AppColors.of(context).primaryContainer,
+        outlineColor: AppColors.of(context).primaryContainer,
+        fillColor: AppColors.of(context).largeSurface,
         segmentHeight: _kGridRowHeight,
         isBow: index == bowIndex,
       );
@@ -127,14 +130,14 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
 class _BoatSegmentPainter extends CustomPainter {
   final int rowNumber;
-  final Color paintColor;
-  final Color boatColor;
+  final Color outlineColor;
+  final Color fillColor;
   final double segmentHeight;
 
   const _BoatSegmentPainter({
     required this.rowNumber,
-    required this.paintColor,
-    required this.boatColor,
+    required this.outlineColor,
+    required this.fillColor,
     required this.segmentHeight,
   });
 
@@ -142,7 +145,7 @@ class _BoatSegmentPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     const double boatStrokeWidth = 3;
     final paint = Paint()
-      ..color = paintColor
+      ..color = outlineColor
       ..strokeWidth = boatStrokeWidth;
 
     final startLeft = Offset(size.width / 4, 0);
@@ -153,7 +156,7 @@ class _BoatSegmentPainter extends CustomPainter {
     canvas.drawLine(startRight, startRight.translate(0, segmentHeight), paint);
 
     // Draw boat fill
-    paint.color = boatColor;
+    paint.color = fillColor;
     canvas.drawRect(
       Rect.fromPoints(
         startLeft.translate(boatStrokeWidth / 2, 0),
@@ -169,7 +172,7 @@ class _BoatSegmentPainter extends CustomPainter {
         style: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
-          color: paintColor,
+          color: outlineColor,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -190,12 +193,14 @@ class _BoatSegmentPainter extends CustomPainter {
 }
 
 class _BoatEndPainter extends CustomPainter {
-  final Color paintColor;
+  final Color outlineColor;
+  final Color fillColor;
   final double segmentHeight;
   final bool isBow;
 
   const _BoatEndPainter({
-    required this.paintColor,
+    required this.outlineColor,
+    required this.fillColor,
     required this.segmentHeight,
     required this.isBow,
   });
@@ -204,13 +209,15 @@ class _BoatEndPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double strokeWidth = 3;
 
-    final paint = Paint()
-      ..color = paintColor
+    final strokePaint = Paint()
+      ..color = outlineColor
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = strokeWidth;
 
-    // Draw left circle
+    final fillPaint = Paint()..color = fillColor;
+
+    // Draw left outline
     canvas.drawArc(
       Rect.fromCircle(
         center: _getLeftCircleCenter(size.width),
@@ -219,7 +226,7 @@ class _BoatEndPainter extends CustomPainter {
       math.pi,
       (isBow ? 1 : -1) * _getSweepAngle(size.width),
       false,
-      paint,
+      strokePaint,
     );
 
     // Draw right circle
@@ -231,8 +238,30 @@ class _BoatEndPainter extends CustomPainter {
       0,
       (isBow ? -1 : 1) * _getSweepAngle(size.width),
       false,
-      paint,
+      strokePaint,
     );
+
+    // The delta from the base of a bow section to its tip.
+    final intersectionDelta = Offset(
+      0.25 * size.width,
+      (isBow ? -1 : 1) * _kBowExtent * segmentHeight,
+    );
+    final fillPath = Path()
+      ..moveTo(0.25 * size.width, isBow ? segmentHeight : 0)
+      ..relativeArcToPoint(
+        intersectionDelta,
+        radius: Radius.circular(_getRadius(size.width)),
+        clockwise: isBow,
+      )
+      ..relativeArcToPoint(
+        Offset(intersectionDelta.dx, intersectionDelta.dy * -1),
+        radius: Radius.circular(_getRadius(size.width)),
+        clockwise: isBow,
+      )
+      ..close();
+
+    // Draw left fill
+    canvas.drawPath(fillPath, fillPaint);
   }
 
   /*
@@ -272,40 +301,4 @@ class _BoatEndPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BoatEndPainter oldDelegate) => false;
-}
-
-class _AddPaddlerTile extends StatelessWidget {
-  const _AddPaddlerTile();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: 0.4 * MediaQuery.of(context).size.width,
-      ),
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        color: Color.alphaBlend(
-          AppColors.of(context).errorSurface,
-          Theme.of(context).scaffoldBackgroundColor,
-        ),
-        borderRadius: Corners.smBorderRadius,
-        border: Border.all(color: AppColors.of(context).accent),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Add',
-            style: TextStyles.body1.copyWith(
-              color: AppColors.of(context).accent,
-            ),
-            maxLines: 2,
-          ),
-          const SizedBox(width: Insets.xs),
-          Icon(Icons.add_rounded, color: AppColors.of(context).accent),
-        ],
-      ),
-    );
-  }
 }
