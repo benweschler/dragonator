@@ -203,6 +203,7 @@ class AppRoute extends GoRoute {
     Widget Function(GoRouterState state)? builder,
     Page Function(GoRouterState state)? pageBuilder,
     List<GoRoute> super.routes = const [],
+    super.parentNavigatorKey,
     this.isNavBarTab = false,
   })  : assert((builder == null) ^ (pageBuilder == null)),
         assert(
