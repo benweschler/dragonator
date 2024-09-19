@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
@@ -14,13 +12,14 @@ import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'boat_painters.dart';
+
 //TODO: fix color theming in whole file!
-//TODO: tip and end of boat are cut off
 
 const int _kBoatCapacity = 22;
 
 /// The number of segments that the bow extends through.
-const int _kBowExtent = 3;
+const int _kBoatEndExtent = 3;
 
 const double _kGridRowHeight = 100;
 
@@ -64,11 +63,11 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
   Widget _rowBuilder(BuildContext context, int index) {
     final CustomPainter painter;
-    const bowIndex = _kBowExtent - 1;
-    if (index < bowIndex || index > _kBoatCapacity ~/ 2 - bowIndex) {
+    const maxBowIndex = _kBoatEndExtent - 1;
+    if (index < maxBowIndex || index > _kBoatCapacity ~/ 2 - maxBowIndex) {
       return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
-    } else if (bowIndex < index && index < _kBoatCapacity ~/ 2 - bowIndex) {
-      painter = _BoatSegmentPainter(
+    } else if (maxBowIndex < index && index < _kBoatCapacity ~/ 2 - maxBowIndex) {
+      painter = BoatSegmentPainter(
         rowNumber: index,
         //TODO: should be onBackground
         outlineColor: Colors.black,
@@ -76,11 +75,13 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         segmentHeight: _kGridRowHeight,
       );
     } else {
-      painter = _BoatEndPainter(
+      painter = BoatEndPainter(
         outlineColor: AppColors.of(context).primaryContainer,
         fillColor: AppColors.of(context).largeSurface,
         segmentHeight: _kGridRowHeight,
-        isBow: index == bowIndex,
+        isBow: index == maxBowIndex,
+        boatEndExtent: _kBoatEndExtent,
+        boatCapacity: _kBoatCapacity,
       );
     }
 
@@ -89,6 +90,44 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       height: _kGridRowHeight,
       child: CustomPaint(painter: painter),
     );
+  }
+
+  Offset _calculateCOM() {
+    const relativeLeftPos = 0.25;
+    const relativeRightPos = 0.75;
+    const numRows = _kBoatCapacity / 2 + 1;
+    double relativeYPos(int row) => (0.5 + row) / numRows;
+
+    double xWeighted = 0;
+    double yWeighted = 0;
+    double total = 0;
+
+    for (int i = 1; i < _kBoatCapacity - 1; i++) {
+      final paddler = _paddlerList[i];
+      if (paddler == null) continue;
+
+      // Even indices are on the right, and odd indices are on the left.
+      if (i % 2 == 0) {
+        xWeighted += paddler.weight * relativeRightPos;
+      } else {
+        xWeighted += paddler.weight * relativeLeftPos;
+      }
+
+      yWeighted += paddler.weight * relativeYPos((i / 2).ceil());
+      total += paddler.weight;
+    }
+
+    if (_paddlerList.first != null) {
+      // Add the drummer.
+      yWeighted += _paddlerList.first!.weight * relativeYPos(0);
+    }
+    if (_paddlerList.last != null) {
+      // Add the steers person.
+      yWeighted +=
+          _paddlerList.last!.weight * relativeYPos(_paddlerList.length - 1);
+    }
+
+    return Offset(xWeighted / total, yWeighted / total);
   }
 
   @override
@@ -109,221 +148,108 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         },
         icon: Icons.check_rounded,
       ),
-      child: AnimatedReorderableGrid(
-        length: _paddlerList.length,
-        crossAxisCount: 2,
-        overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
-        buildDefaultDragDetectors: false,
-        itemBuilder: _itemBuilder,
-        rowHeight: _kGridRowHeight,
-        rowBuilder: _rowBuilder,
-        keyBuilder: (index) => ValueKey(index),
-        onReorder: (oldIndex, newIndex) => setState(() {
-          final temp = _paddlerList[oldIndex];
-          _paddlerList[oldIndex] = _paddlerList[newIndex];
-          _paddlerList[newIndex] = temp;
-        }),
+      //TODO: add an overlay wrapper inside of the reorderable grid implementation
+      //TODO: add clipBehavior to reorderable grid
+      child: Stack(
+        children: [
+          AnimatedReorderableGrid(
+            length: _paddlerList.length,
+            crossAxisCount: 2,
+            overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
+            buildDefaultDragDetectors: false,
+            itemBuilder: _itemBuilder,
+            rowHeight: _kGridRowHeight,
+            rowBuilder: _rowBuilder,
+            //TODO: header and footer should not affect overlay
+            header: const SizedBox(height: Insets.med),
+            footer: const SizedBox(height: Insets.med),
+            //TODO: add positioned.fill and ignore pointer to animated reorderable grid
+            overlay: Positioned.fill(
+              child: IgnorePointer(
+                child: _COMOverlay(
+                  duration: const Duration(milliseconds: 250),
+                  com: _calculateCOM(),
+                ),
+              ),
+            ),
+            keyBuilder: (index) => ValueKey(index),
+            onReorder: (oldIndex, newIndex) => setState(() {
+              final temp = _paddlerList[oldIndex];
+              _paddlerList[oldIndex] = _paddlerList[newIndex];
+              _paddlerList[newIndex] = temp;
+            }),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _BoatSegmentPainter extends CustomPainter {
-  final int rowNumber;
-  final Color outlineColor;
-  final Color fillColor;
-  final double segmentHeight;
+class _COMOverlay extends ImplicitlyAnimatedWidget {
+  final Offset com;
 
-  const _BoatSegmentPainter({
-    required this.rowNumber,
-    required this.outlineColor,
-    required this.fillColor,
-    required this.segmentHeight,
-  });
+  const _COMOverlay({required super.duration, required this.com})
+      : super(curve: Curves.easeOutQuad);
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
+      _COMOverlayState();
+}
+
+class _COMOverlayState extends ImplicitlyAnimatedWidgetState<_COMOverlay> {
+  Tween<Offset>? _com;
+  late Animation<Offset> _comAnimation;
+
+  Tween<Offset> _tweenConstructor(dynamic value) {
+    return Tween<Offset>(begin: value as Offset);
+  }
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _com = visitor(_com, widget.com, _tweenConstructor) as Tween<Offset>?;
+  }
+
+  @override
+  void didUpdateTweens() {
+    _comAnimation = animation.drive(_com!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _comAnimation,
+      builder: (_, __) {
+        return CustomPaint(
+          painter: _COMPainter(_comAnimation.value),
+        );
+      },
+    );
+  }
+}
+
+class _COMPainter extends CustomPainter {
+  final Offset com;
+
+  const _COMPainter(this.com);
 
   @override
   void paint(Canvas canvas, Size size) {
-    const double boatStrokeWidth = 3;
+    final x = size.width * com.dx;
+    final y = size.height * com.dy;
+
     final paint = Paint()
-      ..color = outlineColor
-      ..strokeWidth = boatStrokeWidth;
-
-    final startLeft = Offset(size.width / 4, 0);
-    final startRight = Offset(size.width * (3 / 4), 0);
-
-    // Draw boat borders
-    canvas.drawLine(startLeft, startLeft.translate(0, segmentHeight), paint);
-    canvas.drawLine(startRight, startRight.translate(0, segmentHeight), paint);
-
-    // Draw boat fill
-    paint.color = fillColor;
-    canvas.drawRect(
-      Rect.fromPoints(
-        startLeft.translate(boatStrokeWidth / 2, 0),
-        startRight.translate(boatStrokeWidth / -2, segmentHeight),
-      ),
-      paint,
-    );
-
-    // Draw row text
-    final rowText = _getRowTextPainter('$rowNumber', outlineColor);
-    rowText.layout();
-    rowText.paint(
-      canvas,
-      Offset(
-        size.width / 2 - rowText.size.width / 2,
-        size.height / 2 - rowText.size.height / 2,
-      ),
-    );
-  }
-
-  @override
-  bool shouldRepaint(_BoatSegmentPainter oldDelegate) => false;
-}
-
-class _BoatEndPainter extends CustomPainter {
-  final Color outlineColor;
-  final Color fillColor;
-  final double segmentHeight;
-  final bool isBow;
-
-  const _BoatEndPainter({
-    required this.outlineColor,
-    required this.fillColor,
-    required this.segmentHeight,
-    required this.isBow,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double strokeWidth = 3;
-
-    final strokePaint = Paint()
-      ..color = outlineColor
+      ..color = Colors.black
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = strokeWidth;
+      ..strokeWidth = 2;
 
-    final fillPaint = Paint()..color = fillColor;
-
-    // Draw left outline.
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: _getLeftCircleCenter(size.width),
-        radius: _getRadius(size.width),
-      ),
-      math.pi,
-      (isBow ? 1 : -1) * _getSweepAngle(size.width),
-      false,
-      strokePaint,
-    );
-
-    // Draw right outline.
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: _getRightCircleCenter(size.width),
-        radius: _getRadius(size.width),
-      ),
-      0,
-      (isBow ? -1 : 1) * _getSweepAngle(size.width),
-      false,
-      strokePaint,
-    );
-
-    // The delta from the base of a bow section to its tip.
-    final intersectionDelta = Offset(
-      0.25 * size.width,
-      (isBow ? -1 : 1) * _kBowExtent * segmentHeight,
-    );
-    final fillPath = Path()
-      ..moveTo(0.25 * size.width, isBow ? segmentHeight : 0)
-      ..relativeArcToPoint(
-        intersectionDelta,
-        radius: Radius.circular(_getRadius(size.width)),
-        clockwise: isBow,
-      )
-      ..relativeArcToPoint(
-        Offset(intersectionDelta.dx, intersectionDelta.dy * -1),
-        radius: Radius.circular(_getRadius(size.width)),
-        clockwise: isBow,
-      )
-      ..close();
-
-    // Draw fill.
-    canvas.drawPath(fillPath, fillPaint);
-
-    // Draw row text.
-    //
-    // The number of labeled rows is one less than the extent of the bow since
-    // the drummer and steers person rows are unlabeled.
-    for (int i = 0; i < _kBowExtent - 1; i++) {
-      final label = isBow
-          ? _kBowExtent - 1 - i
-          : (_kBoatCapacity - 2) ~/ 2 + i;
-      final rowText = _getRowTextPainter('$label', outlineColor);
-
-      rowText.layout();
-
-      final heightIncrement = (isBow ? -1 : 1) * i * size.height;
-      rowText.paint(
-        canvas,
-        Offset(
-          size.width / 2 - rowText.size.width / 2,
-          size.height / 2 - rowText.size.height / 2 + heightIncrement,
-        ),
-      );
-    }
-  }
-
-  /*
-  The following formulae are derived from solving for the equations of two
-  circles that:
-     * Are centered on the x-axis
-     * Have equal radii
-     * Intersect at (0.5, 1)
-     * Have roots at x=0.25 and x=0.75
-   These values are then scaled for the width and height of the segment.
-   */
-
-  Offset _getLeftCircleCenter(double w) {
-    double h = segmentHeight;
-    return Offset(
-        0.375 * w + 2 * math.pow(h * _kBowExtent, 2) / w, isBow ? h : 0);
-  }
-
-  Offset _getRightCircleCenter(double w) {
-    double h = segmentHeight;
-    return Offset(
-        0.625 * w - 2 * math.pow(h * _kBowExtent, 2) / w, isBow ? h : 0);
-  }
-
-  double _getRadius(double w) {
-    double h = segmentHeight;
-    return 0.125 * w + 2 * math.pow(h * _kBowExtent, 2) / w;
-  }
-
-  /// The sweep angle between the x-axis and the point of intersection.
-  double _getSweepAngle(double w) {
-    double h = segmentHeight;
-    return math.atan(_kBowExtent *
-        segmentHeight /
-        (0.125 * w - 2 * math.pow(_kBowExtent * h, 2) / w).abs());
+    const double targetRadius = 20;
+    canvas.drawCircle(Offset(x, y), targetRadius, paint);
+    canvas.drawLine(Offset(x, 0), Offset(x, y - targetRadius * 0.6), paint);
+    canvas.drawLine(Offset(x, size.height), Offset(x, y + targetRadius * 0.6), paint);
+    canvas.drawLine(Offset(0, y), Offset(x - targetRadius * 0.6, y), paint);
+    canvas.drawLine(Offset(size.width, y), Offset(x + targetRadius * 0.6, y), paint);
   }
 
   @override
-  bool shouldRepaint(_BoatEndPainter oldDelegate) => false;
-}
-
-TextPainter _getRowTextPainter(String label, Color color) {
-  return TextPainter(
-    text: TextSpan(
-      text: label,
-      style: TextStyle(
-        fontSize: 28,
-        fontWeight: FontWeight.w600,
-        color: color,
-      ),
-    ),
-    textDirection: TextDirection.ltr,
-  );
+  bool shouldRepaint(_COMPainter oldDelegate) => oldDelegate.com != com;
 }

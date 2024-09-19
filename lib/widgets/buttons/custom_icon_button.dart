@@ -18,13 +18,9 @@ class CustomIconButton extends StatelessWidget {
       onTap: onTap,
       builder: (overlay) => Container(
         padding: const EdgeInsets.all(6),
-        decoration: ShapeDecoration(
-          shape: StadiumBorder(
-            side: BorderSide(
-              //TODO: change this and other instances to divider color once added to AppColors. This is the default M3 divider color.
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
-          ),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
           color: AppColors.of(context).smallSurface,
         ),
         child: Icon(
