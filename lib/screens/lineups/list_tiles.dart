@@ -150,8 +150,8 @@ class PositionLabelTile extends StatelessWidget {
   }
 }
 
-class AddPaddlerTile extends StatelessWidget {
-  const AddPaddlerTile({super.key});
+class OldAddPaddlerTile extends StatelessWidget {
+  const OldAddPaddlerTile({super.key});
 
   @override
   Widget build(BuildContext context) {

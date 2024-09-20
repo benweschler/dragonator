@@ -46,7 +46,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Widget _itemBuilder(BuildContext context, int index) {
     final paddler = _paddlerList[index];
     if (paddler != null) {
-      return PaddlerGridTile(
+      return EditPaddlerTile(
         paddlerID: paddler.id,
         index: index,
         removePaddler: () => setState(() => _paddlerList[index] = null),
@@ -150,36 +150,33 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
-      child: Stack(
-        children: [
-          AnimatedReorderableGrid(
-            length: _paddlerList.length,
-            crossAxisCount: 2,
-            overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
-            buildDefaultDragDetectors: false,
-            itemBuilder: _itemBuilder,
-            rowHeight: _kGridRowHeight,
-            rowBuilder: _rowBuilder,
-            //TODO: header and footer should not affect overlay
-            header: const SizedBox(height: Insets.med),
-            footer: const SizedBox(height: Insets.med),
-            //TODO: add positioned.fill and ignore pointer to animated reorderable grid
-            overlay: Positioned.fill(
-              child: IgnorePointer(
-                child: _COMOverlay(
-                  duration: const Duration(milliseconds: 250),
-                  com: _calculateCOM(),
-                ),
-              ),
+      //TODO: stack not needed
+      child: AnimatedReorderableGrid(
+        length: _paddlerList.length,
+        crossAxisCount: 2,
+        overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
+        buildDefaultDragDetectors: false,
+        itemBuilder: _itemBuilder,
+        rowHeight: _kGridRowHeight,
+        rowBuilder: _rowBuilder,
+        //TODO: header and footer should not affect overlay
+        header: const SizedBox(height: Insets.med),
+        footer: const SizedBox(height: Insets.med),
+        //TODO: add positioned.fill and ignore pointer to animated reorderable grid
+        overlay: Positioned.fill(
+          child: IgnorePointer(
+            child: _COMOverlay(
+              duration: const Duration(milliseconds: 250),
+              com: _calculateCOM(),
             ),
-            keyBuilder: (index) => ValueKey(index),
-            onReorder: (oldIndex, newIndex) => setState(() {
-              final temp = _paddlerList[oldIndex];
-              _paddlerList[oldIndex] = _paddlerList[newIndex];
-              _paddlerList[newIndex] = temp;
-            }),
           ),
-        ],
+        ),
+        keyBuilder: (index) => ValueKey(index),
+        onReorder: (oldIndex, newIndex) => setState(() {
+          final temp = _paddlerList[oldIndex];
+          _paddlerList[oldIndex] = _paddlerList[newIndex];
+          _paddlerList[newIndex] = temp;
+        }),
       ),
     );
   }

@@ -13,12 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PaddlerGridTile extends StatelessWidget {
+class EditPaddlerTile extends StatelessWidget {
   final String paddlerID;
   final int index;
   final VoidCallback removePaddler;
 
-  const PaddlerGridTile({
+  const EditPaddlerTile({
     super.key,
     required this.paddlerID,
     required this.index,
@@ -30,38 +30,16 @@ class PaddlerGridTile extends StatelessWidget {
     final paddler = context
         .select<RosterModel, Paddler>((model) => model.getPaddler(paddlerID)!);
 
-    final tileBody = Container(
-      constraints: BoxConstraints(
-        maxWidth: 0.4 * MediaQuery.of(context).size.width,
-      ),
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        borderRadius: Corners.smBorderRadius,
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border.all(
-          color: AppColors.of(context).primaryContainer,
-        ),
-      ),
-      child: Text(
-        '${paddler.firstName} ${paddler.lastName}',
-        style: TextStyles.body1.copyWith(
-          color: AppColors.of(context).primaryContainer,
-        ),
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-
     return DeferredPointerHandler(
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           ReorderableGridDragListener(
             index: index,
-            child: tileBody,
+            child: BasePaddlerTile(paddler),
           ),
           Positioned(
+            // The radius of the paddler options button is 13.
             right: -13,
             top: -13,
             child: DeferPointer(
@@ -139,3 +117,36 @@ class _PaddlerContextMenu extends StatelessWidget {
     ]);
   }
 }
+
+class BasePaddlerTile extends StatelessWidget {
+  final Paddler paddler;
+
+  const BasePaddlerTile(this.paddler, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: 0.4 * MediaQuery.of(context).size.width,
+      ),
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        borderRadius: Corners.smBorderRadius,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border.all(
+          color: AppColors.of(context).primaryContainer,
+        ),
+      ),
+      child: Text(
+        '${paddler.firstName} ${paddler.lastName}',
+        style: TextStyles.body1.copyWith(
+          color: AppColors.of(context).primaryContainer,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+

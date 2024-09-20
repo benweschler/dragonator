@@ -79,7 +79,7 @@ class _OldEditLineupScreenState extends State<OldEditLineupScreen> {
                         index: i,
                       )
                     else
-                      AddPaddlerTile(key: ValueKey(i))
+                      OldAddPaddlerTile(key: ValueKey(i))
                 ],
               ),
             ),

@@ -1,7 +1,11 @@
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/boat_painters.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
@@ -11,12 +15,50 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'list_tiles.dart';
+//TODO: share with edit lineup screen
+const int _kBoatCapacity = 22;
+
+/// The number of segments that the bow extends through.
+const int _kBoatEndExtent = 3;
+
+const double _kGridRowHeight = 100;
 
 class LineupScreen extends StatelessWidget {
   final String lineupID;
 
   const LineupScreen({super.key, required this.lineupID});
+
+  Widget _rowBuilder(BuildContext context, int index) {
+    final CustomPainter painter;
+    const maxBowIndex = _kBoatEndExtent - 1;
+    if (index < maxBowIndex || index > _kBoatCapacity ~/ 2 - maxBowIndex) {
+      return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
+    } else if (maxBowIndex < index &&
+        index < _kBoatCapacity ~/ 2 - maxBowIndex) {
+      painter = BoatSegmentPainter(
+        rowNumber: index,
+        //TODO: should be onBackground
+        outlineColor: Colors.black,
+        fillColor: AppColors.of(context).largeSurface,
+        segmentHeight: _kGridRowHeight,
+      );
+    } else {
+      painter = BoatEndPainter(
+        outlineColor: AppColors.of(context).primaryContainer,
+        fillColor: AppColors.of(context).largeSurface,
+        segmentHeight: _kGridRowHeight,
+        isBow: index == maxBowIndex,
+        boatEndExtent: _kBoatEndExtent,
+        boatCapacity: _kBoatCapacity,
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      height: _kGridRowHeight,
+      child: CustomPaint(painter: painter),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +71,7 @@ class LineupScreen extends StatelessWidget {
     ];
 
     return CustomScaffold(
+      addScreenInset: false,
       leading: const CustomBackButton(),
       center: Text(lineup.name, style: TextStyles.title1),
       trailing: CustomIconButton(
@@ -52,23 +95,65 @@ class LineupScreen extends StatelessWidget {
         icon: Icons.more_horiz,
       ),
       child: SingleChildScrollView(
-        child: Row(
-          children: [
-            Column(children: <Widget>[
-              for (int i = 0; i < 22; i++) PositionLabelTile(position: i)
-            ]),
-            Expanded(
-              child: Column(children: [
-                for (int i = 0; i < 22; i++)
-                  if (paddlerList[i] != null)
-                    PaddlerTile(paddlerList[i]!)
-                  else
-                    const EmptyPaddlerTile()
-              ]),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: Insets.med),
+          child: SizedBox(
+            height: _kGridRowHeight * (paddlerList.length / 2 + 1),
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    for (int i = 0; i < _kBoatCapacity / 2 + 1; i++)
+                      _rowBuilder(context, i),
+                  ],
+                ),
+                CustomMultiChildLayout(
+                  delegate: _TileLayoutDelegate(paddlers: paddlerList),
+                  children: [
+                    for (int i = 0; i < paddlerList.length; i++)
+                      LayoutId(
+                        id: i,
+                        child: paddlerList[i] != null
+                            ? BasePaddlerTile(paddlerList[i]!)
+                            : AddPaddlerTile(addPaddler: (_) {}),
+                      )
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
+}
+
+class _TileLayoutDelegate extends MultiChildLayoutDelegate {
+  final List<Paddler?> paddlers;
+
+  _TileLayoutDelegate({required this.paddlers});
+
+  @override
+  void performLayout(Size parentSize) {
+    for (int i = 0; i < paddlers.length; i++) {
+      final tileSize = layoutChild(i, BoxConstraints.loose(parentSize));
+      final row = (i / 2).ceil();
+      final yPos = (row + 1 / 2) * _kGridRowHeight - tileSize.height / 2;
+      final double xPos;
+
+      // Position drummer and steers person in the middle of their row.
+      if (i == 0 || i == paddlers.length - 1) {
+        xPos = parentSize.width / 2 - tileSize.width / 2;
+      } else {
+        xPos =
+            parentSize.width * (i % 2 != 0 ? 0.25 : 0.75) - tileSize.width / 2;
+      }
+
+      positionChild(i, Offset(xPos, yPos));
+    }
+  }
+
+  @override
+  bool shouldRelayout(_TileLayoutDelegate oldDelegate) =>
+      paddlers != oldDelegate.paddlers;
 }
