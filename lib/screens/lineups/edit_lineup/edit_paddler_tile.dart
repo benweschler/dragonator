@@ -5,7 +5,7 @@ import 'package:defer_pointer/defer_pointer.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
-import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
@@ -36,7 +36,7 @@ class EditPaddlerTile extends StatelessWidget {
         children: [
           ReorderableGridDragListener(
             index: index,
-            child: BasePaddlerTile(paddler),
+            child: PaddlerTile(paddler),
           ),
           Positioned(
             // The radius of the paddler options button is 13.
@@ -117,36 +117,3 @@ class _PaddlerContextMenu extends StatelessWidget {
     ]);
   }
 }
-
-class BasePaddlerTile extends StatelessWidget {
-  final Paddler paddler;
-
-  const BasePaddlerTile(this.paddler, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: 0.4 * MediaQuery.of(context).size.width,
-      ),
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        borderRadius: Corners.smBorderRadius,
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border.all(
-          color: AppColors.of(context).primaryContainer,
-        ),
-      ),
-      child: Text(
-        '${paddler.firstName} ${paddler.lastName}',
-        style: TextStyles.body1.copyWith(
-          color: AppColors.of(context).primaryContainer,
-        ),
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-}
-

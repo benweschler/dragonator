@@ -3,7 +3,7 @@ import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
-import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
