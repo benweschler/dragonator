@@ -1,6 +1,7 @@
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/boat_painters.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
@@ -16,12 +17,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 //TODO: share with edit lineup screen
-const int _kBoatCapacity = 22;
-
-/// The number of segments that the bow extends through.
-const int _kBoatEndExtent = 3;
-
-const double _kGridRowHeight = 100;
 
 class LineupScreen extends StatelessWidget {
   final String lineupID;
@@ -30,32 +25,32 @@ class LineupScreen extends StatelessWidget {
 
   Widget _rowBuilder(BuildContext context, int index) {
     final CustomPainter painter;
-    const maxBowIndex = _kBoatEndExtent - 1;
-    if (index < maxBowIndex || index > _kBoatCapacity ~/ 2 - maxBowIndex) {
-      return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
+    const maxBowIndex = kBoatEndExtent - 1;
+    if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
+      return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
     } else if (maxBowIndex < index &&
-        index < _kBoatCapacity ~/ 2 - maxBowIndex) {
+        index < kBoatCapacity ~/ 2 - maxBowIndex) {
       painter = BoatSegmentPainter(
         rowNumber: index,
         //TODO: should be onBackground
         outlineColor: Colors.black,
         fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: _kGridRowHeight,
+        segmentHeight: kGridRowHeight,
       );
     } else {
       painter = BoatEndPainter(
         outlineColor: AppColors.of(context).primaryContainer,
         fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: _kGridRowHeight,
+        segmentHeight: kGridRowHeight,
         isBow: index == maxBowIndex,
-        boatEndExtent: _kBoatEndExtent,
-        boatCapacity: _kBoatCapacity,
+        boatEndExtent: kBoatEndExtent,
+        boatCapacity: kBoatCapacity,
       );
     }
 
     return SizedBox(
       width: double.infinity,
-      height: _kGridRowHeight,
+      height: kGridRowHeight,
       child: CustomPaint(painter: painter),
     );
   }
@@ -98,12 +93,12 @@ class LineupScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.med),
           child: SizedBox(
-            height: _kGridRowHeight * (paddlerList.length / 2 + 1),
+            height: kGridRowHeight * (paddlerList.length / 2 + 1),
             child: Stack(
               children: [
                 Column(
                   children: [
-                    for (int i = 0; i < _kBoatCapacity / 2 + 1; i++)
+                    for (int i = 0; i < kBoatCapacity / 2 + 1; i++)
                       _rowBuilder(context, i),
                   ],
                 ),
@@ -138,7 +133,7 @@ class _TileLayoutDelegate extends MultiChildLayoutDelegate {
     for (int i = 0; i < paddlers.length; i++) {
       final tileSize = layoutChild(i, BoxConstraints.loose(parentSize));
       final row = (i / 2).ceil();
-      final yPos = (row + 1 / 2) * _kGridRowHeight - tileSize.height / 2;
+      final yPos = (row + 1 / 2) * kGridRowHeight - tileSize.height / 2;
       final double xPos;
 
       // Position drummer and steers person in the middle of their row.

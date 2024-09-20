@@ -1,6 +1,7 @@
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/paddler_grid_tile.dart';
 import 'package:dragonator/styles/styles.dart';
@@ -15,13 +16,6 @@ import 'package:provider/provider.dart';
 import 'boat_painters.dart';
 
 //TODO: fix color theming in whole file!
-
-const int _kBoatCapacity = 22;
-
-/// The number of segments that the bow extends through.
-const int _kBoatEndExtent = 3;
-
-const double _kGridRowHeight = 100;
 
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
@@ -40,7 +34,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   // state.
   late final List<Paddler?> _paddlerList = [
     ..._lineup.paddlers,
-    for (int i = _lineup.paddlers.length; i < _kBoatCapacity; i++) null,
+    for (int i = _lineup.paddlers.length; i < kBoatCapacity; i++) null,
   ];
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -63,31 +57,31 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
   Widget _rowBuilder(BuildContext context, int index) {
     final CustomPainter painter;
-    const maxBowIndex = _kBoatEndExtent - 1;
-    if (index < maxBowIndex || index > _kBoatCapacity ~/ 2 - maxBowIndex) {
-      return SizedBox.fromSize(size: const Size.fromHeight(_kGridRowHeight));
-    } else if (maxBowIndex < index && index < _kBoatCapacity ~/ 2 - maxBowIndex) {
+    const maxBowIndex = kBoatEndExtent - 1;
+    if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
+      return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
+    } else if (maxBowIndex < index && index < kBoatCapacity ~/ 2 - maxBowIndex) {
       painter = BoatSegmentPainter(
         rowNumber: index,
         //TODO: should be onBackground
         outlineColor: Colors.black,
         fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: _kGridRowHeight,
+        segmentHeight: kGridRowHeight,
       );
     } else {
       painter = BoatEndPainter(
         outlineColor: AppColors.of(context).primaryContainer,
         fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: _kGridRowHeight,
+        segmentHeight: kGridRowHeight,
         isBow: index == maxBowIndex,
-        boatEndExtent: _kBoatEndExtent,
-        boatCapacity: _kBoatCapacity,
+        boatEndExtent: kBoatEndExtent,
+        boatCapacity: kBoatCapacity,
       );
     }
 
     return SizedBox(
       width: double.infinity,
-      height: _kGridRowHeight,
+      height: kGridRowHeight,
       child: CustomPaint(painter: painter),
     );
   }
@@ -95,14 +89,14 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Offset _calculateCOM() {
     const relativeLeftPos = 0.25;
     const relativeRightPos = 0.75;
-    const numRows = _kBoatCapacity / 2 + 1;
+    const numRows = kBoatCapacity / 2 + 1;
     double relativeYPos(int row) => (0.5 + row) / numRows;
 
     double xWeighted = 0;
     double yWeighted = 0;
     double total = 0;
 
-    for (int i = 1; i < _kBoatCapacity - 1; i++) {
+    for (int i = 1; i < kBoatCapacity - 1; i++) {
       final paddler = _paddlerList[i];
       if (paddler == null) continue;
 
@@ -154,10 +148,10 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       child: AnimatedReorderableGrid(
         length: _paddlerList.length,
         crossAxisCount: 2,
-        overriddenRowCounts: const [(0, 1), (_kBoatCapacity ~/ 2, 1)],
+        overriddenRowCounts: const [(0, 1), (kBoatCapacity ~/ 2, 1)],
         buildDefaultDragDetectors: false,
         itemBuilder: _itemBuilder,
-        rowHeight: _kGridRowHeight,
+        rowHeight: kGridRowHeight,
         rowBuilder: _rowBuilder,
         //TODO: header and footer should not affect overlay
         header: const SizedBox(height: Insets.med),
