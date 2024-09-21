@@ -3,7 +3,6 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
-import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/boat_painters.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -15,8 +14,6 @@ import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-//TODO: share with edit lineup screen
 
 class LineupScreen extends StatelessWidget {
   final String lineupID;
@@ -110,7 +107,7 @@ class LineupScreen extends StatelessWidget {
                         id: i,
                         child: paddlerList[i] != null
                             ? PaddlerTile(paddlerList[i]!)
-                            : AddPaddlerTile(addPaddler: (_) {}),
+                            : const _EmptyPaddlerTile(),
                       )
                   ],
                 ),
@@ -152,3 +149,33 @@ class _TileLayoutDelegate extends MultiChildLayoutDelegate {
   bool shouldRelayout(_TileLayoutDelegate oldDelegate) =>
       paddlers != oldDelegate.paddlers;
 }
+
+class _EmptyPaddlerTile extends StatelessWidget {
+  const _EmptyPaddlerTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: 0.4 * MediaQuery.of(context).size.width,
+      ),
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        color: Color.alphaBlend(
+          AppColors.of(context).errorSurface,
+          Theme.of(context).scaffoldBackgroundColor,
+        ),
+        borderRadius: Corners.smBorderRadius,
+        border: Border.all(color: AppColors.of(context).accent),
+      ),
+      child: Text(
+        'Empty',
+        style: TextStyles.body1.copyWith(
+          color: AppColors.of(context).accent,
+        ),
+        maxLines: 2,
+      ),
+    );
+  }
+}
+
