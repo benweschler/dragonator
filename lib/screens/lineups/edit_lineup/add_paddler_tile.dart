@@ -5,38 +5,41 @@ import 'package:flutter/material.dart';
 
 //TODO: implement adding paddler
 class AddPaddlerTile extends StatelessWidget {
-  final ValueChanged<Paddler> addPaddler;
+  final ValueChanged<Paddler?> addPaddler;
 
   const AddPaddlerTile({super.key, required this.addPaddler});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: 0.4 * MediaQuery.of(context).size.width,
-      ),
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        color: Color.alphaBlend(
-          AppColors.of(context).errorSurface,
-          Theme.of(context).scaffoldBackgroundColor,
+    return GestureDetector(
+      onTap: () => addPaddler(null),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: 0.4 * MediaQuery.of(context).size.width,
         ),
-        borderRadius: Corners.smBorderRadius,
-        border: Border.all(color: AppColors.of(context).accent),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Add',
-            style: TextStyles.body1.copyWith(
-              color: AppColors.of(context).accent,
-            ),
-            maxLines: 2,
+        padding: const EdgeInsets.all(7),
+        decoration: BoxDecoration(
+          color: Color.alphaBlend(
+            AppColors.of(context).errorSurface,
+            Theme.of(context).scaffoldBackgroundColor,
           ),
-          const SizedBox(width: Insets.xs),
-          Icon(Icons.add_rounded, color: AppColors.of(context).accent),
-        ],
+          borderRadius: Corners.smBorderRadius,
+          border: Border.all(color: AppColors.of(context).accent),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Add',
+              style: TextStyles.body1.copyWith(
+                color: AppColors.of(context).accent,
+              ),
+              maxLines: 2,
+            ),
+            const SizedBox(width: Insets.xs),
+            Icon(Icons.add_rounded, color: AppColors.of(context).accent),
+          ],
+        ),
       ),
     );
   }

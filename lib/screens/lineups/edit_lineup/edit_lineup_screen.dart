@@ -47,11 +47,13 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       );
     }
 
-    return ReorderableGridDragListener(
-      index: index,
-      child: AddPaddlerTile(
-        addPaddler: (paddler) => setState(() => _paddlerList[index] = paddler),
-      ),
+    return AddPaddlerTile(
+      //TODO: implement
+      addPaddler: (paddler) {
+        print(paddler);
+        if(paddler == null) return;
+        setState(() => _paddlerList[index] = paddler);
+      },
     );
   }
 
