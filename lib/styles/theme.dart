@@ -73,11 +73,7 @@ class AppColors extends ThemeExtension<AppColors> {
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
     return themeData.copyWith(
-      colorScheme: themeData.colorScheme.copyWith(
-        primary: accent,
-        primaryContainer: primaryContainer,
-        onPrimaryContainer: onPrimaryContainer,
-      ),
+      colorScheme: themeData.colorScheme.copyWith(primary: accent),
     );
   }
 
@@ -106,7 +102,8 @@ class AppColors extends ThemeExtension<AppColors> {
       primaryContainer: primaryContainer ?? this.primaryContainer,
       onPrimaryContainer: onPrimaryContainer ?? this.onPrimaryContainer,
       tabHighlightColor: tabHighlightColor ?? this.tabHighlightColor,
-      responsiveOverlayColor: responsiveOverlayColor ?? this.responsiveOverlayColor,
+      responsiveOverlayColor:
+          responsiveOverlayColor ?? this.responsiveOverlayColor,
       isDark: isDark ?? this.isDark,
     );
   }
@@ -121,10 +118,14 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       errorSurface: Color.lerp(errorSurface, other.errorSurface, t)!,
       neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
-      primaryContainer: Color.lerp(primaryContainer, other.primaryContainer, t)!,
-      onPrimaryContainer: Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
-      tabHighlightColor: Color.lerp(tabHighlightColor, other.tabHighlightColor, t)!,
-      responsiveOverlayColor: Color.lerp(responsiveOverlayColor, other.responsiveOverlayColor, t)!,
+      primaryContainer:
+          Color.lerp(primaryContainer, other.primaryContainer, t)!,
+      onPrimaryContainer:
+          Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
+      tabHighlightColor:
+          Color.lerp(tabHighlightColor, other.tabHighlightColor, t)!,
+      responsiveOverlayColor:
+          Color.lerp(responsiveOverlayColor, other.responsiveOverlayColor, t)!,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }

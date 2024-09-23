@@ -6,8 +6,12 @@ import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:go_router/go_router.dart';
@@ -92,7 +96,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Offset _calculateCOM() {
     const relativeLeftPos = 0.25;
     const relativeRightPos = 0.75;
-    const numRows = kBoatCapacity / 2 + 1;
+    final int numRows = (kBoatCapacity / 2).ceil() + 1;
     double relativeYPos(int row) => (0.5 + row) / numRows;
 
     double xWeighted = 0;
@@ -116,12 +120,15 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     if (_paddlerList.first != null) {
       // Add the drummer.
+      total += _paddlerList.first!.weight;
       yWeighted += _paddlerList.first!.weight * relativeYPos(0);
+      xWeighted += _paddlerList.first!.weight * 0.5;
     }
     if (_paddlerList.last != null) {
       // Add the steers person.
-      yWeighted +=
-          _paddlerList.last!.weight * relativeYPos(_paddlerList.length - 1);
+      total += _paddlerList.last!.weight;
+      yWeighted += _paddlerList.last!.weight * relativeYPos(numRows - 1);
+      xWeighted += _paddlerList.last!.weight * 0.5;
     }
 
     return Offset(xWeighted / total, yWeighted / total);
@@ -144,6 +151,17 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           context.pop();
         },
         icon: Icons.check_rounded,
+      ),
+      floatingActionButton: CustomFAB.extended(
+        child: Text(
+          'Options',
+          style: TextStyles.title1.copyWith(
+            color: AppColors.of(context).onPrimaryContainer,
+          ),
+        ),
+        onTap: () {
+          context.showModal(const OptionsModalSheet());
+        },
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
@@ -248,3 +266,50 @@ class _COMPainter extends CustomPainter {
   @override
   bool shouldRepaint(_COMPainter oldDelegate) => oldDelegate.com != com;
 }
+
+class OptionsModalSheet extends StatelessWidget {
+  const OptionsModalSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ModalSheet(
+      child: Padding(
+        padding: const EdgeInsets.all(Insets.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text('Boat Length', style: TextStyles.h2),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    const Text('Center of Mass', style: TextStyles.h2),
+                    const Spacer(),
+                    Switch(value: true, onChanged: (_){})
+                  ],
+                ),
+                const SizedBox(height: Insets.sm),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Horizontal Position:', style: TextStyles.body1),
+                    Text('0.52', style: TextStyles.body1),
+                  ],
+                ),
+                const SizedBox(height: Insets.xs),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Vertical Position:', style: TextStyles.body1),
+                    Text('0.37', style: TextStyles.body1),
+                  ],
+                ),
+              ],
+            ),
+          ].separate(const SizedBox(height: Insets.sm)).toList(),
+        ),
+      ),
+    );
+  }
+}
+

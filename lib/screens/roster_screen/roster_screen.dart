@@ -88,7 +88,7 @@ class _RosterContent extends StatefulWidget {
 }
 
 class _RosterContentState extends State<_RosterContent> {
-  var sortingStrategy = PaddlerSort.sortingStrategyLabels.keys.first;
+  String sortingStrategy = PaddlerSort.sortingStrategyLabels.keys.first;
   bool sortIncreasing = true;
   Gender? genderFilter;
   SidePreference? sidePreferenceFilter;
