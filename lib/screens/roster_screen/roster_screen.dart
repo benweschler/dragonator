@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'paddler_preview_tile.dart';
+import '../../widgets/paddler_preview_tile.dart';
 
 class RosterScreen extends StatefulWidget {
   const RosterScreen({super.key});

@@ -75,7 +75,7 @@ class LineupScreen extends StatelessWidget {
           ),
           ContextMenuAction(
             icon: Icons.view_list_rounded,
-            onTap: () => context.push(RoutePaths.editLineup(lineupID)),
+            onTap: () => context.go(RoutePaths.editLineup(lineupID)),
             label: 'Edit',
           ),
           ContextMenuAction(

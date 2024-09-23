@@ -35,7 +35,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "5a9de8bd19ed7aba49ed84104d560480bfdd694a"
+      resolved-ref: "95d8919e9b96e667d742503c3f43ee48aab05ced"
       url: "https://github.com/benweschler/animated_reorderable_grid.git"
     source: git
     version: "0.0.2"

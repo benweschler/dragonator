@@ -3,13 +3,13 @@ import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 class CustomIconButton extends StatelessWidget {
-  final GestureTapCallback onTap;
   final IconData icon;
+  final GestureTapCallback onTap;
 
   const CustomIconButton({
     super.key,
-    required this.onTap,
     required this.icon,
+    required this.onTap,
   });
 
   @override

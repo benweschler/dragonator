@@ -49,9 +49,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     return AddPaddlerTile(
       //TODO: implement
+      lineupID: widget.lineupID,
       addPaddler: (paddler) {
-        print(paddler);
-        if(paddler == null) return;
+        if (paddler == null) return;
         setState(() => _paddlerList[index] = paddler);
       },
     );
@@ -62,7 +62,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     const maxBowIndex = kBoatEndExtent - 1;
     if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
       return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
-    } else if (maxBowIndex < index && index < kBoatCapacity ~/ 2 - maxBowIndex) {
+    } else if (maxBowIndex < index &&
+        index < kBoatCapacity ~/ 2 - maxBowIndex) {
       painter = BoatSegmentPainter(
         rowNumber: index,
         //TODO: should be onBackground
@@ -146,7 +147,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
-      //TODO: stack not needed
       child: AnimatedReorderableGrid(
         length: _paddlerList.length,
         crossAxisCount: 2,
@@ -155,17 +155,11 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         itemBuilder: _itemBuilder,
         rowHeight: kGridRowHeight,
         rowBuilder: _rowBuilder,
-        //TODO: header and footer should not affect overlay
         header: const SizedBox(height: Insets.med),
         footer: const SizedBox(height: Insets.med),
-        //TODO: add positioned.fill and ignore pointer to animated reorderable grid
-        overlay: Positioned.fill(
-          child: IgnorePointer(
-            child: _COMOverlay(
-              duration: const Duration(milliseconds: 250),
-              com: _calculateCOM(),
-            ),
-          ),
+        overlay: _COMOverlay(
+          duration: const Duration(milliseconds: 250),
+          com: _calculateCOM(),
         ),
         keyBuilder: (index) => ValueKey(index),
         onReorder: (oldIndex, newIndex) => setState(() {
@@ -238,9 +232,17 @@ class _COMPainter extends CustomPainter {
     const double targetRadius = 20;
     canvas.drawCircle(Offset(x, y), targetRadius, paint);
     canvas.drawLine(Offset(x, 0), Offset(x, y - targetRadius * 0.6), paint);
-    canvas.drawLine(Offset(x, size.height), Offset(x, y + targetRadius * 0.6), paint);
+    canvas.drawLine(
+      Offset(x, size.height),
+      Offset(x, y + targetRadius * 0.6),
+      paint,
+    );
     canvas.drawLine(Offset(0, y), Offset(x - targetRadius * 0.6, y), paint);
-    canvas.drawLine(Offset(size.width, y), Offset(x + targetRadius * 0.6, y), paint);
+    canvas.drawLine(
+      Offset(size.width, y),
+      Offset(x + targetRadius * 0.6, y),
+      paint,
+    );
   }
 
   @override

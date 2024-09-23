@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
@@ -52,7 +53,10 @@ abstract class RoutePaths {
       );
 
   static String editLineup(String lineupID) =>
-      '$lineupLibrary/edit-lineup/$lineupID';
+      '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
+
+  static String addPaddlerToLineup(String lineupID) =>
+      '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/add-paddler';
 }
 
 class AppRouter {
@@ -135,14 +139,25 @@ class AppRouter {
                   builder: (state) => LineupScreen(
                     lineupID: state.pathParameters['id']!,
                   ),
-                ),
-                AppRoute(
-                  path: 'edit-lineup/:id',
-                  pageBuilder: (state) => FadeTransitionPage(
-                    child: EditLineupScreen(
-                      lineupID: state.pathParameters['id']!,
+                  routes: [
+                    AppRoute(
+                      path: 'edit-lineup/:id',
+                      pageBuilder: (state) => FadeTransitionPage(
+                        child: EditLineupScreen(
+                          lineupID: state.pathParameters['id']!,
+                        ),
+                      ),
+                      routes: [
+                        AppRoute(
+                          path: 'add-paddler',
+                          builder: (state) => AddPaddlerToLineupScreen(
+                              lineupID: state.pathParameters['id']!,
+                              addPaddler: state.extra as dynamic,
+                            ),
+                        ),
+                      ],
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
