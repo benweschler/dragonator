@@ -142,7 +142,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         onTap: context.pop,
         icon: Icons.close_rounded,
       ),
-      center: Text(_lineup.name, style: TextStyles.title1),
+      center: Text('Edit ${_lineup.name}', style: TextStyles.title1),
       trailing: CustomIconButton(
         onTap: () {
           context
