@@ -24,55 +24,14 @@ void main() async {
       ChangeNotifierProvider.value(value: rosterModel),
       ChangeNotifierProvider.value(value: appModel),
     ],
-    child: MyApp(AppRouter(appModel).router),
+    child: DragonatorApp(AppRouter(appModel).router),
   ));
 }
 
-class ReorderableApp extends StatefulWidget {
-  const ReorderableApp({super.key});
-
-  @override
-  State<ReorderableApp> createState() => _ReorderableAppState();
-}
-
-class _ReorderableAppState extends State<ReorderableApp> {
-  final data = [
-    for (int i = 0; i < 30; i++)
-      i.toString()
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: ReorderableListView(
-            onReorder: (int oldIndex, int newIndex) {
-              if (oldIndex < newIndex) {
-                newIndex -= 1;
-              }
-
-              final s = data.removeAt(oldIndex);
-              data.insert(newIndex, s);
-            },
-            children: [
-              for(var datum in data)
-                ListTile(
-                  key: ValueKey(datum),
-                  title: Text(datum),
-                )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
+class DragonatorApp extends StatelessWidget {
   final RouterConfig<Object> router;
 
-  const MyApp(this.router, {super.key});
+  const DragonatorApp(this.router, {super.key});
 
   @override
   Widget build(BuildContext context) {
