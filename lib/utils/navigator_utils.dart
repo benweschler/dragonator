@@ -7,6 +7,7 @@ extension NavigatorUtils on BuildContext {
       // Removes shadow
       elevation: 0,
       backgroundColor: Colors.transparent,
+      scrollControlDisabledMaxHeightRatio: 1,
       builder: (_) => sheet,
       useRootNavigator: true,
     );
