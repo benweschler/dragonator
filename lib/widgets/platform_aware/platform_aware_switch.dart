@@ -1,3 +1,4 @@
+import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/platform_aware/platform_aware_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +16,18 @@ class PlatformAwareSwitch extends PlatformAwareWidget<CupertinoSwitch, Switch> {
 
   @override
   buildCupertinoWidget(BuildContext context) {
-    return CupertinoSwitch(value: value, onChanged: onChanged);
+    return CupertinoSwitch(
+      value: value,
+      activeColor: AppColors.of(context).accent,
+      onChanged: onChanged,
+    );
   }
 
   @override
   buildMaterialWidget(BuildContext context) {
-    return Switch(value: value, onChanged: onChanged);
+    return Switch(
+      value: value,
+      onChanged: onChanged,
+    );
   }
 }

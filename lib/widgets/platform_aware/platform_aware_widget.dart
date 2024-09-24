@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Base class to be extended by all platform-aware widgets
 abstract class PlatformAwareWidget<C extends Widget, M extends Widget>
     extends StatelessWidget {
-  const PlatformAwareWidget({Key? key}) : super(key: key);
+  const PlatformAwareWidget({super.key});
 
   C buildCupertinoWidget(BuildContext context);
   M buildMaterialWidget(BuildContext context);

@@ -3,15 +3,14 @@ import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal_sheet.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
-import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:go_router/go_router.dart';
@@ -159,9 +158,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
             color: AppColors.of(context).onPrimaryContainer,
           ),
         ),
-        onTap: () {
-          context.showModal(const OptionsModalSheet());
-        },
+        onTap: () => context.showModal(const EditLineupOptionsModalSheet()),
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
@@ -266,50 +263,3 @@ class _COMPainter extends CustomPainter {
   @override
   bool shouldRepaint(_COMPainter oldDelegate) => oldDelegate.com != com;
 }
-
-class OptionsModalSheet extends StatelessWidget {
-  const OptionsModalSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ModalSheet(
-      child: Padding(
-        padding: const EdgeInsets.all(Insets.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text('Boat Length', style: TextStyles.h2),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    const Text('Center of Mass', style: TextStyles.h2),
-                    const Spacer(),
-                    Switch(value: true, onChanged: (_){})
-                  ],
-                ),
-                const SizedBox(height: Insets.sm),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Horizontal Position:', style: TextStyles.body1),
-                    Text('0.52', style: TextStyles.body1),
-                  ],
-                ),
-                const SizedBox(height: Insets.xs),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Vertical Position:', style: TextStyles.body1),
-                    Text('0.37', style: TextStyles.body1),
-                  ],
-                ),
-              ],
-            ),
-          ].separate(const SizedBox(height: Insets.sm)).toList(),
-        ),
-      ),
-    );
-  }
-}
-

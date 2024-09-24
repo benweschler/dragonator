@@ -8,6 +8,7 @@ import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -68,14 +69,14 @@ class _PaddlerOptionsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final moreIcon = Platform.isAndroid ? Icons.more_vert : Icons.more_horiz;
 
-    return GestureDetector(
+    return ResponsiveButton(
       onTap: showPaddlerContextMenu,
-      child: Container(
+      builder: (overlay) => Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: AppColors.of(context).neutralContent,
+            color: Theme.of(context).colorScheme.outlineVariant,
           ),
           color: Color.alphaBlend(
             AppColors.of(context).smallSurface,
@@ -85,7 +86,10 @@ class _PaddlerOptionsButton extends StatelessWidget {
         child: Icon(
           moreIcon,
           size: 18,
-          color: AppColors.of(context).neutralContent,
+          color: Color.alphaBlend(
+            overlay,
+            AppColors.of(context).neutralContent,
+          ),
         ),
       ),
     );
