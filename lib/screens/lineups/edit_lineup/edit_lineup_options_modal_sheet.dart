@@ -56,32 +56,17 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: Insets.med),
+                const SizedBox(height: Insets.lg),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Horizontal Position',
-                            style: TextStyles.body1,
-                          ),
-                          Text(
-                            'Overlay a diagram of the boat\'s center of mass on the boat diagram.',
-                            style: TextStyles.caption.copyWith(
-                              color: AppColors.of(context).neutralContent,
-                            ),
-                          ),
-                        ],
-                      ),
+                    const Text(
+                      'Horizontal Position',
+                      style: TextStyles.body1,
                     ),
                     // Aligns text with above switch.
                     Padding(
-                      padding: const EdgeInsets.only(
-                        left: Insets.lg,
-                        right: Insets.xs,
-                      ),
+                      padding: const EdgeInsets.only(right: Insets.xs),
                       child: Text(
                         '${(com.dx * 100).round()}%',
                         style: TextStyles.body1,
@@ -89,37 +74,30 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: Insets.med),
+                const SizedBox(height: Insets.sm),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Vertical Position',
-                            style: TextStyles.body1,
-                          ),
-                          Text(
-                            'Overlay a diagram of the boat\'s center of mass on the boat diagram.',
-                            style: TextStyles.caption.copyWith(
-                              color: AppColors.of(context).neutralContent,
-                            ),
-                          ),
-                        ],
-                      ),
+                    const Text(
+                      'Vertical Position',
+                      style: TextStyles.body1,
                     ),
+                    // Aligns text with above switch.
                     Padding(
-                      padding: const EdgeInsets.only(
-                        left: Insets.lg,
-                        right: Insets.xs,
-                      ),
+                      padding: const EdgeInsets.only(right: Insets.xs),
                       child: Text(
                         '${(com.dy * 100).round()}%',
                         style: TextStyles.body1,
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: Insets.sm),
+                Text(
+                  'Shown as a percentage of the total width and height of the boat, where 50% corresponds to the boat\'s center.',
+                  style: TextStyles.caption.copyWith(
+                    color: AppColors.of(context).neutralContent,
+                  ),
                 ),
               ],
             ),
