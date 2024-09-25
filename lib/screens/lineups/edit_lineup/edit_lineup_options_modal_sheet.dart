@@ -5,24 +5,17 @@ import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:dragonator/widgets/platform_aware/platform_aware_switch.dart';
 import 'package:flutter/material.dart';
 
-class EditLineupOptionsModalSheet extends StatefulWidget {
+class EditLineupOptionsModalSheet extends StatelessWidget {
   final Offset com;
+  final ValueNotifier<bool> overlayVisibilityNotifier;
   final ValueChanged<bool> toggleOverlay;
 
   const EditLineupOptionsModalSheet({
     super.key,
     required this.com,
+    required this.overlayVisibilityNotifier,
     required this.toggleOverlay,
   });
-
-  @override
-  State<EditLineupOptionsModalSheet> createState() =>
-      _EditLineupOptionsModalSheetState();
-}
-
-class _EditLineupOptionsModalSheetState
-    extends State<EditLineupOptionsModalSheet> {
-  bool value = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +47,12 @@ class _EditLineupOptionsModalSheetState
                         ],
                       ),
                     ),
-                    PlatformAwareSwitch(
-                      onChanged: (_) => setState(() => value = !value),
-                      value: value,
+                    ValueListenableBuilder(
+                      valueListenable: overlayVisibilityNotifier,
+                      builder: (_, value, __) => PlatformAwareSwitch(
+                        onChanged: (value) => toggleOverlay(value),
+                        value: value,
+                      ),
                     ),
                   ],
                 ),
@@ -87,7 +83,7 @@ class _EditLineupOptionsModalSheetState
                         right: Insets.xs,
                       ),
                       child: Text(
-                        '${(widget.com.dx * 100).round()}%',
+                        '${(com.dx * 100).round()}%',
                         style: TextStyles.body1,
                       ),
                     ),
@@ -119,7 +115,7 @@ class _EditLineupOptionsModalSheetState
                         right: Insets.xs,
                       ),
                       child: Text(
-                        '${(widget.com.dy * 100).round()}%',
+                        '${(com.dy * 100).round()}%',
                         style: TextStyles.body1,
                       ),
                     ),

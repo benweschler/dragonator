@@ -40,6 +40,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     for (int i = _lineup.paddlers.length; i < kBoatCapacity; i++) null,
   ];
 
+  final _comVisibility = ValueNotifier(true);
+
   Widget _itemBuilder(BuildContext context, int index) {
     final paddler = _paddlerList[index];
     if (paddler != null) {
@@ -160,7 +162,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(
           com: _calculateCOM(),
-          toggleOverlay: (_) {},
+          overlayVisibilityNotifier: _comVisibility,
+          toggleOverlay: (value) => _comVisibility.value = value,
         )),
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
@@ -175,9 +178,16 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         rowBuilder: _rowBuilder,
         header: const SizedBox(height: Insets.med),
         footer: const SizedBox(height: Insets.med),
-        overlay: _COMOverlay(
-          duration: const Duration(milliseconds: 250),
-          com: _calculateCOM(),
+        overlay: ValueListenableBuilder(
+          valueListenable: _comVisibility,
+          builder: (_, visible, child) => Visibility(
+            visible: visible,
+            child: child!,
+          ),
+          child: _COMOverlay(
+            duration: const Duration(milliseconds: 250),
+            com: _calculateCOM(),
+          ),
         ),
         keyBuilder: (index) => ValueKey(index),
         onReorder: (oldIndex, newIndex) => setState(() {
