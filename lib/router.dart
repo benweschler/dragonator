@@ -55,7 +55,7 @@ abstract class RoutePaths {
   static String editLineup(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
 
-  static String paddlerSelectionScreen(String lineupID) =>
+  static String selectPaddler(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/select-paddler';
 }
 
@@ -152,9 +152,9 @@ class AppRouter {
                         AppRoute(
                           path: 'select-paddler',
                           builder: (state) => SelectPaddlerScreen(
-                              lineupID: state.pathParameters['id']!,
-                              addPaddler: state.extra as dynamic,
-                            ),
+                            lineupID: state.pathParameters['id']!,
+                            addPaddler: state.extra as dynamic,
+                          ),
                         ),
                       ],
                     ),
