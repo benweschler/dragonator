@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 /// Builds as a CupertinoSwitch on iOS, and as a Material Design Switch otherwise.
 class PlatformAwareSwitch extends PlatformAwareWidget<CupertinoSwitch, Switch> {
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   const PlatformAwareSwitch({
     super.key,

@@ -6,7 +6,14 @@ import 'package:dragonator/widgets/platform_aware/platform_aware_switch.dart';
 import 'package:flutter/material.dart';
 
 class EditLineupOptionsModalSheet extends StatefulWidget {
-  const EditLineupOptionsModalSheet({super.key});
+  final Offset com;
+  final ValueChanged<bool> toggleOverlay;
+
+  const EditLineupOptionsModalSheet({
+    super.key,
+    required this.com,
+    required this.toggleOverlay,
+  });
 
   @override
   State<EditLineupOptionsModalSheet> createState() =>
@@ -41,7 +48,8 @@ class _EditLineupOptionsModalSheetState
                           Text(
                             'Overlay a diagram of the boat\'s center of mass on the boat diagram.',
                             style: TextStyles.caption.copyWith(
-                                color: AppColors.of(context).neutralContent),
+                              color: AppColors.of(context).neutralContent,
+                            ),
                           ),
                         ],
                       ),
@@ -52,25 +60,68 @@ class _EditLineupOptionsModalSheetState
                     ),
                   ],
                 ),
-                const SizedBox(height: Insets.sm),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(height: Insets.med),
+                Row(
                   children: [
-                    Text('Horizontal Position', style: TextStyles.body1),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Horizontal Position',
+                            style: TextStyles.body1,
+                          ),
+                          Text(
+                            'Overlay a diagram of the boat\'s center of mass on the boat diagram.',
+                            style: TextStyles.caption.copyWith(
+                              color: AppColors.of(context).neutralContent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Aligns text with above switch.
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Insets.xs),
-                      child: Text('52%', style: TextStyles.body1),
+                      padding: const EdgeInsets.only(
+                        left: Insets.lg,
+                        right: Insets.xs,
+                      ),
+                      child: Text(
+                        '${(widget.com.dx * 100).round()}%',
+                        style: TextStyles.body1,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: Insets.sm),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(height: Insets.med),
+                Row(
                   children: [
-                    Text('Vertical Position', style: TextStyles.body1),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Vertical Position',
+                            style: TextStyles.body1,
+                          ),
+                          Text(
+                            'Overlay a diagram of the boat\'s center of mass on the boat diagram.',
+                            style: TextStyles.caption.copyWith(
+                              color: AppColors.of(context).neutralContent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Insets.xs),
-                      child: Text('25%', style: TextStyles.body1),
+                      padding: const EdgeInsets.only(
+                        left: Insets.lg,
+                        right: Insets.xs,
+                      ),
+                      child: Text(
+                        '${(widget.com.dy * 100).round()}%',
+                        style: TextStyles.body1,
+                      ),
                     ),
                   ],
                 ),

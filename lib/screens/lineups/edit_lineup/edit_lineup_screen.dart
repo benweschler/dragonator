@@ -158,7 +158,10 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
             color: AppColors.of(context).onPrimaryContainer,
           ),
         ),
-        onTap: () => context.showModal(const EditLineupOptionsModalSheet()),
+        onTap: () => context.showModal(EditLineupOptionsModalSheet(
+          com: _calculateCOM(),
+          toggleOverlay: (_) {},
+        )),
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
