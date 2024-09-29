@@ -1,11 +1,11 @@
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/easy_notifier.dart';
+import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 
-class AppModel extends EasyNotifier {
-  final EasyNotifier routerRefreshNotifier = EasyNotifier();
+class AppModel extends Notifier {
+  final Notifier routerRefreshNotifier = Notifier();
 
   AppModel() {
     FirebaseAuth.instance.authStateChanges().listen((authUser) {

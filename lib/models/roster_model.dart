@@ -4,10 +4,10 @@ import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
-import 'package:dragonator/utils/easy_notifier.dart';
+import 'package:dragonator/utils/notifier.dart';
 
 //TODO: add documentation
-class RosterModel extends EasyNotifier {
+class RosterModel extends Notifier {
   Future<void> initialize(AppUser user) async {
     final firestore = FirebaseFirestore.instance;
 
