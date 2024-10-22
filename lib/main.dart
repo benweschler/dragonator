@@ -1,4 +1,3 @@
-//TODO: set preferred device orientation on android
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -9,6 +8,9 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'models/roster_model.dart';
+
+//TODO: set preferred device orientation on android
+//TODO: limit addition of fields to reasonable number for appropriate firestore documents (e.g. paddler lists, lineup lists, wherever users can create infinite of something)
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

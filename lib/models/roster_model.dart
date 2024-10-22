@@ -8,6 +8,7 @@ import 'package:dragonator/utils/notifier.dart';
 
 //TODO: add documentation
 class RosterModel extends Notifier {
+  //TODO: no awaiting here means that data isn't loaded when roster screen shows
   Future<void> initialize(AppUser user) async {
     final firestore = FirebaseFirestore.instance;
 

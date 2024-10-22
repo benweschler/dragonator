@@ -19,6 +19,8 @@ class LineupLibraryScreen extends StatefulWidget {
 }
 
 class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
+  //TODO: should have a globally selected team
+  //TODO: doesn't actually do anything
   int selectedTeamIndex = 0;
 
   @override

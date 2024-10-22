@@ -23,4 +23,9 @@ class Lineup {
       paddlers: paddlers ?? this.paddlers,
     );
   }
+
+  @override
+  String toString() {
+    return 'Lineup($id, $name, $paddlers)';
+  }
 }
