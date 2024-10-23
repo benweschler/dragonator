@@ -1,29 +1,24 @@
-//TODO: freeze
-class Lineup {
-  final String id;
-  final String name;
-  final Iterable<String?> paddlerIDs;
+import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const Lineup({
-    required this.id,
-    required this.name,
-    required this.paddlerIDs,
-  });
+part 'lineup.freezed.dart';
 
-  Lineup copyWith({
-    String? id,
-    String? name,
-    Iterable<String?>? paddlerIDs,
-  }) {
-    return Lineup(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      paddlerIDs: paddlerIDs ?? this.paddlerIDs,
-    );
-  }
+part 'lineup.g.dart';
+
+// Define equality only based on id using Equatable. This means that two Lineups
+// are equal if their ids are equal.
+@Freezed(equal: false)
+class Lineup extends Equatable with _$Lineup {
+  const Lineup._();
+
+  const factory Lineup({
+    required String id,
+    required String name,
+    required Iterable<String?> paddlerIDs,
+  }) = _Lineup;
+
+  factory Lineup.fromJson(Map<String, Object?> json) => _$LineupFromJson(json);
 
   @override
-  String toString() {
-    return 'Lineup($id, $name, $paddlerIDs)';
-  }
+  List<Object?> get props => [id];
 }

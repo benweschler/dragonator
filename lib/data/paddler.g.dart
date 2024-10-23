@@ -1,4 +1,3 @@
-// ignore_for_file: type=lint
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'paddler.dart';
@@ -7,12 +6,13 @@ part of 'paddler.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
+_$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
+    _$PaddlerImpl(
       id: json['id'] as String,
       teamID: json['teamID'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
-      weight: json['weight'] as int,
+      weight: (json['weight'] as num).toInt(),
       gender: $enumDecode(_$GenderEnumMap, json['gender']),
       sidePreference:
           $enumDecode(_$SidePreferenceEnumMap, json['sidePreference']),
@@ -22,7 +22,7 @@ _$_Paddler _$$_PaddlerFromJson(Map<String, dynamic> json) => _$_Paddler(
       strokePreference: json['strokePreference'] as bool,
     );
 
-Map<String, dynamic> _$$_PaddlerToJson(_$_Paddler instance) =>
+Map<String, dynamic> _$$PaddlerImplToJson(_$PaddlerImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'teamID': instance.teamID,

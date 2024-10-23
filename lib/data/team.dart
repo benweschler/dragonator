@@ -5,6 +5,8 @@ part 'team.freezed.dart';
 
 part 'team.g.dart';
 
+// Define equality only based on id using Equatable. This means that two Teams
+// are equal if their ids are equal.
 @Freezed(equal: false)
 class Team extends Equatable with _$Team {
   const Team._();

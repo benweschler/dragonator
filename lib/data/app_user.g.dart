@@ -1,4 +1,3 @@
-// ignore_for_file: type=lint
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'app_user.dart';
@@ -7,7 +6,8 @@ part of 'app_user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_AppUser _$$_AppUserFromJson(Map<String, dynamic> json) => _$_AppUser(
+_$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
+    _$AppUserImpl(
       id: json['id'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
@@ -15,7 +15,7 @@ _$_AppUser _$$_AppUserFromJson(Map<String, dynamic> json) => _$_AppUser(
       teams: (json['teams'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$$_AppUserToJson(_$_AppUser instance) =>
+Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'firstName': instance.firstName,

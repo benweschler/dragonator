@@ -5,6 +5,8 @@ part 'paddler.freezed.dart';
 
 part 'paddler.g.dart';
 
+// Define equality only based on id using Equatable. This means that two
+// Paddlers are equal if their ids are equal.
 @Freezed(equal: false)
 class Paddler extends Equatable with _$Paddler {
   const Paddler._();

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'team.dart';
+part of 'lineup.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,44 +14,44 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Team _$TeamFromJson(Map<String, dynamic> json) {
-  return _Team.fromJson(json);
+Lineup _$LineupFromJson(Map<String, dynamic> json) {
+  return _Lineup.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Team {
+mixin _$Lineup {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  Set<String> get paddlerIDs => throw _privateConstructorUsedError;
+  Iterable<String?> get paddlerIDs => throw _privateConstructorUsedError;
 
-  /// Serializes this Team to a JSON map.
+  /// Serializes this Lineup to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of Team
+  /// Create a copy of Lineup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TeamCopyWith<Team> get copyWith => throw _privateConstructorUsedError;
+  $LineupCopyWith<Lineup> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TeamCopyWith<$Res> {
-  factory $TeamCopyWith(Team value, $Res Function(Team) then) =
-      _$TeamCopyWithImpl<$Res, Team>;
+abstract class $LineupCopyWith<$Res> {
+  factory $LineupCopyWith(Lineup value, $Res Function(Lineup) then) =
+      _$LineupCopyWithImpl<$Res, Lineup>;
   @useResult
-  $Res call({String id, String name, Set<String> paddlerIDs});
+  $Res call({String id, String name, Iterable<String?> paddlerIDs});
 }
 
 /// @nodoc
-class _$TeamCopyWithImpl<$Res, $Val extends Team>
-    implements $TeamCopyWith<$Res> {
-  _$TeamCopyWithImpl(this._value, this._then);
+class _$LineupCopyWithImpl<$Res, $Val extends Lineup>
+    implements $LineupCopyWith<$Res> {
+  _$LineupCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Team
+  /// Create a copy of Lineup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -72,29 +72,30 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
       paddlerIDs: null == paddlerIDs
           ? _value.paddlerIDs
           : paddlerIDs // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
+              as Iterable<String?>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
-  factory _$$TeamImplCopyWith(
-          _$TeamImpl value, $Res Function(_$TeamImpl) then) =
-      __$$TeamImplCopyWithImpl<$Res>;
+abstract class _$$LineupImplCopyWith<$Res> implements $LineupCopyWith<$Res> {
+  factory _$$LineupImplCopyWith(
+          _$LineupImpl value, $Res Function(_$LineupImpl) then) =
+      __$$LineupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, Set<String> paddlerIDs});
+  $Res call({String id, String name, Iterable<String?> paddlerIDs});
 }
 
 /// @nodoc
-class __$$TeamImplCopyWithImpl<$Res>
-    extends _$TeamCopyWithImpl<$Res, _$TeamImpl>
-    implements _$$TeamImplCopyWith<$Res> {
-  __$$TeamImplCopyWithImpl(_$TeamImpl _value, $Res Function(_$TeamImpl) _then)
+class __$$LineupImplCopyWithImpl<$Res>
+    extends _$LineupCopyWithImpl<$Res, _$LineupImpl>
+    implements _$$LineupImplCopyWith<$Res> {
+  __$$LineupImplCopyWithImpl(
+      _$LineupImpl _value, $Res Function(_$LineupImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Team
+  /// Create a copy of Lineup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -103,7 +104,7 @@ class __$$TeamImplCopyWithImpl<$Res>
     Object? name = null,
     Object? paddlerIDs = null,
   }) {
-    return _then(_$TeamImpl(
+    return _then(_$LineupImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -113,74 +114,66 @@ class __$$TeamImplCopyWithImpl<$Res>
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       paddlerIDs: null == paddlerIDs
-          ? _value._paddlerIDs
+          ? _value.paddlerIDs
           : paddlerIDs // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
+              as Iterable<String?>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TeamImpl extends _Team {
-  const _$TeamImpl(
-      {required this.id,
-      required this.name,
-      required final Set<String> paddlerIDs})
-      : _paddlerIDs = paddlerIDs,
-        super._();
+class _$LineupImpl extends _Lineup {
+  const _$LineupImpl(
+      {required this.id, required this.name, required this.paddlerIDs})
+      : super._();
 
-  factory _$TeamImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TeamImplFromJson(json);
+  factory _$LineupImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LineupImplFromJson(json);
 
   @override
   final String id;
   @override
   final String name;
-  final Set<String> _paddlerIDs;
   @override
-  Set<String> get paddlerIDs {
-    if (_paddlerIDs is EqualUnmodifiableSetView) return _paddlerIDs;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_paddlerIDs);
-  }
+  final Iterable<String?> paddlerIDs;
 
-  /// Create a copy of Team
+  /// Create a copy of Lineup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TeamImplCopyWith<_$TeamImpl> get copyWith =>
-      __$$TeamImplCopyWithImpl<_$TeamImpl>(this, _$identity);
+  _$$LineupImplCopyWith<_$LineupImpl> get copyWith =>
+      __$$LineupImplCopyWithImpl<_$LineupImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TeamImplToJson(
+    return _$$LineupImplToJson(
       this,
     );
   }
 }
 
-abstract class _Team extends Team {
-  const factory _Team(
+abstract class _Lineup extends Lineup {
+  const factory _Lineup(
       {required final String id,
       required final String name,
-      required final Set<String> paddlerIDs}) = _$TeamImpl;
-  const _Team._() : super._();
+      required final Iterable<String?> paddlerIDs}) = _$LineupImpl;
+  const _Lineup._() : super._();
 
-  factory _Team.fromJson(Map<String, dynamic> json) = _$TeamImpl.fromJson;
+  factory _Lineup.fromJson(Map<String, dynamic> json) = _$LineupImpl.fromJson;
 
   @override
   String get id;
   @override
   String get name;
   @override
-  Set<String> get paddlerIDs;
+  Iterable<String?> get paddlerIDs;
 
-  /// Create a copy of Team
+  /// Create a copy of Lineup
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TeamImplCopyWith<_$TeamImpl> get copyWith =>
+  _$$LineupImplCopyWith<_$LineupImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

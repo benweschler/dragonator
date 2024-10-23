@@ -12,7 +12,7 @@ part of 'paddler.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Paddler _$PaddlerFromJson(Map<String, dynamic> json) {
   return _Paddler.fromJson(json);
@@ -32,8 +32,12 @@ mixin _$Paddler {
   bool get steersPersonPreference => throw _privateConstructorUsedError;
   bool get strokePreference => throw _privateConstructorUsedError;
 
+  /// Serializes this Paddler to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Paddler
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PaddlerCopyWith<Paddler> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -66,6 +70,8 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Paddler
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -131,10 +137,10 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
 }
 
 /// @nodoc
-abstract class _$$_PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
-  factory _$$_PaddlerCopyWith(
-          _$_Paddler value, $Res Function(_$_Paddler) then) =
-      __$$_PaddlerCopyWithImpl<$Res>;
+abstract class _$$PaddlerImplCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
+  factory _$$PaddlerImplCopyWith(
+          _$PaddlerImpl value, $Res Function(_$PaddlerImpl) then) =
+      __$$PaddlerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -152,12 +158,15 @@ abstract class _$$_PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_PaddlerCopyWithImpl<$Res>
-    extends _$PaddlerCopyWithImpl<$Res, _$_Paddler>
-    implements _$$_PaddlerCopyWith<$Res> {
-  __$$_PaddlerCopyWithImpl(_$_Paddler _value, $Res Function(_$_Paddler) _then)
+class __$$PaddlerImplCopyWithImpl<$Res>
+    extends _$PaddlerCopyWithImpl<$Res, _$PaddlerImpl>
+    implements _$$PaddlerImplCopyWith<$Res> {
+  __$$PaddlerImplCopyWithImpl(
+      _$PaddlerImpl _value, $Res Function(_$PaddlerImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Paddler
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,7 +182,7 @@ class __$$_PaddlerCopyWithImpl<$Res>
     Object? steersPersonPreference = null,
     Object? strokePreference = null,
   }) {
-    return _then(_$_Paddler(
+    return _then(_$PaddlerImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -224,8 +233,8 @@ class __$$_PaddlerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Paddler extends _Paddler {
-  const _$_Paddler(
+class _$PaddlerImpl extends _Paddler {
+  const _$PaddlerImpl(
       {required this.id,
       required this.teamID,
       required this.firstName,
@@ -239,8 +248,8 @@ class _$_Paddler extends _Paddler {
       required this.strokePreference})
       : super._();
 
-  factory _$_Paddler.fromJson(Map<String, dynamic> json) =>
-      _$$_PaddlerFromJson(json);
+  factory _$PaddlerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PaddlerImplFromJson(json);
 
   @override
   final String id;
@@ -265,15 +274,17 @@ class _$_Paddler extends _Paddler {
   @override
   final bool strokePreference;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Paddler
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PaddlerCopyWith<_$_Paddler> get copyWith =>
-      __$$_PaddlerCopyWithImpl<_$_Paddler>(this, _$identity);
+  _$$PaddlerImplCopyWith<_$PaddlerImpl> get copyWith =>
+      __$$PaddlerImplCopyWithImpl<_$PaddlerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PaddlerToJson(
+    return _$$PaddlerImplToJson(
       this,
     );
   }
@@ -291,10 +302,10 @@ abstract class _Paddler extends Paddler {
       required final AgeGroup ageGroup,
       required final bool drummerPreference,
       required final bool steersPersonPreference,
-      required final bool strokePreference}) = _$_Paddler;
+      required final bool strokePreference}) = _$PaddlerImpl;
   const _Paddler._() : super._();
 
-  factory _Paddler.fromJson(Map<String, dynamic> json) = _$_Paddler.fromJson;
+  factory _Paddler.fromJson(Map<String, dynamic> json) = _$PaddlerImpl.fromJson;
 
   @override
   String get id;
@@ -318,8 +329,11 @@ abstract class _Paddler extends Paddler {
   bool get steersPersonPreference;
   @override
   bool get strokePreference;
+
+  /// Create a copy of Paddler
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_PaddlerCopyWith<_$_Paddler> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PaddlerImplCopyWith<_$PaddlerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
