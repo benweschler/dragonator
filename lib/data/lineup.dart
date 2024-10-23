@@ -1,31 +1,29 @@
-import 'package:dragonator/data/paddler.dart';
-
 //TODO: freeze
 class Lineup {
   final String id;
   final String name;
-  final Iterable<Paddler?> paddlers;
+  final Iterable<String?> paddlerIDs;
 
   const Lineup({
     required this.id,
     required this.name,
-    required this.paddlers,
+    required this.paddlerIDs,
   });
 
   Lineup copyWith({
     String? id,
     String? name,
-    Iterable<Paddler?>? paddlers,
+    Iterable<String?>? paddlerIDs,
   }) {
     return Lineup(
       id: id ?? this.id,
       name: name ?? this.name,
-      paddlers: paddlers ?? this.paddlers,
+      paddlerIDs: paddlerIDs ?? this.paddlerIDs,
     );
   }
 
   @override
   String toString() {
-    return 'Lineup($id, $name, $paddlers)';
+    return 'Lineup($id, $name, $paddlerIDs)';
   }
 }

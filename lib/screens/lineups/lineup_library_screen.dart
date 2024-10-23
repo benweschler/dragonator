@@ -70,18 +70,18 @@ class LineupPreviewTile extends StatelessWidget {
           horizontal: Insets.sm,
           vertical: Insets.med,
         ),
-        child: _buildContent(AppColors.of(context)),
+        child: _buildContent(AppColors.of(context), context),
       ),
     );
   }
 
-  Widget _buildContent(AppColors appColors) {
-    final paddlerNames = lineup.paddlers.isEmpty
+  Widget _buildContent(AppColors appColors, BuildContext context) {
+    final paddlerNames = lineup.paddlerIDs.isEmpty
         ? 'No paddlers'
-        : lineup.paddlers
-            .where((paddler) => paddler != null)
-            .map((paddler) => '${paddler!.firstName} ${paddler.lastName}')
-            .join(', ');
+        : lineup.paddlerIDs.where((id) => id != null).map((id) {
+            final paddler = context.read<RosterModel>().getPaddler(id);
+            return '${paddler!.firstName} ${paddler.lastName}';
+          }).join(', ');
 
     return Row(
       children: [

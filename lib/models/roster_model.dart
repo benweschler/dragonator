@@ -60,12 +60,12 @@ class RosterModel extends Notifier {
     '1': Lineup(
       id: '1',
       name: 'Lineup One',
-      paddlers: paddlers.take(22),
+      paddlerIDs: paddlers.take(22).map((paddler) => paddler.id),
     ),
     '2': Lineup(
       id: '2',
       name: 'Lineup Two',
-      paddlers: paddlers.take(22),
+      paddlerIDs: paddlers.take(22).map((paddler) => paddler.id),
     ),
   };
 

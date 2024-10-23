@@ -30,17 +30,25 @@ class EditLineupScreen extends StatefulWidget {
 }
 
 class _EditLineupScreenState extends State<EditLineupScreen> {
-  late final Lineup _lineup =
-      context.read<RosterModel>().getLineup(widget.lineupID)!;
+  late final Lineup _lineup;
 
   // This is mutable state. The paddler list is updated on reorder through set
   // state.
-  late final List<Paddler?> _paddlerList = [
-    ..._lineup.paddlers,
-    for (int i = _lineup.paddlers.length; i < kBoatCapacity; i++) null,
-  ];
+  late final List<Paddler?> _paddlerList;
 
   final _comVisibility = ValueNotifier(true);
+
+  @override
+  void initState() {
+    super.initState();
+
+    final rosterModel = context.read<RosterModel>();
+    _lineup = rosterModel.getLineup(widget.lineupID)!;
+    _paddlerList = [
+      ..._lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)),
+      for (int i = _lineup.paddlerIDs.length; i < kBoatCapacity; i++) null,
+    ];
+  }
 
   Widget _itemBuilder(BuildContext context, int index) {
     final paddler = _paddlerList[index];
@@ -146,9 +154,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       center: Text('Edit ${_lineup.name}', style: TextStyles.title1),
       trailing: CustomIconButton(
         onTap: () {
-          context
-              .read<RosterModel>()
-              .setLineup(_lineup.copyWith(paddlers: _paddlerList));
+          context.read<RosterModel>().setLineup(_lineup.copyWith(
+                paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
+              ));
           context.pop();
         },
         icon: Icons.check_rounded,

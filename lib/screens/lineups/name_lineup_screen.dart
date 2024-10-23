@@ -1,5 +1,4 @@
 import 'package:dragonator/data/lineup.dart';
-import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/single_field_form_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class NameLineupScreen extends StatelessWidget {
                 Lineup(
                   id: '$lineupNum',
                   name: lineupName,
-                  paddlers: const Iterable<Paddler?>.empty(),
+                  paddlerIDs: const Iterable<String?>.empty(),
                 ),
           ),
       heading: 'Create Lineup',
