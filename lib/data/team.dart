@@ -18,6 +18,13 @@ class Team extends Equatable with _$Team {
 
   factory Team.fromJson(Map<String, Object?> json) => _$TeamFromJson(json);
 
+  factory Team.fromFirestore({
+    required String id,
+    required Map<String, dynamic> data,
+  }) {
+    return Team.fromJson(data..['id'] = id);
+  }
+
   @override
   List<Object?> get props => [id];
 }

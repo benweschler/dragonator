@@ -20,6 +20,7 @@ class Bootstrapper {
     appModel.isInitialized = true;
   }
 
+  //TODO: move this to AppModel, move user commands to app model, and open realtime listener.
   Future<void> _loadUser() async {
     appModel.user = await getUserCommand(firebaseAuth.currentUser!.uid);
   }

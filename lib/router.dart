@@ -10,6 +10,7 @@ import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart'
 import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
+import 'package:dragonator/screens/settings_screen/set_team_name_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
@@ -32,7 +33,7 @@ abstract class RoutePaths {
   static String splash = '/';
   static String roster = '/roster';
   static String lineupLibrary = '/lineup-library';
-  static String profile = '/profile';
+  static String settings = '/settings';
   static String logIn = '/log-in';
   static String forgotPassword = '$logIn/forgot-password';
   static String signUp = '/sign-up';
@@ -52,8 +53,11 @@ abstract class RoutePaths {
   static String editLineup(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
 
+  //TODO: rename to add paddler
   static String selectPaddler(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/select-paddler';
+
+  static String setTeamName([String? id]) => '$settings/set-team-name/$id';
 }
 
 class AppRouter {
@@ -159,9 +163,19 @@ class AppRouter {
               ],
             ),
             AppRoute(
-              path: RoutePaths.profile,
+              path: RoutePaths.settings,
               isNavBarTab: true,
               builder: (_) => const SettingsScreen(),
+              routes: [
+                AppRoute(
+                  path: 'set-team-name/:id',
+                  pageBuilder: (state) => FadeTransitionPage(
+                    child: SetTeamNameScreen(
+                      teamID: state.pathParameters['id'],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

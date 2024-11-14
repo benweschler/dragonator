@@ -9,6 +9,8 @@ import 'package:dragonator/utils/notifier.dart';
 
 part '../commands/paddler_commands.dart';
 
+part '../commands/team_commands.dart';
+
 //TODO: add documentation
 class RosterModel extends Notifier {
   //TODO: if logging out replaces the roster model, no need for data members to ever be null.
@@ -130,6 +132,8 @@ class RosterModel extends Notifier {
 
   Iterable<Team> get teams => _teamIDMap.values;
 
+  Team? getTeam(String? id) => _teamIDMap[id];
+
   String? get currentTeamID => _currentTeamID;
 
   //* LINEUP GETTERS *//
@@ -150,7 +154,8 @@ class RosterModel extends Notifier {
 
   //* TEAM SETTERS */
 
-  //TODO: implement
+  Future<void> renameTeam(String teamID, String name) =>
+      _renameTeamCommand(teamID, name);
 
   //* LINEUP SETTERS *//
 

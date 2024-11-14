@@ -2,6 +2,7 @@ import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/settings_screen/change_theme_button.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -13,6 +14,7 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 //TODO: using divider
@@ -195,7 +197,7 @@ class _TeamTile extends StatelessWidget {
       onTap: () => context.showModal(ContextMenu([
         ContextMenuAction(
           icon: Icons.edit_rounded,
-          onTap: () {},
+          onTap: () => context.push(RoutePaths.setTeamName(team.id)),
           label: 'Rename',
         ),
         ContextMenuAction(

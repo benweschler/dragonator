@@ -24,7 +24,7 @@ class MainAppScaffold extends StatefulWidget {
       label: 'Lineups',
     ),
     NavigationTab(
-      rootLocation: RoutePaths.profile,
+      rootLocation: RoutePaths.settings,
       icon: Icons.settings_rounded,
       label: 'Settings',
     ),
