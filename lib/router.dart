@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
-import 'package:dragonator/screens/lineups/edit_lineup/select_paddler_screen.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_to_lineup_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
 import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart';
@@ -54,8 +54,8 @@ abstract class RoutePaths {
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
 
   //TODO: rename to add paddler
-  static String selectPaddler(String lineupID) =>
-      '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/select-paddler';
+  static String addPaddlerToLineup(String lineupID) =>
+      '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/add-paddler';
 
   static String setTeamName([String? id]) => '$settings/set-team-name/$id';
 }
@@ -150,8 +150,8 @@ class AppRouter {
                       routes: [
                         // TODO: navigating to paddler details goes to roster screen.
                         AppRoute(
-                          path: 'select-paddler',
-                          builder: (state) => SelectPaddlerScreen(
+                          path: 'add-paddler',
+                          builder: (state) => AddPaddlerToLineupScreen(
                             lineupID: state.pathParameters['id']!,
                             addPaddler: state.extra as dynamic,
                           ),

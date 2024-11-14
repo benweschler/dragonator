@@ -19,7 +19,7 @@ class AddPaddlerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => context.push(
-        RoutePaths.selectPaddler(lineupID),
+        RoutePaths.addPaddlerToLineup(lineupID),
         extra: addPaddler,
       ),
       child: Container(

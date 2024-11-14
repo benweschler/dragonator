@@ -9,21 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class SelectPaddlerScreen extends StatefulWidget {
+class AddPaddlerToLineupScreen extends StatefulWidget {
   final String lineupID;
   final ValueChanged<Paddler?> addPaddler;
 
-  const SelectPaddlerScreen({
+  const AddPaddlerToLineupScreen({
     super.key,
     required this.lineupID,
     required this.addPaddler,
   });
 
   @override
-  State<SelectPaddlerScreen> createState() => _SelectPaddlerScreenState();
+  State<AddPaddlerToLineupScreen> createState() => _AddPaddlerToLineupScreenState();
 }
 
-class _SelectPaddlerScreenState extends State<SelectPaddlerScreen> {
+class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
   int? _selected;
 
   @override
