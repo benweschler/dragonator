@@ -6,9 +6,11 @@ import 'package:dragonator/screens/settings_screen/change_theme_button.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: Insets.sm),
-                const TeamCard(),
+                const _TeamCard(),
                 const SizedBox(height: Insets.xl),
                 const Divider(height: 0.5, thickness: 0.5),
                 const SizedBox(height: Insets.xl),
@@ -148,8 +150,8 @@ class ProfileInfo extends StatelessWidget {
   }
 }
 
-class TeamCard extends StatelessWidget {
-  const TeamCard({super.key});
+class _TeamCard extends StatelessWidget {
+  const _TeamCard();
 
   @override
   Widget build(BuildContext context) {
@@ -160,22 +162,7 @@ class TeamCard extends StatelessWidget {
           content = const [Text('You don\'t have any teams yet')];
         } else {
           content = <Widget>[
-            for (Team team in rosterModel.teams)
-              TeamTile(
-                teamName: team.name,
-                //TODO: need to make names available. or just delete them
-                paddlerNames: ['TEST'],
-                /*
-                paddlerNames: team.paddlerIDs
-                    .map((id) => rosterModel.getPaddler(id)!)
-                    .map(
-                      (paddler) => '${paddler.firstName} ${paddler.lastName}',
-                    )
-                    .toList()
-                  ..sort(),
-
-                 */
-              ),
+            for (Team team in rosterModel.teams) _TeamTile(team)
           ]
               .separate(const Divider(height: Insets.med * 2, thickness: 0.5))
               .toList();
@@ -187,38 +174,53 @@ class TeamCard extends StatelessWidget {
             borderRadius: Corners.medBorderRadius,
             color: AppColors.of(context).largeSurface,
           ),
-          child: Column(children: content),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: content,
+          ),
         );
       },
     );
   }
 }
 
-class TeamTile extends StatelessWidget {
-  final String teamName;
-  final Iterable<String> paddlerNames;
+class _TeamTile extends StatelessWidget {
+  final Team team;
 
-  const TeamTile({super.key, required this.teamName, required this.paddlerNames});
+  const _TeamTile(this.team);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(teamName, style: TextStyles.body1),
-            Text(
-              paddlerNames.isNotEmpty ? paddlerNames.join(', ') : 'No paddlers',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyles.caption.copyWith(
-                color: AppColors.of(context).neutralContent,
-              ),
-            ),
-          ],
+    return ResponsiveStrokeButton(
+      onTap: () => context.showModal(ContextMenu([
+        ContextMenuAction(
+          icon: Icons.edit_rounded,
+          onTap: () {},
+          label: 'Rename',
         ),
-      ],
+        ContextMenuAction(
+          icon: Icons.groups_rounded,
+          onTap: () {},
+          label: 'View Roster',
+        ),
+        ContextMenuAction(
+          icon: Icons.delete_rounded,
+          onTap: () {},
+          label: 'Delete',
+        ),
+      ])),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            team.name,
+            style: TextStyles.body1.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Icon(Icons.chevron_right_rounded),
+        ],
+      ),
     );
   }
 }
