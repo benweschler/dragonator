@@ -39,11 +39,8 @@ abstract class RoutePaths {
 
   static String paddler(String id) => '$roster/paddler/$id';
 
-  static String editPaddler({String? paddlerID, String? teamID}) =>
-      _appendQueryParams(
-        '$roster/edit-paddler',
-        {'paddlerID': paddlerID, 'teamID': teamID},
-      );
+  static String editPaddler({String? paddlerID}) =>
+      _appendQueryParams('$roster/edit-paddler', {'paddlerID': paddlerID});
 
   static String lineup(String lineupID) => '$lineupLibrary/lineup/$lineupID';
 
@@ -115,7 +112,6 @@ class AppRouter {
                   pageBuilder: (state) => FadeTransitionPage(
                     child: EditPaddlerScreen(
                       paddlerID: state.uri.queryParameters['paddlerID'],
-                      teamID: state.uri.queryParameters['teamID'],
                     ),
                   ),
                 ),
@@ -180,6 +176,7 @@ class AppRouter {
         path != RoutePaths.logIn &&
         path != RoutePaths.signUp &&
         path != RoutePaths.forgotPassword) {
+      context.read<RosterModel>().clear();
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isInitialized && path != RoutePaths.splash) {

@@ -13,7 +13,6 @@ class Paddler extends Equatable with _$Paddler {
 
   const factory Paddler({
     required String id,
-    required String teamID,
     required String firstName,
     required String lastName,
     required int weight,
@@ -27,6 +26,15 @@ class Paddler extends Equatable with _$Paddler {
 
   factory Paddler.fromJson(Map<String, Object?> json) =>
       _$PaddlerFromJson(json);
+
+  factory Paddler.fromFirestore({
+    required String id,
+    required Map<String, dynamic> data,
+  }) {
+    return Paddler.fromJson(data..['id'] = id);
+  }
+
+  Map<String, dynamic> toFirestore() => toJson()..remove('id');
 
   @override
   List<Object?> get props => [id];

@@ -14,7 +14,6 @@ class Team extends Equatable with _$Team {
   const factory Team({
     required String id,
     required String name,
-    required Set<String> paddlerIDs,
   }) = _Team;
 
   factory Team.fromJson(Map<String, Object?> json) => _$TeamFromJson(json);

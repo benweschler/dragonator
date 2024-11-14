@@ -163,6 +163,9 @@ class TeamCard extends StatelessWidget {
             for (Team team in rosterModel.teams)
               TeamTile(
                 teamName: team.name,
+                //TODO: need to make names available. or just delete them
+                paddlerNames: ['TEST'],
+                /*
                 paddlerNames: team.paddlerIDs
                     .map((id) => rosterModel.getPaddler(id)!)
                     .map(
@@ -170,6 +173,8 @@ class TeamCard extends StatelessWidget {
                     )
                     .toList()
                   ..sort(),
+
+                 */
               ),
           ]
               .separate(const Divider(height: Insets.med * 2, thickness: 0.5))

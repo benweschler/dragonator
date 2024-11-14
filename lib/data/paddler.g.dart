@@ -9,7 +9,6 @@ part of 'paddler.dart';
 _$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
     _$PaddlerImpl(
       id: json['id'] as String,
-      teamID: json['teamID'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       weight: (json['weight'] as num).toInt(),
@@ -25,7 +24,6 @@ _$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$PaddlerImplToJson(_$PaddlerImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'teamID': instance.teamID,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'weight': instance.weight,

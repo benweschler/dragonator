@@ -19,13 +19,12 @@ import 'labeled_text_field.dart';
 
 class EditPaddlerScreen extends StatelessWidget {
   final String? paddlerID;
-  final String? teamID;
 
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
   static const _uuid = Uuid();
 
-  EditPaddlerScreen({this.paddlerID, this.teamID, super.key})
-      : assert((paddlerID == null) ^ (teamID == null));
+  // If paddlerID is not provided, a new paddler will be created.
+  EditPaddlerScreen({this.paddlerID, super.key});
 
   void _savePaddler(RosterModel rosterModel, Paddler? paddler) {
     final formData = _formKey.currentState!.value;
@@ -46,7 +45,6 @@ class EditPaddlerScreen extends StatelessWidget {
     } else {
       updatedPaddler = Paddler(
         id: _uuid.v4(),
-        teamID: teamID!,
         firstName: formData[EditPaddlerFieldNames.firstName],
         lastName: formData[EditPaddlerFieldNames.lastName],
         weight: int.parse(formData[EditPaddlerFieldNames.weight]),

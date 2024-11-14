@@ -22,7 +22,7 @@ abstract class CreateUserCommand {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      teams: [],
+      teamIDs: [],
     );
 
     await firestore.collection('users').doc(user.id).set(user.toJson());

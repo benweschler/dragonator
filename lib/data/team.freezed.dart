@@ -22,7 +22,6 @@ Team _$TeamFromJson(Map<String, dynamic> json) {
 mixin _$Team {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  Set<String> get paddlerIDs => throw _privateConstructorUsedError;
 
   /// Serializes this Team to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +37,7 @@ abstract class $TeamCopyWith<$Res> {
   factory $TeamCopyWith(Team value, $Res Function(Team) then) =
       _$TeamCopyWithImpl<$Res, Team>;
   @useResult
-  $Res call({String id, String name, Set<String> paddlerIDs});
+  $Res call({String id, String name});
 }
 
 /// @nodoc
@@ -58,7 +57,6 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? paddlerIDs = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -69,10 +67,6 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      paddlerIDs: null == paddlerIDs
-          ? _value.paddlerIDs
-          : paddlerIDs // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
     ) as $Val);
   }
 }
@@ -84,7 +78,7 @@ abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
       __$$TeamImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, Set<String> paddlerIDs});
+  $Res call({String id, String name});
 }
 
 /// @nodoc
@@ -101,7 +95,6 @@ class __$$TeamImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? paddlerIDs = null,
   }) {
     return _then(_$TeamImpl(
       id: null == id
@@ -112,10 +105,6 @@ class __$$TeamImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      paddlerIDs: null == paddlerIDs
-          ? _value._paddlerIDs
-          : paddlerIDs // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
     ));
   }
 }
@@ -123,12 +112,7 @@ class __$$TeamImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TeamImpl extends _Team {
-  const _$TeamImpl(
-      {required this.id,
-      required this.name,
-      required final Set<String> paddlerIDs})
-      : _paddlerIDs = paddlerIDs,
-        super._();
+  const _$TeamImpl({required this.id, required this.name}) : super._();
 
   factory _$TeamImpl.fromJson(Map<String, dynamic> json) =>
       _$$TeamImplFromJson(json);
@@ -137,13 +121,6 @@ class _$TeamImpl extends _Team {
   final String id;
   @override
   final String name;
-  final Set<String> _paddlerIDs;
-  @override
-  Set<String> get paddlerIDs {
-    if (_paddlerIDs is EqualUnmodifiableSetView) return _paddlerIDs;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_paddlerIDs);
-  }
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
@@ -162,10 +139,8 @@ class _$TeamImpl extends _Team {
 }
 
 abstract class _Team extends Team {
-  const factory _Team(
-      {required final String id,
-      required final String name,
-      required final Set<String> paddlerIDs}) = _$TeamImpl;
+  const factory _Team({required final String id, required final String name}) =
+      _$TeamImpl;
   const _Team._() : super._();
 
   factory _Team.fromJson(Map<String, dynamic> json) = _$TeamImpl.fromJson;
@@ -174,8 +149,6 @@ abstract class _Team extends Team {
   String get id;
   @override
   String get name;
-  @override
-  Set<String> get paddlerIDs;
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.

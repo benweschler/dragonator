@@ -1,5 +1,4 @@
 import 'package:dragonator/data/paddler.dart';
-import 'package:dragonator/data/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/roster_screen/sorting_options_menu.dart';
@@ -33,10 +32,7 @@ class _RosterScreenState extends State<RosterScreen> {
     return Consumer<RosterModel>(
       builder: (context, rosterModel, _) {
         final teams = rosterModel.teams.toList();
-
-        final hasPaddlers = teams.isNotEmpty
-            ? teams[selectedTeamIndex].paddlerIDs.isNotEmpty
-            : false;
+        final hasPaddlers = rosterModel.paddlers.isNotEmpty;
 
         final appBarCenter = teams.isNotEmpty
             ? ChangeTeamHeading(
@@ -49,7 +45,7 @@ class _RosterScreenState extends State<RosterScreen> {
 
         final content = teams.isNotEmpty && hasPaddlers
             ? _RosterContent(
-                team: teams[selectedTeamIndex],
+                paddlerIDs: rosterModel.paddlerIDs,
                 rosterModel: rosterModel,
               )
             : _EmptyRoster(
@@ -62,9 +58,8 @@ class _RosterScreenState extends State<RosterScreen> {
           addScreenInset: false,
           floatingActionButton: CustomFAB(
             child: const Icon(Icons.add_rounded),
-            onTap: () => context.go(RoutePaths.editPaddler(
-              teamID: teams[selectedTeamIndex].id,
-            )),
+            //TODO: verify change from go to psh
+            onTap: () => context.push(RoutePaths.editPaddler()),
           ),
           center: appBarCenter,
           child: content,
@@ -75,11 +70,11 @@ class _RosterScreenState extends State<RosterScreen> {
 }
 
 class _RosterContent extends StatefulWidget {
-  final Team team;
+  final Iterable<String> paddlerIDs;
   final RosterModel rosterModel;
 
   const _RosterContent({
-    required this.team,
+    required this.paddlerIDs,
     required this.rosterModel,
   });
 
@@ -97,8 +92,7 @@ class _RosterContentState extends State<_RosterContent> {
   @override
   Widget build(BuildContext context) {
     final List<Paddler> paddlers = [
-      for (String id in widget.team.paddlerIDs)
-        widget.rosterModel.getPaddler(id)!
+      for (String id in widget.paddlerIDs) widget.rosterModel.getPaddler(id)!
     ];
 
     final Widget filterRow = SingleChildScrollView(

@@ -12,7 +12,7 @@ class AppUser with _$AppUser {
     required String firstName,
     required String lastName,
     required String email,
-    required List<String> teams,
+    required List<String> teamIDs,
   }) = _AppUser;
 
   factory AppUser.fromJson(Map<String, Object?> json)
