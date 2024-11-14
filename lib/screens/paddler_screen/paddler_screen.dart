@@ -28,9 +28,16 @@ class PaddlerScreen extends StatelessWidget {
         icon: Icons.edit_rounded,
       ),
       child: SingleChildScrollView(
-        child: Selector<RosterModel, Paddler>(
-          selector: (_, model) => model.getPaddler(paddlerID)!,
-          builder: (_, paddler, __) => Column(
+        child: Selector<RosterModel, Paddler?>(
+          selector: (_, model) => model.getPaddler(paddlerID),
+          // If the paddler is deleted, this screen is popped and should
+          // continue showing the same screen (i.e. the deleted paddler's
+          // details) while animating out.
+          shouldRebuild: (_, newPaddler) => newPaddler != null,
+          builder: (_, paddler, __) {
+            paddler = paddler as Paddler;
+
+            return Column(
             children: [
               Center(
                 child: Text(
@@ -77,20 +84,19 @@ class PaddlerScreen extends StatelessWidget {
                 ),
                 ActionButton(
                   onTap: () async {
-                    final pop = context.pop;
                     await DeletePaddlerCommand.run(
-                      //TODO: hardcoded team ID. change once state management with provider is implemented.
-                      'gCyi30iKgjw11wk1Fvgn',
+                      context.read<RosterModel>().currentTeamID!,
                       paddlerID,
                     );
-                    pop();
+                    if(context.mounted) context.pop();
                   },
                   label: 'Delete',
                   icon: Icons.delete_rounded,
                 ),
               ]),
             ],
-          ),
+          );
+          },
         ),
       ),
     );

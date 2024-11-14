@@ -14,7 +14,7 @@ class RosterModel extends Notifier {
   // from Firestore.
   StreamSubscription? _teamDocSubscription;
   StreamSubscription? _paddlersSubscription;
-  String? currentTeamID;
+  String? _currentTeamID;
 
   Future<void> initialize(AppUser user) async {
     final firestore = FirebaseFirestore.instance;
@@ -34,8 +34,8 @@ class RosterModel extends Notifier {
 
     //TODO: store the last team that the user accessed
     // Load paddlers
-    currentTeamID = user.teamIDs.first;
-    final currentTeamDoc = firestore.collection('teams').doc(currentTeamID);
+    _currentTeamID = user.teamIDs.first;
+    final currentTeamDoc = firestore.collection('teams').doc(_currentTeamID);
     final paddlersDoc = currentTeamDoc.collection('paddlers').doc('paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
     final paddlers = paddlersSnapshot.data()!;
@@ -73,7 +73,8 @@ class RosterModel extends Notifier {
   }
 
   void _onPaddlerDocUpdate(
-      DocumentSnapshot<Map<String, dynamic>> snapshot) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) async {
     final Map<String, dynamic> paddlers = snapshot.data()!;
     final Set<String> paddlerIDs = paddlers.keys.toSet();
 
@@ -82,7 +83,7 @@ class RosterModel extends Notifier {
     final removedPaddlers = currentPaddlerIDs.toSet().difference(paddlerIDs);
 
     for (String id in addedPaddlers) {
-      _paddlerIDMap[id] = paddlers[id];
+      _paddlerIDMap[id] = Paddler.fromFirestore(id: id, data: paddlers[id]);
     }
 
     for (String id in removedPaddlers) {
@@ -102,6 +103,8 @@ class RosterModel extends Notifier {
 
   Iterable<Team> get teams => _teamIDMap.values;
 
+  String? get currentTeamID => _currentTeamID;
+
   Paddler? getPaddler(String? id) => _paddlerIDMap[id];
 
   void assignPaddlerID(String id, Paddler paddler) =>
@@ -113,7 +116,7 @@ class RosterModel extends Notifier {
   /// If [paddler] already exists, it is updated. If it does not exist,
   /// it is created.
   void setPaddler(Paddler paddler) =>
-      SetPaddlerCommand.run(paddler, currentTeamID!);
+      SetPaddlerCommand.run(paddler, _currentTeamID!);
 
   //TODO: dummy Data
   late final Map<String, Lineup> _lineupIDMap = {
