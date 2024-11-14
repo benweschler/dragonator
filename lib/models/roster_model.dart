@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/commands/set_paddler_command.dart';
+import 'package:dragonator/commands/paddler_write_commands.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
@@ -10,11 +10,11 @@ import 'package:dragonator/utils/notifier.dart';
 
 //TODO: add documentation
 class RosterModel extends Notifier {
+  //TODO: if logging out replaces the roster model, no need for data members to ever be null.
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
   StreamSubscription? _teamDocSubscription;
   StreamSubscription? _paddlersSubscription;
-  String? _currentTeamID;
 
   Future<void> initialize(AppUser user) async {
     final firestore = FirebaseFirestore.instance;
@@ -53,9 +53,11 @@ class RosterModel extends Notifier {
     notifyListeners();
   }
 
+  //TODO: this should be modified to be used when switching teams. logging out should replace the roster model.
   void clear() {
     _paddlerIDMap.clear();
     _teamIDMap.clear();
+    _currentTeamID = null;
     _lineupIDMap.clear();
     _teamDocSubscription?.cancel();
     _paddlersSubscription?.cancel();
@@ -93,30 +95,13 @@ class RosterModel extends Notifier {
     notifyListeners();
   }
 
+  //* DATA *//
+
   final Map<String, Paddler> _paddlerIDMap = {};
 
   final Map<String, Team> _teamIDMap = {};
 
-  Iterable<String> get paddlerIDs => _paddlerIDMap.keys;
-
-  Iterable<Paddler> get paddlers => _paddlerIDMap.values;
-
-  Iterable<Team> get teams => _teamIDMap.values;
-
-  String? get currentTeamID => _currentTeamID;
-
-  Paddler? getPaddler(String? id) => _paddlerIDMap[id];
-
-  void assignPaddlerID(String id, Paddler paddler) =>
-      notify(() => _paddlerIDMap[id] = paddler);
-
-  void assignTeamID(String id, Team team) =>
-      notify(() => _teamIDMap[id] = team);
-
-  /// If [paddler] already exists, it is updated. If it does not exist,
-  /// it is created.
-  void setPaddler(Paddler paddler) =>
-      SetPaddlerCommand.run(paddler, _currentTeamID!);
+  String? _currentTeamID;
 
   //TODO: dummy Data
   late final Map<String, Lineup> _lineupIDMap = {
@@ -132,9 +117,41 @@ class RosterModel extends Notifier {
     ),
   };
 
+  //* PADDLER GETTERS *//
+
+  Iterable<String> get paddlerIDs => _paddlerIDMap.keys;
+
+  Iterable<Paddler> get paddlers => _paddlerIDMap.values;
+
+  Paddler? getPaddler(String? id) => _paddlerIDMap[id];
+
+  //* TEAM GETTERS *//
+
+  Iterable<Team> get teams => _teamIDMap.values;
+
+  String? get currentTeamID => _currentTeamID;
+
+  //* LINEUP GETTERS *//
+
   Iterable<Lineup> get lineups => _lineupIDMap.values;
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
+
+  //* PADDLER SETTERS *//
+
+  /// If [paddler] already exists, it is updated. If it does not exist, it is
+  /// created.
+  Future<void> setPaddler(Paddler paddler) =>
+      setPaddlerCommand(paddler, _currentTeamID!);
+
+  Future<void> deletePaddler(String paddlerID) =>
+      deletePaddlerCommand(_currentTeamID!, paddlerID);
+
+  //* TEAM SETTERS */
+
+  //TODO: implement
+
+  //* LINEUP SETTERS *//
 
   void setLineup(Lineup lineup) =>
       notify(() => _lineupIDMap[lineup.id] = lineup);

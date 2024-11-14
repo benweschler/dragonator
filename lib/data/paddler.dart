@@ -34,6 +34,7 @@ class Paddler extends Equatable with _$Paddler {
     return Paddler.fromJson(data..['id'] = id);
   }
 
+  // Paddlers in Firestore have their ID as their key rather than a data member.
   Map<String, dynamic> toFirestore() => toJson()..remove('id');
 
   @override

@@ -1,4 +1,3 @@
-import 'package:dragonator/commands/delete_paddler_command.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
@@ -38,64 +37,63 @@ class PaddlerScreen extends StatelessWidget {
             paddler = paddler as Paddler;
 
             return Column(
-            children: [
-              Center(
-                child: Text(
-                  '${paddler.firstName} ${paddler.lastName}',
-                  style: TextStyles.h2.copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-              const SizedBox(height: Insets.xl),
-              PaddlerStatTable(paddler),
-              const SizedBox(height: Insets.xl),
-              Row(
-                children: [
-                  Expanded(
-                    child: PreferenceRow(
-                      label: 'Drummer',
-                      hasPreference: paddler.drummerPreference,
-                    ),
+              children: [
+                Center(
+                  child: Text(
+                    '${paddler.firstName} ${paddler.lastName}',
+                    style: TextStyles.h2.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  Expanded(
-                    child: PreferenceRow(
-                      label: 'Steers Person',
-                      hasPreference: paddler.steersPersonPreference,
+                ),
+                const SizedBox(height: Insets.xl),
+                PaddlerStatTable(paddler),
+                const SizedBox(height: Insets.xl),
+                Row(
+                  children: [
+                    Expanded(
+                      child: PreferenceRow(
+                        label: 'Drummer',
+                        hasPreference: paddler.drummerPreference,
+                      ),
                     ),
+                    Expanded(
+                      child: PreferenceRow(
+                        label: 'Steers Person',
+                        hasPreference: paddler.steersPersonPreference,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Insets.med),
+                PreferenceRow(
+                  label: 'Stroke',
+                  hasPreference: paddler.strokePreference,
+                ),
+                const SizedBox(height: Insets.xl),
+                //TODO: implement actions
+                ActionButtonCard([
+                  ActionButton(
+                    onTap: () {},
+                    label: 'Add to team',
+                    icon: Icons.add_rounded,
                   ),
-                ],
-              ),
-              const SizedBox(height: Insets.med),
-              PreferenceRow(
-                label: 'Stroke',
-                hasPreference: paddler.strokePreference,
-              ),
-              const SizedBox(height: Insets.xl),
-              //TODO: implement actions
-              ActionButtonCard([
-                ActionButton(
-                  onTap: () {},
-                  label: 'Add to team',
-                  icon: Icons.add_rounded,
-                ),
-                ActionButton(
-                  onTap: () {},
-                  label: 'View active lineups',
-                  icon: Icons.library_books_rounded,
-                ),
-                ActionButton(
-                  onTap: () async {
-                    await DeletePaddlerCommand.run(
-                      context.read<RosterModel>().currentTeamID!,
-                      paddlerID,
-                    );
-                    if(context.mounted) context.pop();
-                  },
-                  label: 'Delete',
-                  icon: Icons.delete_rounded,
-                ),
-              ]),
-            ],
-          );
+                  ActionButton(
+                    onTap: () {},
+                    label: 'View active lineups',
+                    icon: Icons.library_books_rounded,
+                  ),
+                  ActionButton(
+                    onTap: () async {
+                      await context
+                          .read<RosterModel>()
+                          .deletePaddler(paddlerID);
+                      if (context.mounted) context.pop();
+                    },
+                    label: 'Delete',
+                    icon: Icons.delete_rounded,
+                  ),
+                ]),
+              ],
+            );
           },
         ),
       ),
