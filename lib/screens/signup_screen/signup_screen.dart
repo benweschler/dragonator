@@ -1,4 +1,4 @@
-import 'package:dragonator/commands/create_user_command.dart';
+import 'package:dragonator/commands/user_commands.dart';
 import 'package:dragonator/models/app_model.dart';import 'package:dragonator/screens/signup_screen/field_names.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -23,7 +23,7 @@ class SignUpScreen extends StatelessWidget {
   Future<void> signUp(AppModel appModel) async {
     final formData = _formKey.currentState!.value;
 
-    await CreateUserCommand.run(
+    await createUserCommand(
       firstName: formData[SignUpFieldNames.firstName],
       lastName: formData[SignUpFieldNames.lastName],
       email: formData[SignUpFieldNames.email],

@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/commands/paddler_write_commands.dart';
 import 'package:dragonator/data/app_user.dart';
 import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/utils/notifier.dart';
+
+part '../commands/paddler_commands.dart';
 
 //TODO: add documentation
 class RosterModel extends Notifier {
@@ -142,10 +143,10 @@ class RosterModel extends Notifier {
   /// If [paddler] already exists, it is updated. If it does not exist, it is
   /// created.
   Future<void> setPaddler(Paddler paddler) =>
-      setPaddlerCommand(paddler, _currentTeamID!);
+      _setPaddlerCommand(paddler, _currentTeamID!);
 
   Future<void> deletePaddler(String paddlerID) =>
-      deletePaddlerCommand(_currentTeamID!, paddlerID);
+      _deletePaddlerCommand(_currentTeamID!, paddlerID);
 
   //* TEAM SETTERS */
 

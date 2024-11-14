@@ -1,4 +1,4 @@
-import 'package:dragonator/commands/get_user_command.dart';
+import 'package:dragonator/commands/user_commands.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,7 +21,6 @@ class Bootstrapper {
   }
 
   Future<void> _loadUser() async {
-    final User user = firebaseAuth.currentUser!;
-    appModel.user = await GetUserCommand.run(user);
+    appModel.user = await getUserCommand(firebaseAuth.currentUser!.uid);
   }
 }

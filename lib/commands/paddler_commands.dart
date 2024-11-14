@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/data/paddler.dart';
+part of '../models/roster_model.dart';
 
-Future<void> setPaddlerCommand(Paddler paddler, String teamID) async {
+Future<void> _setPaddlerCommand(Paddler paddler, String teamID) async {
   await FirebaseFirestore.instance
       .collection('teams')
       .doc(teamID)
@@ -10,7 +9,7 @@ Future<void> setPaddlerCommand(Paddler paddler, String teamID) async {
       .update({paddler.id: paddler.toFirestore()});
 }
 
-Future<void> deletePaddlerCommand(String teamID, String paddlerID) async {
+Future<void> _deletePaddlerCommand(String teamID, String paddlerID) async {
   await FirebaseFirestore.instance
       .collection('teams')
       .doc(teamID)
