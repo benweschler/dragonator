@@ -197,7 +197,7 @@ class _TeamTile extends StatelessWidget {
       onTap: () => context.showModal(ContextMenu([
         ContextMenuAction(
           icon: Icons.edit_rounded,
-          onTap: () => context.push(RoutePaths.setTeamName(team.id)),
+          onTap: () => context.push(RoutePaths.nameTeam(team.id)),
           label: 'Rename',
         ),
         ContextMenuAction(

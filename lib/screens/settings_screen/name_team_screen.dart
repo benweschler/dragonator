@@ -3,10 +3,10 @@ import 'package:dragonator/screens/single_field_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SetTeamNameScreen extends StatelessWidget {
+class NameTeamScreen extends StatelessWidget {
   final String? teamID;
 
-  const SetTeamNameScreen({this.teamID, super.key});
+  const NameTeamScreen({this.teamID, super.key});
 
   @override
   Widget build(BuildContext context) {

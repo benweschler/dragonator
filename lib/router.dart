@@ -10,7 +10,7 @@ import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart'
 import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
-import 'package:dragonator/screens/settings_screen/set_team_name_screen.dart';
+import 'package:dragonator/screens/settings_screen/name_team_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
@@ -45,6 +45,7 @@ abstract class RoutePaths {
 
   static String lineup(String lineupID) => '$lineupLibrary/lineup/$lineupID';
 
+  /// If an ID is passed, the lineup is renamed. Otherwise, a lineup is created.
   static String nameLineup([String? lineupID]) => _appendQueryParams(
         '$lineupLibrary/name-lineup',
         {'lineupID': lineupID},
@@ -53,11 +54,11 @@ abstract class RoutePaths {
   static String editLineup(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
 
-  //TODO: rename to add paddler
   static String addPaddlerToLineup(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/add-paddler';
 
-  static String setTeamName([String? id]) => '$settings/set-team-name/$id';
+  /// If an ID is passed, the team is renamed. Otherwise, a team is created.
+  static String nameTeam([String? id]) => '$settings/name-team/$id';
 }
 
 class AppRouter {
@@ -168,9 +169,9 @@ class AppRouter {
               builder: (_) => const SettingsScreen(),
               routes: [
                 AppRoute(
-                  path: 'set-team-name/:id',
+                  path: 'name-team/:id',
                   pageBuilder: (state) => FadeTransitionPage(
-                    child: SetTeamNameScreen(
+                    child: NameTeamScreen(
                       teamID: state.pathParameters['id'],
                     ),
                   ),
