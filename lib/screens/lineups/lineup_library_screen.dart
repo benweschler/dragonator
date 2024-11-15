@@ -20,8 +20,9 @@ class LineupLibraryScreen extends StatefulWidget {
 
 class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
   //TODO: should have a globally selected team
+  //TODO: add screen if user has no lineups
   //TODO: doesn't actually do anything
-  int selectedTeamIndex = 0;
+  int _selectedTeamIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,9 @@ class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
       builder: (_, rosterModel, __) => CustomScaffold(
         center: ChangeTeamHeading(
           teams: rosterModel.teams.toList(),
-          selectedTeamIndex: selectedTeamIndex,
+          selectedTeamIndex: _selectedTeamIndex,
           updateSelectedTeamIndex: (newIndex) =>
-              setState(() => selectedTeamIndex = newIndex),
+              setState(() => _selectedTeamIndex = newIndex),
         ),
         floatingActionButton: Builder(builder: (context) {
           return CustomFAB(

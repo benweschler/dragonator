@@ -205,6 +205,7 @@ class _TeamTile extends StatelessWidget {
           onTap: () {},
           label: 'View Roster',
         ),
+        //TODO: must implement screen if user has no teams and if current team is deleted.
         ContextMenuAction(
           icon: Icons.delete_rounded,
           onTap: () {},

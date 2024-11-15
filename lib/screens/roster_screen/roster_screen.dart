@@ -25,6 +25,7 @@ class RosterScreen extends StatefulWidget {
 }
 
 class _RosterScreenState extends State<RosterScreen> {
+  //TODO: change to roster model currently selected team
   int selectedTeamIndex = 0;
 
   @override
@@ -43,6 +44,7 @@ class _RosterScreenState extends State<RosterScreen> {
               )
             : null;
 
+        //TODO: implement screen if user has no teams.
         final content = teams.isNotEmpty && hasPaddlers
             ? _RosterContent(
                 paddlerIDs: rosterModel.paddlerIDs,
@@ -50,6 +52,7 @@ class _RosterScreenState extends State<RosterScreen> {
               )
             : _EmptyRoster(
                 content: hasPaddlers
+                //TODO: this will throw index out of bounds if teams is empty
                     ? 'No paddlers in ${teams[selectedTeamIndex].name}'
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );

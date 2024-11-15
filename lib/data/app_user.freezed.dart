@@ -24,7 +24,6 @@ mixin _$AppUser {
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  List<String> get teamIDs => throw _privateConstructorUsedError;
 
   /// Serializes this AppUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,12 +39,7 @@ abstract class $AppUserCopyWith<$Res> {
   factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) then) =
       _$AppUserCopyWithImpl<$Res, AppUser>;
   @useResult
-  $Res call(
-      {String id,
-      String firstName,
-      String lastName,
-      String email,
-      List<String> teamIDs});
+  $Res call({String id, String firstName, String lastName, String email});
 }
 
 /// @nodoc
@@ -67,7 +61,6 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? firstName = null,
     Object? lastName = null,
     Object? email = null,
-    Object? teamIDs = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -86,10 +79,6 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      teamIDs: null == teamIDs
-          ? _value.teamIDs
-          : teamIDs // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ) as $Val);
   }
 }
@@ -101,12 +90,7 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       __$$AppUserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String firstName,
-      String lastName,
-      String email,
-      List<String> teamIDs});
+  $Res call({String id, String firstName, String lastName, String email});
 }
 
 /// @nodoc
@@ -126,7 +110,6 @@ class __$$AppUserImplCopyWithImpl<$Res>
     Object? firstName = null,
     Object? lastName = null,
     Object? email = null,
-    Object? teamIDs = null,
   }) {
     return _then(_$AppUserImpl(
       id: null == id
@@ -145,10 +128,6 @@ class __$$AppUserImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      teamIDs: null == teamIDs
-          ? _value._teamIDs
-          : teamIDs // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ));
   }
 }
@@ -160,10 +139,8 @@ class _$AppUserImpl extends _AppUser {
       {required this.id,
       required this.firstName,
       required this.lastName,
-      required this.email,
-      required final List<String> teamIDs})
-      : _teamIDs = teamIDs,
-        super._();
+      required this.email})
+      : super._();
 
   factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppUserImplFromJson(json);
@@ -176,17 +153,10 @@ class _$AppUserImpl extends _AppUser {
   final String lastName;
   @override
   final String email;
-  final List<String> _teamIDs;
-  @override
-  List<String> get teamIDs {
-    if (_teamIDs is EqualUnmodifiableListView) return _teamIDs;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_teamIDs);
-  }
 
   @override
   String toString() {
-    return 'AppUser(id: $id, firstName: $firstName, lastName: $lastName, email: $email, teamIDs: $teamIDs)';
+    return 'AppUser(id: $id, firstName: $firstName, lastName: $lastName, email: $email)';
   }
 
   @override
@@ -199,14 +169,12 @@ class _$AppUserImpl extends _AppUser {
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
-            (identical(other.email, email) || other.email == email) &&
-            const DeepCollectionEquality().equals(other._teamIDs, _teamIDs));
+            (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, firstName, lastName, email,
-      const DeepCollectionEquality().hash(_teamIDs));
+  int get hashCode => Object.hash(runtimeType, id, firstName, lastName, email);
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -229,8 +197,7 @@ abstract class _AppUser extends AppUser {
       {required final String id,
       required final String firstName,
       required final String lastName,
-      required final String email,
-      required final List<String> teamIDs}) = _$AppUserImpl;
+      required final String email}) = _$AppUserImpl;
   const _AppUser._() : super._();
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
@@ -243,8 +210,6 @@ abstract class _AppUser extends AppUser {
   String get lastName;
   @override
   String get email;
-  @override
-  List<String> get teamIDs;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.

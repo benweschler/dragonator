@@ -16,8 +16,8 @@ class NameTeamScreen extends StatelessWidget {
     return SingleFieldFormScreen(
       onSave: (name) {
         // TODO: add creating team when implemented
-        teamID == null ? rosterModel.renameTeam(teamID!, name) : null;
-      } ,
+        teamID == null ? null : rosterModel.renameTeam(teamID!, name);
+      },
       initialValue: teamName ?? 'Team #${rosterModel.teams.length + 1}',
       heading: teamID == null ? 'Create Team' : 'Rename Team',
     );

@@ -21,7 +21,6 @@ Future<void> createUserCommand({
     firstName: firstName,
     lastName: lastName,
     email: email,
-    teamIDs: [],
   );
 
   await firestore.collection('users').doc(user.id).set(user.toJson());

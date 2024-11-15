@@ -12,8 +12,6 @@ _$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
-      teamIDs:
-          (json['teamIDs'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
@@ -22,5 +20,4 @@ Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'email': instance.email,
-      'teamIDs': instance.teamIDs,
     };

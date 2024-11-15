@@ -16,7 +16,7 @@ class RosterModel extends Notifier {
   //TODO: if logging out replaces the roster model, no need for data members to ever be null.
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
-  StreamSubscription? _teamDocSubscription;
+  StreamSubscription? _teamsSubscription;
   StreamSubscription? _paddlersSubscription;
 
   Future<void> initialize(AppUser user) async {
@@ -27,19 +27,15 @@ class RosterModel extends Notifier {
     //assert(_lineupIDMap.isEmpty);
 
     // Load teams
-    for (String teamID in user.teamIDs) {
-      final teamSnapshot =
-          await firestore.collection('teams').doc(teamID).get();
-      final Map<String, dynamic> teamData = teamSnapshot.data()!;
-
-      _teamIDMap[teamID] = Team(id: teamID, name: teamData['name']);
-    }
-
+    final teamsQuery =
+        firestore.collection('teams').where('owners', arrayContains: user.id);
+    final QuerySnapshot snapshot = await teamsQuery.get();
+    _updateTeams(snapshot);
     //TODO: store the last team that the user accessed
+    _currentTeamID = _teamIDMap.keys.first;
+
     // Load paddlers
-    _currentTeamID = user.teamIDs.first;
-    final currentTeamDoc = firestore.collection('teams').doc(_currentTeamID);
-    final paddlersDoc = currentTeamDoc.collection('paddlers').doc('paddlers');
+    final paddlersDoc = firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
     final paddlers = paddlersSnapshot.data()!;
 
@@ -50,7 +46,7 @@ class RosterModel extends Notifier {
       );
     }
 
-    _teamDocSubscription = currentTeamDoc.snapshots().listen(_onTeamDocUpdate);
+    _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
     _paddlersSubscription = paddlersDoc.snapshots().listen(_onPaddlerDocUpdate);
 
     notifyListeners();
@@ -61,20 +57,33 @@ class RosterModel extends Notifier {
     _paddlerIDMap.clear();
     _teamIDMap.clear();
     _currentTeamID = null;
-    _lineupIDMap.clear();
-    _teamDocSubscription?.cancel();
+    //TODO: add once lineups are pulled from db _lineupIDMap.clear();
+    _teamsSubscription?.cancel();
     _paddlersSubscription?.cancel();
   }
 
-  void _onTeamDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final teamID = snapshot.id;
-    final Map<String, dynamic> teamData = snapshot.data()!;
+  void _onTeamsQueryUpdate(QuerySnapshot snapshot) {
+    final List<DocumentSnapshot> teamDocs = snapshot.docs;
+    if (!teamDocs.map((doc) => doc.id).contains(_currentTeamID)) {
+      //TODO: implement popup/refresh if current team is deleted
+      throw UnimplementedError('Current team has been deleted');
+    }
 
-    // The the ID can not change over the lifetime of the team, so the only
-    // field that could have changed is the name.
-    _teamIDMap[teamID] = _teamIDMap[teamID]!.copyWith(name: teamData['name']);
-
+    _updateTeams(snapshot);
     notifyListeners();
+  }
+
+  void _updateTeams(QuerySnapshot snapshot) {
+    for (final docChange in snapshot.docChanges) {
+      final id = docChange.doc.id;
+
+      if (docChange.type == DocumentChangeType.removed) {
+        _teamIDMap.remove(id);
+      } else {
+        final teamData = docChange.doc.data() as Map<String, dynamic>;
+        _teamIDMap[id] = Team.fromFirestore(id: id, data: teamData);
+      }
+    }
   }
 
   void _onPaddlerDocUpdate(
