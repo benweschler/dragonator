@@ -35,14 +35,7 @@ class _RosterScreenState extends State<RosterScreen> {
         final teams = rosterModel.teams.toList();
         final hasPaddlers = rosterModel.paddlers.isNotEmpty;
 
-        final appBarCenter = teams.isNotEmpty
-            ? ChangeTeamHeading(
-                teams: teams,
-                selectedTeamIndex: selectedTeamIndex,
-                updateSelectedTeamIndex: (newTeamIndex) =>
-                    setState(() => selectedTeamIndex = newTeamIndex),
-              )
-            : null;
+        final appBarCenter = teams.isNotEmpty ? ChangeTeamHeading() : null;
 
         //TODO: implement screen if user has no teams.
         final content = teams.isNotEmpty && hasPaddlers
@@ -52,7 +45,7 @@ class _RosterScreenState extends State<RosterScreen> {
               )
             : _EmptyRoster(
                 content: hasPaddlers
-                //TODO: this will throw index out of bounds if teams is empty
+                    //TODO: this will throw index out of bounds if teams is empty
                     ? 'No paddlers in ${teams[selectedTeamIndex].name}'
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );

@@ -32,9 +32,10 @@ class RosterModel extends Notifier {
     final QuerySnapshot snapshot = await teamsQuery.get();
     _updateTeams(snapshot);
     //TODO: store the last team that the user accessed
-    _currentTeamID = _teamIDMap.keys.first;
+    _currentTeamID = _teamIDMap.keys.elementAtOrNull(0);
 
     // Load paddlers
+    //TODO CRITICAL: paddler doc does not update when current team ID changes, and current teamID must be automatically set when the first team is added
     final paddlersDoc = firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
     final paddlers = paddlersSnapshot.data()!;
@@ -143,7 +144,12 @@ class RosterModel extends Notifier {
 
   Team? getTeam(String? id) => _teamIDMap[id];
 
-  String? get currentTeamID => _currentTeamID;
+  Team get currentTeam => _teamIDMap[_currentTeamID]!;
+
+  setCurrentTeam(String teamID) {
+    if(teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
+    notify(() => _currentTeamID = teamID);
+  }
 
   //* LINEUP GETTERS *//
 

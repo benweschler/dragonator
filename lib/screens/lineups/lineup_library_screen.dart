@@ -11,29 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class LineupLibraryScreen extends StatefulWidget {
+class LineupLibraryScreen extends StatelessWidget {
   const LineupLibraryScreen({super.key});
 
-  @override
-  State<LineupLibraryScreen> createState() => _LineupLibraryScreenState();
-}
-
-class _LineupLibraryScreenState extends State<LineupLibraryScreen> {
-  //TODO: should have a globally selected team
   //TODO: add screen if user has no lineups
-  //TODO: doesn't actually do anything
-  int _selectedTeamIndex = 0;
+  //TODO: add screen if user has no teams
 
   @override
   Widget build(BuildContext context) {
     return Consumer<RosterModel>(
       builder: (_, rosterModel, __) => CustomScaffold(
-        center: ChangeTeamHeading(
-          teams: rosterModel.teams.toList(),
-          selectedTeamIndex: _selectedTeamIndex,
-          updateSelectedTeamIndex: (newIndex) =>
-              setState(() => _selectedTeamIndex = newIndex),
-        ),
+        center: ChangeTeamHeading(),
         floatingActionButton: Builder(builder: (context) {
           return CustomFAB(
             onTap: () => context.push(RoutePaths.nameLineup()),
