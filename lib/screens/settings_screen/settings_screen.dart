@@ -213,14 +213,18 @@ class _TeamTile extends StatelessWidget {
         ),
       ])),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            team.name,
-            style: TextStyles.body1.copyWith(
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Text(
+              team.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.body1.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
+          SizedBox(width: Insets.med),
           Icon(Icons.chevron_right_rounded),
         ],
       ),

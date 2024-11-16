@@ -32,18 +32,27 @@ class ChangeTeamHeading extends StatelessWidget {
           }
         },
       )),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${teams[selectedTeamIndex].name} ',
-            style: TextStyles.title1,
-          ),
-          Transform.rotate(
-            angle: pi / 2,
-            child: const Icon(Icons.chevron_right_rounded),
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) => ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.75),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    'Team One',//'${teams[selectedTeamIndex].name} ',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.title1,
+                  ),
+                ),
+                Transform.rotate(
+                  angle: pi / 2,
+                  child: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          )
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 class SingleFieldFormScreen extends StatefulWidget {
@@ -11,6 +12,7 @@ class SingleFieldFormScreen extends StatefulWidget {
   final String heading;
   final String? hintText;
   final String? initialValue;
+  final int maxLength;
 
   const SingleFieldFormScreen({
     super.key,
@@ -18,6 +20,7 @@ class SingleFieldFormScreen extends StatefulWidget {
     required this.heading,
     this.hintText,
     this.initialValue,
+    this.maxLength = 75,
   });
 
   @override
@@ -62,6 +65,9 @@ class _SingleFieldFormScreenState extends State<SingleFieldFormScreen> {
             textAlign: TextAlign.center,
             style: TextStyles.h1.copyWith(),
             focusNode: _focusNode,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(widget.maxLength),
+            ],
             decoration: const InputDecoration(
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
             ),
