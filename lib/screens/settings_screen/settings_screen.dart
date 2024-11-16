@@ -217,8 +217,6 @@ class _TeamTile extends StatelessWidget {
           Expanded(
             child: Text(
               team.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
               style: TextStyles.body1.copyWith(
                 fontWeight: FontWeight.w500,
               ),

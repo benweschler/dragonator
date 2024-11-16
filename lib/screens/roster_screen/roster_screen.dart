@@ -38,6 +38,7 @@ class RosterScreen extends StatelessWidget {
                 content: hasPaddlers
                     //TODO: this will throw index out of bounds if teams is empty
                     ? 'No paddlers in ${rosterModel.currentTeam!.name}'
+                     //TODO: navigate to creating a team if there are no teams
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );
 
@@ -183,13 +184,9 @@ class _EmptyRoster extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: Text(content, textAlign: TextAlign.center),
-            ),
-          ),
+          Text(content, textAlign: TextAlign.center),
         ],
       ),
     );
