@@ -144,7 +144,7 @@ class RosterModel extends Notifier {
 
   Team? getTeam(String? id) => _teamIDMap[id];
 
-  Team get currentTeam => _teamIDMap[_currentTeamID]!;
+  Team? get currentTeam => _teamIDMap[_currentTeamID];
 
   setCurrentTeam(String teamID) {
     if(teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;

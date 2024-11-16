@@ -17,16 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class RosterScreen extends StatefulWidget {
+class RosterScreen extends StatelessWidget {
   const RosterScreen({super.key});
-
-  @override
-  State<RosterScreen> createState() => _RosterScreenState();
-}
-
-class _RosterScreenState extends State<RosterScreen> {
-  //TODO: change to roster model currently selected team
-  int selectedTeamIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +26,6 @@ class _RosterScreenState extends State<RosterScreen> {
       builder: (context, rosterModel, _) {
         final teams = rosterModel.teams.toList();
         final hasPaddlers = rosterModel.paddlers.isNotEmpty;
-
         final appBarCenter = teams.isNotEmpty ? ChangeTeamHeading() : null;
 
         //TODO: implement screen if user has no teams.
@@ -46,7 +37,7 @@ class _RosterScreenState extends State<RosterScreen> {
             : _EmptyRoster(
                 content: hasPaddlers
                     //TODO: this will throw index out of bounds if teams is empty
-                    ? 'No paddlers in ${teams[selectedTeamIndex].name}'
+                    ? 'No paddlers in ${rosterModel.currentTeam!.name}'
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );
 

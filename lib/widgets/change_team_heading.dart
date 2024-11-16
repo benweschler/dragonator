@@ -22,7 +22,7 @@ class ChangeTeamHeading extends StatelessWidget {
       return ResponsiveStrokeButton(
         onTap: () => context.showModal(_TeamSelectionMenu(
           teams: teams,
-          initiallySelectedTeamID: rosterModel.currentTeam.id,
+          initiallySelectedTeamID: rosterModel.currentTeam!.id,
           //TODO: add toast notification if team no longer exists
           updateCurrentTeamID: (id) => rosterModel.setCurrentTeam(id),
         )),
@@ -34,7 +34,7 @@ class ChangeTeamHeading extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    rosterModel.currentTeam.name,
+                    rosterModel.currentTeam!.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.title1,
