@@ -5,8 +5,6 @@ part 'paddler.freezed.dart';
 
 part 'paddler.g.dart';
 
-// Define equality only based on id using Equatable. This means that two
-// Paddlers are equal if their ids are equal.
 @Freezed(equal: false)
 class Paddler extends Equatable with _$Paddler {
   const Paddler._();
@@ -38,7 +36,18 @@ class Paddler extends Equatable with _$Paddler {
   Map<String, dynamic> toFirestore() => toJson()..remove('id');
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [
+        id,
+        firstName,
+        lastName,
+        weight,
+        gender,
+        sidePreference,
+        ageGroup,
+        drummerPreference,
+        steersPersonPreference,
+        strokePreference,
+      ];
 }
 
 enum SidePreference {

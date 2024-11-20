@@ -13,7 +13,6 @@ part '../commands/team_commands.dart';
 
 //TODO: add documentation
 class RosterModel extends Notifier {
-  //TODO: if logging out replaces the roster model, no need for data members to ever be null.
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
   StreamSubscription? _teamsSubscription;
@@ -31,12 +30,30 @@ class RosterModel extends Notifier {
         firestore.collection('teams').where('owners', arrayContains: user.id);
     final QuerySnapshot snapshot = await teamsQuery.get();
     _updateTeams(snapshot);
-    //TODO: store the last team that the user accessed
-    _currentTeamID = _teamIDMap.keys.elementAtOrNull(0);
 
-    // Load paddlers
-    //TODO CRITICAL: paddler doc does not update when current team ID changes, and current teamID must be automatically set when the first team is added
-    final paddlersDoc = firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
+    // Update current team and load corresponding paddlers.
+    //TODO: store the last team that the user accessed
+    await _updateCurrentTeam(_teamIDMap.keys.elementAtOrNull(0));
+
+    _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
+
+    notify();
+  }
+
+  Future<void> _updateCurrentTeam(String? newTeamID) async {
+    _currentTeamID = newTeamID;
+    await _loadTeamPaddlers();
+  }
+
+  Future<void> _loadTeamPaddlers() async {
+    _paddlersSubscription?.cancel();
+    _paddlerIDMap.clear();
+
+    if (_currentTeamID == null) return;
+
+    final firestore = FirebaseFirestore.instance;
+    final paddlersDoc =
+        firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
     final paddlers = paddlersSnapshot.data()!;
 
@@ -47,10 +64,7 @@ class RosterModel extends Notifier {
       );
     }
 
-    _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
     _paddlersSubscription = paddlersDoc.snapshots().listen(_onPaddlerDocUpdate);
-
-    notifyListeners();
   }
 
   //TODO: this should be modified to be used when switching teams. logging out should replace the roster model.
@@ -71,7 +85,7 @@ class RosterModel extends Notifier {
     }
 
     _updateTeams(snapshot);
-    notifyListeners();
+    notify();
   }
 
   void _updateTeams(QuerySnapshot snapshot) {
@@ -87,25 +101,28 @@ class RosterModel extends Notifier {
     }
   }
 
-  void _onPaddlerDocUpdate(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) async {
-    final Map<String, dynamic> paddlers = snapshot.data()!;
-    final Set<String> paddlerIDs = paddlers.keys.toSet();
+  void _onPaddlerDocUpdate(DocumentSnapshot snapshot) {
+    final paddlerData = snapshot.data()! as Map<String, dynamic>;
+    final paddlers = Set<Paddler>.from(paddlerData.entries.map(
+      (entry) => Paddler.fromFirestore(id: entry.key, data: entry.value),
+    ));
+
+    final currentPaddlers = _paddlerIDMap.values.toSet();
+    // Paddlers that were added or modified.
+    final updatedPaddlers = paddlers.difference(currentPaddlers);
 
     final currentPaddlerIDs = _paddlerIDMap.keys.toSet();
-    final addedPaddlers = paddlerIDs.difference(currentPaddlerIDs);
-    final removedPaddlers = currentPaddlerIDs.toSet().difference(paddlerIDs);
+    final paddlerIDs = paddlerData.keys.toSet();
+    final removedPaddlerIDs = currentPaddlerIDs.difference(paddlerIDs);
 
-    for (String id in addedPaddlers) {
-      _paddlerIDMap[id] = Paddler.fromFirestore(id: id, data: paddlers[id]);
+    for (Paddler paddler in updatedPaddlers) {
+      _paddlerIDMap[paddler.id] = paddler;
     }
-
-    for (String id in removedPaddlers) {
+    for (String id in removedPaddlerIDs) {
       _paddlerIDMap.remove(id);
     }
 
-    notifyListeners();
+    notify();
   }
 
   //* DATA *//
@@ -146,11 +163,6 @@ class RosterModel extends Notifier {
 
   Team? get currentTeam => _teamIDMap[_currentTeamID];
 
-  setCurrentTeam(String teamID) {
-    if(teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
-    notify(() => _currentTeamID = teamID);
-  }
-
   //* LINEUP GETTERS *//
 
   Iterable<Lineup> get lineups => _lineupIDMap.values;
@@ -168,6 +180,12 @@ class RosterModel extends Notifier {
       _deletePaddlerCommand(_currentTeamID!, paddlerID);
 
   //* TEAM SETTERS */
+
+  setCurrentTeam(String teamID) async {
+    if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
+    await _updateCurrentTeam(teamID);
+    notify();
+  }
 
   Future<void> renameTeam(String teamID, String name) =>
       _renameTeamCommand(teamID, name);

@@ -18,6 +18,7 @@ import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_library_screen.dart';
 import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/utils/notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -271,10 +272,10 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
 
 /// Converts a [Stream] to a [Listenable], which can then be passed as a
 /// [refreshListenable] to a [GoRouter].
-class GoRouterRefreshStream extends ChangeNotifier {
+class GoRouterRefreshStream extends Notifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
-    notifyListeners();
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
+    notify();
+    _subscription = stream.asBroadcastStream().listen((_) => notify());
   }
 
   late final StreamSubscription<dynamic> _subscription;
