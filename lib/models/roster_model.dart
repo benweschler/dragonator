@@ -6,6 +6,7 @@ import 'package:dragonator/data/lineup.dart';
 import 'package:dragonator/data/paddler.dart';
 import 'package:dragonator/data/team.dart';
 import 'package:dragonator/utils/notifier.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 part '../commands/paddler_commands.dart';
 
@@ -31,7 +32,8 @@ class RosterModel extends Notifier {
     final QuerySnapshot snapshot = await teamsQuery.get();
     _updateTeams(snapshot);
 
-    // Update current team and load corresponding paddlers.
+    // Update current team and load corresponding paddlers. Does nothing if
+    // current team is null (i.e. no teams exist).
     //TODO: store the last team that the user accessed
     await _updateCurrentTeam(_teamIDMap.keys.elementAtOrNull(0));
 
@@ -179,7 +181,7 @@ class RosterModel extends Notifier {
   Future<void> deletePaddler(String paddlerID) =>
       _deletePaddlerCommand(_currentTeamID!, paddlerID);
 
-  //* TEAM SETTERS */
+  //* TEAM SETTERS *//
 
   setCurrentTeam(String teamID) async {
     if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;

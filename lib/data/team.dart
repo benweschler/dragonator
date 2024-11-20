@@ -25,6 +25,13 @@ class Team extends Equatable with _$Team {
     return Team.fromJson(data..['id'] = id);
   }
 
+  static Map<String, dynamic> createFirestoreData({
+    required String name,
+    required String userID,
+  }) {
+    return {'name': name, 'owners': [userID]};
+  }
+
   @override
   List<Object?> get props => [id];
 }

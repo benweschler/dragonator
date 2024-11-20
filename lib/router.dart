@@ -25,8 +25,6 @@ import 'package:provider/provider.dart';
 
 import 'models/roster_model.dart';
 
-//TODO: UNCOMMENTING THIS WILL CRASH THE DART COMPILER
-//TODO: adding <T> generic may fix crash
 typedef AppPage = CupertinoPage;
 
 //TODO: consider using go_router_builder for strongly-typed routing.
