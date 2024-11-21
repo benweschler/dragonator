@@ -154,6 +154,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const headerPadding = Insets.med;
+    const footerPadding = Insets.med;
+
     return CustomScaffold(
       addScreenInset: false,
       leading: CustomIconButton(
@@ -193,8 +196,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         itemBuilder: _itemBuilder,
         rowHeight: kGridRowHeight,
         rowBuilder: _rowBuilder,
-        header: const SizedBox(height: Insets.med),
-        footer: const SizedBox(height: Insets.med),
+        header: const SizedBox(height: headerPadding),
+        footer: const SizedBox(height: footerPadding),
         overlay: ValueListenableBuilder(
           valueListenable: _comVisibility,
           builder: (_, visible, child) => Visibility(
@@ -204,6 +207,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           child: COMOverlay(
             duration: const Duration(milliseconds: 250),
             com: _calculateCOM(),
+            headerInset: headerPadding,
+            footerInset: footerPadding,
           ),
         ),
         keyBuilder: (index) => ValueKey(index),

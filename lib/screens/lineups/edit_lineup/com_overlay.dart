@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 
 class COMOverlay extends ImplicitlyAnimatedWidget {
   final Offset com;
+  final double headerInset;
+  final double footerInset;
 
-  const COMOverlay({super.key, required super.duration, required this.com})
-      : super(curve: Curves.easeOutQuad);
+  const COMOverlay({
+    super.key,
+    required super.duration,
+    required this.com,
+    this.headerInset = 0,
+    this.footerInset = 0,
+  }) : super(curve: Curves.easeOutQuad);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
@@ -35,7 +42,11 @@ class _COMOverlayState extends ImplicitlyAnimatedWidgetState<COMOverlay> {
       animation: _comAnimation,
       builder: (_, __) {
         return CustomPaint(
-          painter: _COMPainter(_comAnimation.value),
+          painter: _COMPainter(
+            com: _comAnimation.value,
+            headerInset: widget.headerInset,
+            footerInset: widget.footerInset,
+          ),
         );
       },
     );
@@ -44,13 +55,19 @@ class _COMOverlayState extends ImplicitlyAnimatedWidgetState<COMOverlay> {
 
 class _COMPainter extends CustomPainter {
   final Offset com;
+  final double headerInset;
+  final double footerInset;
 
-  const _COMPainter(this.com);
+  const _COMPainter({
+    required this.com,
+    required this.headerInset,
+    required this.footerInset,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final x = size.width * com.dx;
-    final y = size.height * com.dy;
+    final y = (size.height - headerInset - footerInset) * com.dy + headerInset;
 
     final paint = Paint()
       ..color = Colors.black
