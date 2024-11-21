@@ -17,10 +17,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'boat_painters.dart';
+import 'com_overlay.dart';
+
+// Weight of boat in pounds.
+//TODO: change this once boats are user-defined. the com of the boat can also be user-defined.
+const double _kBoatWeight = 800;
 
 //TODO: fix color theming in whole file!
-//TODO: handle COM case of no paddlers, where every paddler in the list is null. divide by total = zero.
-
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
 
@@ -110,9 +113,13 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     final int numRows = (kBoatCapacity / 2).ceil() + 1;
     double relativeYPos(int row) => (0.5 + row) / numRows;
 
-    double xWeighted = 0;
-    double yWeighted = 0;
-    double total = 0;
+    //The boat's COM is assumed to be at its center.
+    // Masses weighted by their x-distance from the origin.
+    double xWeighted = 0.5 * _kBoatWeight;
+    // Masses weighted by their y-distance from the origin.
+    double yWeighted = 0.5 * _kBoatWeight;
+    // The total mass on the boat; boat weight + paddler weight.
+    double total = _kBoatWeight;
 
     for (int i = 1; i < kBoatCapacity - 1; i++) {
       final paddler = _paddlerList[i];
@@ -194,7 +201,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
             visible: visible,
             child: child!,
           ),
-          child: _COMOverlay(
+          child: COMOverlay(
             duration: const Duration(milliseconds: 250),
             com: _calculateCOM(),
           ),
@@ -208,81 +215,4 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       ),
     );
   }
-}
-
-class _COMOverlay extends ImplicitlyAnimatedWidget {
-  final Offset com;
-
-  const _COMOverlay({required super.duration, required this.com})
-      : super(curve: Curves.easeOutQuad);
-
-  @override
-  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
-      _COMOverlayState();
-}
-
-class _COMOverlayState extends ImplicitlyAnimatedWidgetState<_COMOverlay> {
-  Tween<Offset>? _com;
-  late Animation<Offset> _comAnimation;
-
-  Tween<Offset> _tweenConstructor(dynamic value) {
-    return Tween<Offset>(begin: value as Offset);
-  }
-
-  @override
-  void forEachTween(TweenVisitor<dynamic> visitor) {
-    _com = visitor(_com, widget.com, _tweenConstructor) as Tween<Offset>?;
-  }
-
-  @override
-  void didUpdateTweens() {
-    _comAnimation = animation.drive(_com!);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _comAnimation,
-      builder: (_, __) {
-        return CustomPaint(
-          painter: _COMPainter(_comAnimation.value),
-        );
-      },
-    );
-  }
-}
-
-class _COMPainter extends CustomPainter {
-  final Offset com;
-
-  const _COMPainter(this.com);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final x = size.width * com.dx;
-    final y = size.height * com.dy;
-
-    final paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    const double targetRadius = 20;
-    canvas.drawCircle(Offset(x, y), targetRadius, paint);
-    canvas.drawLine(Offset(x, 0), Offset(x, y - targetRadius * 0.6), paint);
-    canvas.drawLine(
-      Offset(x, size.height),
-      Offset(x, y + targetRadius * 0.6),
-      paint,
-    );
-    canvas.drawLine(Offset(0, y), Offset(x - targetRadius * 0.6, y), paint);
-    canvas.drawLine(
-      Offset(size.width, y),
-      Offset(x + targetRadius * 0.6, y),
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_COMPainter oldDelegate) => oldDelegate.com != com;
 }
