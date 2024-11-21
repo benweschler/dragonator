@@ -65,9 +65,11 @@ class LineupPreviewTile extends StatelessWidget {
   }
 
   Widget _buildContent(AppColors appColors, BuildContext context) {
-    final paddlerNames = lineup.paddlerIDs.isEmpty
+    final paddlerIDs = lineup.paddlerIDs.where((id) => id != null);
+
+    final paddlerNames = paddlerIDs.isEmpty
         ? 'No paddlers'
-        : lineup.paddlerIDs.where((id) => id != null).map((id) {
+        : paddlerIDs.map((id) {
             final paddler = context.read<RosterModel>().getPaddler(id);
             return '${paddler!.firstName} ${paddler.lastName}';
           }).join(', ');
