@@ -57,7 +57,7 @@ class RosterModel extends Notifier {
     final paddlersDoc =
         firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
-    final paddlers = paddlersSnapshot.data()!;
+    final Map<String, dynamic> paddlers = paddlersSnapshot.data() ?? {};
 
     for (final paddlerEntry in paddlers.entries) {
       _paddlerIDMap[paddlerEntry.key] = Paddler.fromFirestore(
@@ -103,8 +103,9 @@ class RosterModel extends Notifier {
     }
   }
 
-  void _onPaddlerDocUpdate(DocumentSnapshot snapshot) {
-    final paddlerData = snapshot.data()! as Map<String, dynamic>;
+  void _onPaddlerDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final paddlerData = snapshot.data() ?? {};
+
     final paddlers = Set<Paddler>.from(paddlerData.entries.map(
       (entry) => Paddler.fromFirestore(id: entry.key, data: entry.value),
     ));
@@ -183,7 +184,7 @@ class RosterModel extends Notifier {
 
   //* TEAM SETTERS *//
 
-  setCurrentTeam(String teamID) async {
+  Future<void> setCurrentTeam(String teamID) async {
     if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
     await _updateCurrentTeam(teamID);
     notify();
@@ -191,6 +192,8 @@ class RosterModel extends Notifier {
 
   Future<void> renameTeam(String teamID, String name) =>
       _renameTeamCommand(teamID, name);
+
+  Future<void> createTeam(String name) => _createTeamCommand(name);
 
   //* LINEUP SETTERS *//
 

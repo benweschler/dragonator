@@ -25,6 +25,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       child: Center(
+        //TODO: weird consumer AppModel dependence
         child: Consumer<AppModel>(
           builder: (_, model, themeButtonRow) {
             final user = model.user;
@@ -39,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: Insets.sm),
-                ProfileInfo(user),
+                _ProfileInfo(user),
                 const SizedBox(height: Insets.xl),
                 const Text('Theme', style: TextStyles.h2),
                 const SizedBox(height: Insets.sm),
@@ -49,7 +50,12 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     const Text('Teams', style: TextStyles.h2),
                     const Spacer(),
-                    CustomIconButton(onTap: () {}, icon: Icons.add_rounded),
+                    // Create team
+                    CustomIconButton(
+                      // Creates a team when no ID is passed
+                      onTap: () => context.push(RoutePaths.nameTeam()),
+                      icon: Icons.add_rounded,
+                    ),
                   ],
                 ),
                 const SizedBox(height: Insets.sm),
@@ -102,10 +108,10 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-class ProfileInfo extends StatelessWidget {
+class _ProfileInfo extends StatelessWidget {
   final AppUser user;
 
-  const ProfileInfo(this.user, {super.key});
+  const _ProfileInfo(this.user);
 
   @override
   Widget build(BuildContext context) {

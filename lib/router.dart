@@ -57,7 +57,8 @@ abstract class RoutePaths {
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/add-paddler';
 
   /// If an ID is passed, the team is renamed. Otherwise, a team is created.
-  static String nameTeam([String? id]) => '$settings/name-team/$id';
+  static String nameTeam([String? id]) =>
+      _appendQueryParams('$settings/name-team', {if (id != null) 'id': id});
 }
 
 class AppRouter {
@@ -168,10 +169,10 @@ class AppRouter {
               builder: (_) => const SettingsScreen(),
               routes: [
                 AppRoute(
-                  path: 'name-team/:id',
+                  path: 'name-team',
                   pageBuilder: (state) => FadeTransitionPage(
                     child: NameTeamScreen(
-                      teamID: state.pathParameters['id'],
+                      teamID: state.uri.queryParameters['id'],
                     ),
                   ),
                 ),

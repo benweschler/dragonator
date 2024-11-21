@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 /// A button that should be used to execute asynchronous actions that can
 /// display a loading indicator.
+//TODO: not used
 class AsyncActionButton<T extends Object> extends StatefulWidget {
   final bool isEnabled;
   final String label;
@@ -29,17 +30,17 @@ class AsyncActionButton<T extends Object> extends StatefulWidget {
 // State class public.
 class AsyncActionButtonState<T extends Object>
     extends State<AsyncActionButton<T>> {
-  bool isLoading = false;
+  bool _isLoading = false;
 
   void executeAction() async {
-    setState(() => isLoading = true);
+    setState(() => _isLoading = true);
 
     try {
       await widget.action()?.whenComplete(() {
         // This widget may have been removed from the tree while or after its
         // async action completes.
         if (mounted) {
-          setState(() => isLoading = false);
+          setState(() => _isLoading = false);
         }
       });
     } on T catch (error) {
@@ -52,7 +53,7 @@ class AsyncActionButtonState<T extends Object>
     final buttonColor = AppColors.of(context).accent;
 
     return IgnorePointer(
-      ignoring: !widget.isEnabled || isLoading,
+      ignoring: !widget.isEnabled || _isLoading,
       child: ResponsiveButton.large(
         onTap: executeAction,
         builder: (overlay) => Container(
@@ -65,7 +66,7 @@ class AsyncActionButtonState<T extends Object>
           ),
           child: _AsyncActionButtonContent(
             labelText: widget.label,
-            isLoading: isLoading,
+            isLoading: _isLoading,
             loadingIndicatorColor: Colors.white,
           ),
         ),

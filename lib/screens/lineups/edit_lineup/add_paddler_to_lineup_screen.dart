@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+//TODO: show message if no paddlers in team
 class AddPaddlerToLineupScreen extends StatefulWidget {
   final String lineupID;
   final ValueChanged<Paddler?> addPaddler;

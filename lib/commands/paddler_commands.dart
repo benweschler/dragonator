@@ -6,7 +6,7 @@ Future<void> _setPaddlerCommand(Paddler paddler, String teamID) async {
       .doc(teamID)
       .collection('paddlers')
       .doc('paddlers')
-      .update({paddler.id: paddler.toFirestore()});
+      .set({paddler.id: paddler.toFirestore()}, SetOptions(merge: true));
 }
 
 Future<void> _deletePaddlerCommand(String teamID, String paddlerID) async {

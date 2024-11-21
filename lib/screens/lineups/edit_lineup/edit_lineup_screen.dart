@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'boat_painters.dart';
 
 //TODO: fix color theming in whole file!
+//TODO: handle COM case of no paddlers, where every paddler in the list is null. divide by total = zero.
 
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
@@ -102,6 +103,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     );
   }
 
+  //TODO: returns NaN if no paddlers
   Offset _calculateCOM() {
     const relativeLeftPos = 0.25;
     const relativeRightPos = 0.75;
