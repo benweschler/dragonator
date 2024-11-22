@@ -152,9 +152,11 @@ class AppRouter {
                         // TODO: navigating to paddler details goes to roster screen.
                         AppRoute(
                           path: 'add-paddler',
-                          builder: (state) => AddPaddlerToLineupScreen(
-                            lineupID: state.pathParameters['id']!,
-                            addPaddler: state.extra as dynamic,
+                          pageBuilder: (state) => FadeTransitionPage(
+                            child: AddPaddlerToLineupScreen(
+                              lineupID: state.pathParameters['id']!,
+                              addPaddler: state.extra as dynamic,
+                            ),
                           ),
                         ),
                       ],
