@@ -108,7 +108,12 @@ class LineupScreen extends StatelessWidget {
                       LayoutId(
                         id: i,
                         child: paddlerList[i] != null
-                            ? PaddlerTile(paddlerList[i]!)
+                            ? GestureDetector(
+                                onTap: () => context.push(RoutePaths.paddler(
+                                  paddlerList[i]!.id,
+                                )),
+                                child: PaddlerTile(paddlerList[i]!),
+                              )
                             : const _EmptyPaddlerTile(),
                       )
                   ],
@@ -180,4 +185,3 @@ class _EmptyPaddlerTile extends StatelessWidget {
     );
   }
 }
-
