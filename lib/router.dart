@@ -37,7 +37,7 @@ abstract class RoutePaths {
   static String forgotPassword = '$logIn/forgot-password';
   static String signUp = '/sign-up';
 
-  static String paddler(String id) => '$roster/paddler/$id';
+  static String paddler(String id) => '/paddler/$id';
 
   static String editPaddler({String? paddlerID}) =>
       _appendQueryParams('$roster/edit-paddler', {'paddlerID': paddlerID});
@@ -103,15 +103,15 @@ class AppRouter {
           ),
           routes: [
             AppRoute(
+              path: '/paddler/:id',
+              builder: (state) =>
+                  PaddlerScreen(state.pathParameters['id']!),
+            ),
+            AppRoute(
               path: RoutePaths.roster,
               builder: (_) => const RosterScreen(),
               isNavBarTab: true,
               routes: [
-                AppRoute(
-                  path: 'paddler/:id',
-                  builder: (state) =>
-                      PaddlerScreen(state.pathParameters['id']!),
-                ),
                 AppRoute(
                   path: 'edit-paddler',
                   pageBuilder: (state) => FadeTransitionPage(

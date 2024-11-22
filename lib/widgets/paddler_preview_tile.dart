@@ -13,7 +13,7 @@ class PaddlerPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(RoutePaths.paddler(paddler.id)),
+      onTap: () => context.push(RoutePaths.paddler(paddler.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(

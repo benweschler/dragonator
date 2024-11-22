@@ -20,6 +20,8 @@ class PaddlerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(GoRouterState.of(context).uri.path);
+
     return CustomScaffold(
       leading: const CustomBackButton(),
       trailing: CustomIconButton(
