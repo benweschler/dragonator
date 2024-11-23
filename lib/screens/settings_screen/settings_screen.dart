@@ -208,7 +208,11 @@ class _TeamTile extends StatelessWidget {
         ),
         ContextMenuAction(
           icon: Icons.groups_rounded,
-          onTap: () {},
+          onTap: () async {
+            context.read<RosterModel>().setCurrentTeam(team.id).then((_) {
+              if (context.mounted) context.go(RoutePaths.roster);
+            });
+          },
           label: 'View Roster',
         ),
         //TODO: must implement screen if user has no teams and if current team is deleted.
