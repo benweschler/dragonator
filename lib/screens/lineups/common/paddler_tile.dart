@@ -17,15 +17,16 @@ class PaddlerTile extends StatelessWidget {
       padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
         borderRadius: Corners.smBorderRadius,
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: AppColors.of(context).background,
         border: Border.all(
-          color: AppColors.of(context).primaryContainer,
+          color: AppColors.of(context).onBackground,
         ),
       ),
       child: Text(
         '${paddler.firstName} ${paddler.lastName}',
         style: TextStyles.body1.copyWith(
-          color: AppColors.of(context).primaryContainer,
+          //TODO: hard to see?
+          color: AppColors.of(context).onBackground,
         ),
         textAlign: TextAlign.center,
         maxLines: 2,

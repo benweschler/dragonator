@@ -1,3 +1,4 @@
+import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 
 class COMOverlay extends ImplicitlyAnimatedWidget {
@@ -44,6 +45,7 @@ class _COMOverlayState extends ImplicitlyAnimatedWidgetState<COMOverlay> {
         return CustomPaint(
           painter: _COMPainter(
             com: _comAnimation.value,
+            color: AppColors.of(context).onBackground,
             headerInset: widget.headerInset,
             footerInset: widget.footerInset,
           ),
@@ -55,11 +57,13 @@ class _COMOverlayState extends ImplicitlyAnimatedWidgetState<COMOverlay> {
 
 class _COMPainter extends CustomPainter {
   final Offset com;
+  final Color color;
   final double headerInset;
   final double footerInset;
 
   const _COMPainter({
     required this.com,
+    required this.color,
     required this.headerInset,
     required this.footerInset,
   });
@@ -70,7 +74,7 @@ class _COMPainter extends CustomPainter {
     final y = (size.height - headerInset - footerInset) * com.dy + headerInset;
 
     final paint = Paint()
-      ..color = Colors.black
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 

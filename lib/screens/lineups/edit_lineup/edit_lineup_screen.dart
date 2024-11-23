@@ -75,20 +75,20 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Widget _rowBuilder(BuildContext context, int index) {
     final CustomPainter painter;
     const maxBowIndex = kBoatEndExtent - 1;
+    //TODO: combine with row builder on lineup screen
     if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
       return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
     } else if (maxBowIndex < index &&
         index < kBoatCapacity ~/ 2 - maxBowIndex) {
       painter = BoatSegmentPainter(
         rowNumber: index,
-        //TODO: should be onBackground
-        outlineColor: Colors.black,
+        outlineColor: AppColors.of(context).onBackground,
         fillColor: AppColors.of(context).largeSurface,
         segmentHeight: kGridRowHeight,
       );
     } else {
       painter = BoatEndPainter(
-        outlineColor: AppColors.of(context).primaryContainer,
+        outlineColor: AppColors.of(context).onBackground,
         fillColor: AppColors.of(context).largeSurface,
         segmentHeight: kGridRowHeight,
         isBow: index == maxBowIndex,
