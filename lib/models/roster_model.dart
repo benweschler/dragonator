@@ -12,6 +12,8 @@ part '../commands/paddler_commands.dart';
 
 part '../commands/team_commands.dart';
 
+part '../commands/firestore_references.dart';
+
 //TODO: add documentation
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
@@ -20,14 +22,12 @@ class RosterModel extends Notifier {
   StreamSubscription? _paddlersSubscription;
 
   Future<void> initialize(AppUser user) async {
-    final firestore = FirebaseFirestore.instance;
     assert(_paddlerIDMap.isEmpty);
     assert(_teamIDMap.isEmpty);
     assert(_lineupIDMap.isEmpty);
 
     // Load teams
-    final teamsQuery =
-        firestore.collection('teams').where('owners', arrayContains: user.id);
+    final teamsQuery = _teamsCollection.where('owners', arrayContains: user.id);
     final QuerySnapshot snapshot = await teamsQuery.get();
     _updateTeams(snapshot);
 
@@ -54,12 +54,8 @@ class RosterModel extends Notifier {
 
     if (_currentTeamID == null) return;
 
-    final firestore = FirebaseFirestore.instance;
-    final paddlersDoc =
-        firestore.doc('teams/$_currentTeamID/details/paddlers');
-    final paddlersSnapshot = await paddlersDoc.get();
-    final Map<String, dynamic> paddlers = paddlersSnapshot.data() ?? {};
-
+    final Map<String, dynamic> paddlers =
+        await _getTeamPaddlersCommand(_currentTeamID!);
     for (final paddlerEntry in paddlers.entries) {
       _paddlerIDMap[paddlerEntry.key] = Paddler.fromFirestore(
         id: paddlerEntry.key,
@@ -67,9 +63,10 @@ class RosterModel extends Notifier {
       );
     }
 
-    _paddlersSubscription = paddlersDoc.snapshots().listen(_onPaddlerDocUpdate);
+    _paddlersSubscription = _getPaddlersDoc(_currentTeamID!)
+        .snapshots()
+        .listen(_onPaddlerDocUpdate);
   }
-
 
   //TODO: implement
   Future<void> _loadTeamLineups() async {
