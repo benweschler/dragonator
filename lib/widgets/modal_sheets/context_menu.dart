@@ -45,7 +45,7 @@ class ContextMenuAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color? color = isDestructiveAction ? AppColors.of(context).accent : null;
+    Color? color = isDestructiveAction ? AppColors.of(context).primary : null;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

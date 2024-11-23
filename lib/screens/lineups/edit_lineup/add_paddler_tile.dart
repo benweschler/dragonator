@@ -39,7 +39,7 @@ class AddPaddlerTile extends StatelessWidget {
             Theme.of(context).scaffoldBackgroundColor,
           ),
           borderRadius: Corners.smBorderRadius,
-          border: Border.all(color: AppColors.of(context).accent),
+          border: Border.all(color: AppColors.of(context).primary),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -47,12 +47,12 @@ class AddPaddlerTile extends StatelessWidget {
             Text(
               'Add',
               style: TextStyles.body1.copyWith(
-                color: AppColors.of(context).accent,
+                color: AppColors.of(context).primary,
               ),
               maxLines: 2,
             ),
             const SizedBox(width: Insets.xs),
-            Icon(Icons.add_rounded, color: AppColors.of(context).accent),
+            Icon(Icons.add_rounded, color: AppColors.of(context).primary),
           ],
         ),
       ),

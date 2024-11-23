@@ -109,7 +109,7 @@ class _SelectFilterMenuState<T> extends State<_SelectFilterMenu<T>> {
                       ))
                   .separate(const Divider(height: 0.5, thickness: 0.5)),
               ModalSheetButtonTile(
-                color: AppColors.of(context).accent,
+                color: AppColors.of(context).primary,
                 onTap: () => widget.onSave(selectedMenuOption),
                 label: 'Apply',
               ),

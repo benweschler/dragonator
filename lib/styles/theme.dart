@@ -7,7 +7,9 @@ enum ThemeType { light, dark }
 class AppColors extends ThemeExtension<AppColors> {
   static const _primaryRed = Color(0xFFE55C45);
 
-  final Color accent;
+  final Color primary;
+  final Color background;
+  final Color onBackground;
   final Color smallSurface;
   final Color largeSurface;
   final Color errorSurface;
@@ -19,7 +21,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final bool isDark;
 
   const AppColors._({
-    required this.accent,
+    required this.primary,
+    required this.background,
+    required this.onBackground,
     required this.smallSurface,
     required this.largeSurface,
     required this.errorSurface,
@@ -35,7 +39,10 @@ class AppColors extends ThemeExtension<AppColors> {
     switch (t) {
       case ThemeType.light:
         return AppColors._(
-          accent: _primaryRed,
+          primary: _primaryRed,
+          // The default M3 light on/background color.
+          background: Color(0xFFFEF7FF),
+          onBackground: Color(0xFF1D1B20),
           smallSurface: Colors.black.withOpacity(0.07),
           largeSurface: Colors.black.withOpacity(0.04),
           errorSurface: _primaryRed.withOpacity(0.25),
@@ -48,7 +55,10 @@ class AppColors extends ThemeExtension<AppColors> {
         );
       case ThemeType.dark:
         return AppColors._(
-          accent: _primaryRed,
+          primary: _primaryRed,
+          // The default M3 dark on/background color.
+          background: Color(0xFF141218),
+          onBackground: Color(0xFFE6E0E9),
           smallSurface: Colors.white.withOpacity(0.07),
           largeSurface: Colors.white.withOpacity(0.04),
           errorSurface: _primaryRed.withOpacity(0.25),
@@ -73,7 +83,7 @@ class AppColors extends ThemeExtension<AppColors> {
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
     return themeData.copyWith(
-      colorScheme: themeData.colorScheme.copyWith(primary: accent),
+      colorScheme: themeData.colorScheme.copyWith(primary: primary),
     );
   }
 
@@ -82,7 +92,9 @@ class AppColors extends ThemeExtension<AppColors> {
 
   @override
   AppColors copyWith({
-    Color? accent,
+    Color? primary,
+    Color? background,
+    Color? onBackground,
     Color? smallSurface,
     Color? largeSurface,
     Color? errorSurface,
@@ -94,7 +106,9 @@ class AppColors extends ThemeExtension<AppColors> {
     bool? isDark,
   }) {
     return AppColors._(
-      accent: accent ?? this.accent,
+      primary: primary ?? this.primary,
+      background: background ?? this.background,
+      onBackground: onBackground ?? this.onBackground,
       smallSurface: smallSurface ?? this.smallSurface,
       largeSurface: largeSurface ?? this.largeSurface,
       errorSurface: errorSurface ?? this.errorSurface,
@@ -113,7 +127,9 @@ class AppColors extends ThemeExtension<AppColors> {
     if (other == null) return this;
 
     return AppColors._(
-      accent: Color.lerp(accent, other.accent, t)!,
+      primary: Color.lerp(primary, other.primary, t)!,
+      background: Color.lerp(background, other.background, t)!,
+      onBackground: Color.lerp(onBackground, other.onBackground, t)!,
       smallSurface: Color.lerp(smallSurface, other.smallSurface, t)!,
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       errorSurface: Color.lerp(errorSurface, other.errorSurface, t)!,

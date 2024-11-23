@@ -14,7 +14,7 @@ class CustomInputDecoration extends InputDecoration {
           filled: true,
           fillColor: colors.largeSurface,
           errorStyle: TextStyles.caption.copyWith(
-            color: colors.accent,
+            color: colors.primary,
             fontWeight: FontWeight.w500,
             height: showEmptyErrorText ? null : 0,
           ),
@@ -38,11 +38,11 @@ class CustomInputDecoration extends InputDecoration {
             borderRadius: Corners.medBorderRadius,
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: colors.accent),
+            borderSide: BorderSide(width: 1, color: colors.primary),
             borderRadius: Corners.medBorderRadius,
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2, color: colors.accent),
+            borderSide: BorderSide(width: 2, color: colors.primary),
             borderRadius: Corners.medBorderRadius,
           ),
         );

@@ -20,26 +20,33 @@ class LineupLibraryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<RosterModel>(
-      builder: (_, rosterModel, __) => CustomScaffold(
-        center: ChangeTeamHeading(),
-        floatingActionButton: Builder(builder: (context) {
-          return CustomFAB(
-            onTap: () => context.push(RoutePaths.nameLineup()),
-            child: const Icon(Icons.add_rounded),
-          );
-        }),
-        child: ListView(
-          children: [
-            const Text('Lineups', style: TextStyles.h1),
-            const SizedBox(height: Insets.sm),
-            ...context
-                .read<RosterModel>()
-                .lineups
-                .map<Widget>((lineup) => LineupPreviewTile(lineup))
-                .separate(const Divider(height: 0.5, thickness: 0.5)),
-          ],
-        ),
-      ),
+      builder: (_, rosterModel, __) {
+        // Sort lineups alphabetically
+        final sortedLineups = context
+            .read<RosterModel>()
+            .lineups
+            .toList()
+            ..sort((a, b) => a.name.compareTo(b.name));
+
+        return CustomScaffold(
+          center: ChangeTeamHeading(),
+          floatingActionButton: Builder(builder: (context) {
+            return CustomFAB(
+              onTap: () => context.push(RoutePaths.nameLineup()),
+              child: const Icon(Icons.add_rounded),
+            );
+          }),
+          child: ListView(
+            children: [
+              const Text('Lineups', style: TextStyles.h1),
+              const SizedBox(height: Insets.sm),
+              ...sortedLineups
+                  .map<Widget>((lineup) => LineupPreviewTile(lineup))
+                  .separate(const Divider(height: 0.5, thickness: 0.5)),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -82,7 +89,7 @@ class LineupPreviewTile extends StatelessWidget {
             children: [
               Text(
                 lineup.name,
-                style: TextStyles.title1.copyWith(color: appColors.accent),
+                style: TextStyles.title1.copyWith(color: appColors.primary),
               ),
               Text(
                 paddlerNames,

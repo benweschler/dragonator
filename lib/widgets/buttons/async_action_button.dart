@@ -50,7 +50,7 @@ class AsyncActionButtonState<T extends Object>
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = AppColors.of(context).accent;
+    final buttonColor = AppColors.of(context).primary;
 
     return IgnorePointer(
       ignoring: !widget.isEnabled || _isLoading,

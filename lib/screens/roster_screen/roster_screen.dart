@@ -90,7 +90,7 @@ class _RosterContentState extends State<_RosterContent> {
       child: Row(
         children: <Widget>[
           ChipButton(
-            fillColor: AppColors.of(context).accent,
+            fillColor: AppColors.of(context).primary,
             contentColor: Colors.white,
             onTap: () => context.showModal(SortingOptionsMenu(
               sortingStrategies: PaddlerSort.sortingStrategyLabels.keys,

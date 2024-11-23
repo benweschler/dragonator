@@ -51,7 +51,7 @@ class _SortingOptionsMenuState extends State<SortingOptionsMenu> {
             //TODO: using divider here
           ].separate(const Divider(height: 0.5, thickness: 0.5)),
           ModalSheetButtonTile(
-            color: AppColors.of(context).accent,
+            color: AppColors.of(context).primary,
             onTap: () => widget.onSave(selectedStrategy, sortIncreasing),
             label: 'Apply',
           ),
@@ -82,7 +82,7 @@ class _SortDirectionSelector extends StatelessWidget {
               padding: const EdgeInsets.all(Insets.xs),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: sortIncreasing ? AppColors.of(context).accent : null,
+                color: sortIncreasing ? AppColors.of(context).primary : null,
               ),
               child: Icon(
                 Icons.arrow_upward_rounded,
@@ -106,7 +106,7 @@ class _SortDirectionSelector extends StatelessWidget {
               padding: const EdgeInsets.all(Insets.xs),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: sortIncreasing ? null : AppColors.of(context).accent,
+                color: sortIncreasing ? null : AppColors.of(context).primary,
               ),
               child: Icon(
                 Icons.arrow_downward_rounded,

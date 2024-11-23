@@ -29,14 +29,13 @@ class LineupScreen extends StatelessWidget {
         index < kBoatCapacity ~/ 2 - maxBowIndex) {
       painter = BoatSegmentPainter(
         rowNumber: index,
-        //TODO: should be onBackground
-        outlineColor: Colors.black,
+        outlineColor: AppColors.of(context).onBackground,
         fillColor: AppColors.of(context).largeSurface,
         segmentHeight: kGridRowHeight,
       );
     } else {
       painter = BoatEndPainter(
-        outlineColor: AppColors.of(context).primaryContainer,
+        outlineColor: AppColors.of(context).onBackground,
         fillColor: AppColors.of(context).largeSurface,
         segmentHeight: kGridRowHeight,
         isBow: index == maxBowIndex,
@@ -170,12 +169,12 @@ class _EmptyPaddlerTile extends StatelessWidget {
           Theme.of(context).scaffoldBackgroundColor,
         ),
         borderRadius: Corners.smBorderRadius,
-        border: Border.all(color: AppColors.of(context).accent),
+        border: Border.all(color: AppColors.of(context).primary),
       ),
       child: Text(
         'Empty',
         style: TextStyles.body1.copyWith(
-          color: AppColors.of(context).accent,
+          color: AppColors.of(context).primary,
         ),
         maxLines: 2,
       ),

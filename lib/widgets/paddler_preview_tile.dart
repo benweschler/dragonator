@@ -35,7 +35,7 @@ class PaddlerPreviewTile extends StatelessWidget {
             children: [
               Text(
                 '${paddler.firstName} ${paddler.lastName}',
-                style: TextStyles.title1.copyWith(color: appColors.accent),
+                style: TextStyles.title1.copyWith(color: appColors.primary),
               ),
               const SizedBox(height: Insets.xs),
               Text.rich(TextSpan(children: [

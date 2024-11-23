@@ -9,7 +9,7 @@ class ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final errorColor = AppColors.of(context).accent;
+    final errorColor = AppColors.of(context).primary;
 
     return SizedBox(
       width: double.infinity,

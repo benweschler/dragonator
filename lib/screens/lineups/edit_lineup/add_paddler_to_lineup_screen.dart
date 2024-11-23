@@ -35,8 +35,8 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
   Widget build(BuildContext context) {
     final rosterModel = context.watch<RosterModel>();
     // Only show paddlers that aren't in the lineup.
-    final rosterPaddlers = rosterModel.paddlers.toSet();
-    final unassignedPaddlers =
+    final Set rosterPaddlers = rosterModel.paddlers.toSet();
+    final List unassignedPaddlers =
         rosterPaddlers.difference(widget.editedLineupPaddlers.toSet()).toList();
 
     final Widget content;

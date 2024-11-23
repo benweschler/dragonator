@@ -64,7 +64,7 @@ class ChangeThemeButton extends StatelessWidget {
                 color: AppColors.of(context).largeSurface,
                 border: Border.all(
                   color: appModel.themeMode == themeMode
-                      ? AppColors.of(context).accent
+                      ? AppColors.of(context).primary
                       : Colors.transparent,
                 ),
               ),
@@ -157,7 +157,7 @@ class _ThemeWindow extends StatelessWidget {
             flex: 2,
             child: Row(
               children: <Widget>[
-                _WindowElement(flex: 3, color: appColors.accent),
+                _WindowElement(flex: 3, color: appColors.primary),
                 _WindowElement(flex: 3, color: smallSurface),
                 _WindowElement(flex: 3, color: smallSurface),
               ].separate(const Spacer()).toList(),

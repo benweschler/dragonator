@@ -20,7 +20,7 @@ class PreferenceRow extends StatelessWidget {
     if (hasPreference) {
       icon = Icon(
         Icons.check_circle_rounded,
-        color: AppColors.of(context).accent,
+        color: AppColors.of(context).primary,
       );
     } else {
       icon = Transform.rotate(

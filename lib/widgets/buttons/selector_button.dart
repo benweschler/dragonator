@@ -22,11 +22,11 @@ class SelectorButton extends StatelessWidget {
         height: 28,
         margin: EdgeInsets.only(right: Insets.med),
         decoration: BoxDecoration(
-          color: selected ? AppColors.of(context).accent : null,
+          color: selected ? AppColors.of(context).primary : null,
           shape: BoxShape.circle,
           //TODO: black should be onBackground
           border: Border.all(
-            color: selected ? Colors.transparent : Colors.black,
+            color: selected ? Colors.transparent : AppColors.of(context).onBackground,
           ),
         ),
         child: selected

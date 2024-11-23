@@ -85,7 +85,7 @@ class SelectionMenuTile extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? AppColors.of(context).accent : null,
+                  color: isSelected ? AppColors.of(context).primary : null,
                 ),
               ),
             ),
@@ -93,7 +93,7 @@ class SelectionMenuTile extends StatelessWidget {
             Icon(
               Icons.check_rounded,
               color: isSelected
-                  ? AppColors.of(context).accent
+                  ? AppColors.of(context).primary
                   : Colors.transparent,
             ),
           ],

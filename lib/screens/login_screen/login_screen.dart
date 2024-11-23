@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Forgot Password',
                         style: TextStyles.body2.copyWith(
-                          color: AppColors.of(context).accent,
+                          color: AppColors.of(context).primary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -150,7 +150,7 @@ class GoToSignUpButton extends StatelessWidget {
           child: Text(
             'Sign Up',
             style: TextStyles.body1.copyWith(
-              color: AppColors.of(context).accent,
+              color: AppColors.of(context).primary,
               fontWeight: FontWeight.w600,
             ),
           ),
