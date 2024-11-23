@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AddPaddlerTile extends StatelessWidget {
-  final String lineupID;
+  /// The list of paddlers in the current state of the edited lineup.
+  final List<Paddler?> editedNullablePaddlers;
   final ValueChanged<Paddler?> addPaddler;
 
   const AddPaddlerTile({
     super.key,
-    required this.lineupID,
+    required this.editedNullablePaddlers,
     required this.addPaddler,
   });
 
@@ -19,8 +20,13 @@ class AddPaddlerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => context.push(
-        RoutePaths.addPaddlerToLineup(lineupID),
-        extra: addPaddler,
+        RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
+        extra: {
+          'addPaddler': addPaddler,
+          'editedLineupPaddlers': editedNullablePaddlers
+              .where((entry) => entry != null)
+              .cast<Paddler>(),
+        },
       ),
       child: Container(
         constraints: BoxConstraints(

@@ -11,17 +11,21 @@ import 'package:provider/provider.dart';
 
 //TODO: show message if no paddlers in team
 class AddPaddlerToLineupScreen extends StatefulWidget {
-  final String lineupID;
+  /// The list of paddlers in the current state of the edited lineup.
+  final Iterable<Paddler> editedLineupPaddlers;
+
+  /// A callback to add a paddler to the edited lineup.
   final ValueChanged<Paddler?> addPaddler;
 
   const AddPaddlerToLineupScreen({
     super.key,
-    required this.lineupID,
+    required this.editedLineupPaddlers,
     required this.addPaddler,
   });
 
   @override
-  State<AddPaddlerToLineupScreen> createState() => _AddPaddlerToLineupScreenState();
+  State<AddPaddlerToLineupScreen> createState() =>
+      _AddPaddlerToLineupScreenState();
 }
 
 class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
@@ -29,7 +33,47 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final paddlers = context.watch<RosterModel>().paddlers.toList();
+    final rosterModel = context.watch<RosterModel>();
+    // Only show paddlers that aren't in the lineup.
+    final rosterPaddlers = rosterModel.paddlers.toSet();
+    final unassignedPaddlers =
+        rosterPaddlers.difference(widget.editedLineupPaddlers.toSet()).toList();
+
+    final Widget content;
+    if (unassignedPaddlers.isEmpty) {
+      content = Padding(
+        padding: EdgeInsets.symmetric(horizontal: Insets.lg),
+        child: Center(
+          child: Text(
+            rosterPaddlers.isEmpty
+                ? 'This team has no paddlers.'
+                : 'All paddlers are already in this lineup.',
+            style: TextStyles.body1,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } else {
+      content = ListView.builder(
+        itemCount: unassignedPaddlers.length,
+        itemBuilder: (context, index) => IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SelectorButton(
+                selected: _selected == index,
+                onTap: () => setState(() {
+                  _selected == index ? _selected = null : _selected = index;
+                }),
+              ),
+              Expanded(
+                child: PaddlerPreviewTile(unassignedPaddlers[index]),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return CustomScaffold(
       leading: CustomIconButton(
@@ -40,25 +84,12 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
       trailing: CustomIconButton(
         icon: Icons.check_rounded,
         onTap: () {
-          widget.addPaddler(_selected != null ? paddlers[_selected!] : null);
+          widget.addPaddler(
+              _selected != null ? unassignedPaddlers[_selected!] : null);
           context.pop();
         },
       ),
-      child: ListView.builder(
-        itemCount: paddlers.length,
-        itemBuilder: (context, index) => Row(
-          children: [
-            SelectorButton(
-              selected: _selected == index,
-              onTap: () => setState(() {
-                _selected == index ? _selected = null : _selected = index;
-              }),
-            ),
-            const SizedBox(width: Insets.med),
-            Expanded(child: PaddlerPreviewTile(paddlers[index])),
-          ],
-        ),
-      ),
+      child: content,
     );
   }
 }

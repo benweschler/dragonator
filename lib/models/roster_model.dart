@@ -23,8 +23,7 @@ class RosterModel extends Notifier {
     final firestore = FirebaseFirestore.instance;
     assert(_paddlerIDMap.isEmpty);
     assert(_teamIDMap.isEmpty);
-    //TODO: add when lineups are fetched from db
-    //assert(_lineupIDMap.isEmpty);
+    assert(_lineupIDMap.isEmpty);
 
     // Load teams
     final teamsQuery =
@@ -45,11 +44,13 @@ class RosterModel extends Notifier {
   Future<void> _updateCurrentTeam(String? newTeamID) async {
     _currentTeamID = newTeamID;
     await _loadTeamPaddlers();
+    await _loadTeamLineups();
   }
 
   Future<void> _loadTeamPaddlers() async {
     _paddlersSubscription?.cancel();
     _paddlerIDMap.clear();
+    _lineupIDMap.clear();
 
     if (_currentTeamID == null) return;
 
@@ -69,14 +70,32 @@ class RosterModel extends Notifier {
     _paddlersSubscription = paddlersDoc.snapshots().listen(_onPaddlerDocUpdate);
   }
 
+
+  //TODO: implement
+  Future<void> _loadTeamLineups() async {
+    _lineupIDMap.addAll({
+      '1': Lineup(
+        id: '1',
+        name: 'Lineup One',
+        paddlerIDs: paddlers.take(11).map((paddler) => paddler.id),
+      ),
+      '2': Lineup(
+        id: '2',
+        name: 'Lineup Two',
+        paddlerIDs: paddlers.take(3).map((paddler) => paddler.id),
+      ),
+    });
+  }
+
   //TODO: this should be modified to be used when switching teams. logging out should replace the roster model.
   void clear() {
-    _paddlerIDMap.clear();
     _teamIDMap.clear();
     _currentTeamID = null;
-    //TODO: add once lineups are pulled from db _lineupIDMap.clear();
     _teamsSubscription?.cancel();
+    _paddlerIDMap.clear();
     _paddlersSubscription?.cancel();
+    _lineupIDMap.clear();
+    //TODO: add once lineups are pulled from db cancel subscription
   }
 
   void _onTeamsQueryUpdate(QuerySnapshot snapshot) {
@@ -137,18 +156,7 @@ class RosterModel extends Notifier {
   String? _currentTeamID;
 
   //TODO: dummy Data
-  late final Map<String, Lineup> _lineupIDMap = {
-    '1': Lineup(
-      id: '1',
-      name: 'Lineup One',
-      paddlerIDs: paddlers.take(22).map((paddler) => paddler.id),
-    ),
-    '2': Lineup(
-      id: '2',
-      name: 'Lineup Two',
-      paddlerIDs: paddlers.take(22).map((paddler) => paddler.id),
-    ),
-  };
+  final Map<String, Lineup> _lineupIDMap = {};
 
   //* PADDLER GETTERS *//
 

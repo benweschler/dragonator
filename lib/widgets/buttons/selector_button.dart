@@ -16,9 +16,11 @@ class SelectorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.translucent,
       child: Container(
         width: 28,
         height: 28,
+        margin: EdgeInsets.only(right: Insets.med),
         decoration: BoxDecoration(
           color: selected ? AppColors.of(context).accent : null,
           shape: BoxShape.circle,

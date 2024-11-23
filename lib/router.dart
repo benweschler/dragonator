@@ -53,8 +53,8 @@ abstract class RoutePaths {
   static String editLineup(String lineupID) =>
       '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID';
 
-  static String addPaddlerToLineup(String lineupID) =>
-      '$lineupLibrary/lineup/$lineupID/edit-lineup/$lineupID/add-paddler';
+  static String addPaddlerToLineup(String currentPath) =>
+      '$currentPath/add-paddler';
 
   /// If an ID is passed, the team is renamed. Otherwise, a team is created.
   static String nameTeam([String? id]) =>
@@ -104,8 +104,7 @@ class AppRouter {
           routes: [
             AppRoute(
               path: '/paddler/:id',
-              builder: (state) =>
-                  PaddlerScreen(state.pathParameters['id']!),
+              builder: (state) => PaddlerScreen(state.pathParameters['id']!),
             ),
             AppRoute(
               path: RoutePaths.roster,
@@ -154,8 +153,9 @@ class AppRouter {
                           path: 'add-paddler',
                           pageBuilder: (state) => FadeTransitionPage(
                             child: AddPaddlerToLineupScreen(
-                              lineupID: state.pathParameters['id']!,
-                              addPaddler: state.extra as dynamic,
+                              editedLineupPaddlers:
+                                  (state.extra as Map)['editedLineupPaddlers'],
+                              addPaddler: (state.extra as Map)['addPaddler'],
                             ),
                           ),
                         ),
@@ -193,6 +193,7 @@ class AppRouter {
         path != RoutePaths.logIn &&
         path != RoutePaths.signUp &&
         path != RoutePaths.forgotPassword) {
+      //TODO: this should probably be put somewhere else.
       context.read<RosterModel>().clear();
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {

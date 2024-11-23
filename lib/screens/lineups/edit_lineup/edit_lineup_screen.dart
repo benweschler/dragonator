@@ -66,7 +66,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     return AddPaddlerTile(
       //TODO: implement
-      lineupID: widget.lineupID,
+      editedNullablePaddlers: _paddlerList,
       addPaddler: (paddler) {
         if (paddler == null) return;
         setState(() => _paddlerList[index] = paddler);
