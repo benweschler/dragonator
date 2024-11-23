@@ -56,7 +56,7 @@ class RosterModel extends Notifier {
 
     final firestore = FirebaseFirestore.instance;
     final paddlersDoc =
-        firestore.doc('teams/$_currentTeamID/paddlers/paddlers');
+        firestore.doc('teams/$_currentTeamID/details/paddlers');
     final paddlersSnapshot = await paddlersDoc.get();
     final Map<String, dynamic> paddlers = paddlersSnapshot.data() ?? {};
 
