@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/data/app_user.dart';
-import 'package:dragonator/data/lineup.dart';
-import 'package:dragonator/data/paddler.dart';
-import 'package:dragonator/data/team.dart';
+import 'package:dragonator/data/user/app_user.dart';
+import 'package:dragonator/data/lineup/lineup.dart';
+import 'package:dragonator/data/paddler/paddler.dart';
+import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -127,49 +127,39 @@ class RosterModel extends Notifier {
   }
 
   void _onPaddlerDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final paddlerData = snapshot.data() ?? {};
-    final paddlers = Set<Paddler>.from(paddlerData.entries.map(
-      (entry) => Paddler.fromFirestore(id: entry.key, data: entry.value),
-    ));
-
-    final currentPaddlers = _paddlerIDMap.values.toSet();
-    // Paddlers that were added or modified.
-    final updatedPaddlers = paddlers.difference(currentPaddlers);
-
-    final currentPaddlerIDs = _paddlerIDMap.keys.toSet();
-    final paddlerIDs = paddlerData.keys.toSet();
-    final removedPaddlerIDs = currentPaddlerIDs.difference(paddlerIDs);
-
-    for (Paddler paddler in updatedPaddlers) {
-      _paddlerIDMap[paddler.id] = paddler;
-    }
-    for (String id in removedPaddlerIDs) {
-      _paddlerIDMap.remove(id);
-    }
-
-    notify();
+    return _updateTeamDetail(snapshot, _paddlerIDMap, Paddler.fromFirestore);
   }
 
-  //TODO: can probably generalize to onTeamDetailUpdate
   void _onLineupDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final lineupData = snapshot.data() ?? {};
-    final lineups = Set<Lineup>.from(lineupData.entries.map(
-      (entry) => Lineup.fromFirestore(id: entry.key, data: entry.value),
+    return _updateTeamDetail(snapshot, _lineupIDMap, Lineup.fromFirestore);
+  }
+
+  void _updateTeamDetail<T extends dynamic>(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    Map<String, T> idMap,
+    T Function({
+      required String id,
+      required Map<String, dynamic> data,
+    }) fromFirestore,
+  ) async {
+    final detailData = snapshot.data() ?? {};
+    final details = Set<T>.from(detailData.entries.map(
+      (entry) => fromFirestore(id: entry.key, data: entry.value),
     ));
 
-    final currentLineups = _lineupIDMap.values.toSet();
-    // Lineups that were added or modified.
-    final updatedLineups = lineups.difference(currentLineups);
+    final currentDetails = idMap.values.toSet();
+    // Details that were added or modified.
+    final updatedDetails = details.difference(currentDetails);
 
-    final currentLineupIDs = _lineupIDMap.keys.toSet();
-    final lineupIDs = lineupData.keys.toSet();
-    final removedLineupIDs = currentLineupIDs.difference(lineupIDs);
+    final currentDetailIDs = idMap.keys.toSet();
+    final detailIDs = detailData.keys.toSet();
+    final removedDetailIDs = currentDetailIDs.difference(detailIDs);
 
-    for (Lineup lineup in updatedLineups) {
-      _lineupIDMap[lineup.id] = lineup;
+    for (T detail in updatedDetails) {
+      idMap[detail.id] = detail;
     }
-    for (String id in removedLineupIDs) {
-      _lineupIDMap.remove(id);
+    for (String id in removedDetailIDs) {
+      idMap.remove(id);
     }
 
     notify();

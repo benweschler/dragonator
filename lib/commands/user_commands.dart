@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dragonator/data/app_user.dart';
+import 'package:dragonator/data/user/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> createUserCommand({

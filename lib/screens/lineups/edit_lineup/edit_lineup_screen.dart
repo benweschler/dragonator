@@ -1,5 +1,5 @@
-import 'package:dragonator/data/lineup.dart';
-import 'package:dragonator/data/paddler.dart';
+import 'package:dragonator/data/lineup/lineup.dart';
+import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';

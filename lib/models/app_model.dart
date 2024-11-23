@@ -1,4 +1,4 @@
-import 'package:dragonator/data/app_user.dart';
+import 'package:dragonator/data/user/app_user.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';

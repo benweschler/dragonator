@@ -1,5 +1,5 @@
-import 'package:dragonator/data/app_user.dart';
-import 'package:dragonator/data/team.dart';
+import 'package:dragonator/data/user/app_user.dart';
+import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';

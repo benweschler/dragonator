@@ -1,4 +1,4 @@
-import 'package:dragonator/data/paddler.dart';
+import 'package:dragonator/data/paddler/paddler.dart';
 
 abstract class PaddlerSort {
   static const sortingStrategyLabels = {

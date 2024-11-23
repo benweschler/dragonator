@@ -1,4 +1,4 @@
-import 'package:dragonator/data/lineup.dart';
+import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/single_field_form_screen.dart';
 import 'package:flutter/material.dart';

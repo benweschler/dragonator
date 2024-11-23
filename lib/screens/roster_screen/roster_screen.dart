@@ -1,4 +1,4 @@
-import 'package:dragonator/data/paddler.dart';
+import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/roster_screen/sorting_options_menu.dart';
