@@ -54,15 +54,12 @@ class LineupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rosterModel = context.read<RosterModel>();
+    final rosterModel = context.watch<RosterModel>();
     final lineup = rosterModel.getLineup(lineupID)!;
 
     //TODO: standardize
-    late final List<Paddler?> paddlerList = [
-      ...lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)),
-      //TODO: 22 magic number
-      for (int i = lineup.paddlerIDs.length; i < 22; i++) null,
-    ];
+    final List<Paddler?> paddlerList =
+        lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
 
     return CustomScaffold(
       addScreenInset: false,

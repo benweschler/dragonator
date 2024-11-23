@@ -48,10 +48,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     final rosterModel = context.read<RosterModel>();
     _lineup = rosterModel.getLineup(widget.lineupID)!;
-    _paddlerList = [
-      ..._lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)),
-      for (int i = _lineup.paddlerIDs.length; i < kBoatCapacity; i++) null,
-    ];
+    _paddlerList =
+        _lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
   }
 
   Widget _itemBuilder(BuildContext context, int index) {

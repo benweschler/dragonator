@@ -12,6 +12,6 @@ Future<void> _setPaddlerCommand(Paddler paddler, String teamID) async {
       .set({paddler.id: paddler.toFirestore()}, SetOptions(merge: true));
 }
 
-Future<void> _deletePaddlerCommand(String teamID, String paddlerID) async {
+Future<void> _deletePaddlerCommand(String paddlerID, String teamID,) async {
   await _getPaddlersDoc(teamID).update({paddlerID: FieldValue.delete()});
 }
