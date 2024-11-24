@@ -79,7 +79,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor = AppColors.of(context).responsiveOverlayColor;
+    final overlayColor = AppColors.of(context).responsiveOverlay;
 
     return AnimatedBuilder(
       animation: _controller,

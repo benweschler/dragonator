@@ -176,7 +176,7 @@ class _NavigationBarButtonState extends State<NavigationBarButton>
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.of(context).tabHighlightColor,
+          color: AppColors.of(context).tabHighlight,
         ),
       ),
     );

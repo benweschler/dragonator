@@ -165,8 +165,7 @@ class _EmptyPaddlerTile extends StatelessWidget {
       padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
         color: Color.alphaBlend(
-          //TODO: should be primary surface
-          AppColors.of(context).errorSurface,
+          AppColors.of(context).primarySurface,
           AppColors.of(context).background,
         ),
         borderRadius: Corners.smBorderRadius,

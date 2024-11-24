@@ -35,7 +35,7 @@ class AddPaddlerTile extends StatelessWidget {
         padding: const EdgeInsets.all(7),
         decoration: BoxDecoration(
           color: Color.alphaBlend(
-            AppColors.of(context).errorSurface,
+            AppColors.of(context).primarySurface,
             AppColors.of(context).background,
           ),
           borderRadius: Corners.smBorderRadius,
