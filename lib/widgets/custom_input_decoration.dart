@@ -32,8 +32,7 @@ class CustomInputDecoration extends InputDecoration {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
-              //TODO: change to use text color
-              color: colors.primaryContainer,
+              color: colors.outline,
             ),
             borderRadius: Corners.medBorderRadius,
           ),

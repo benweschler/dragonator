@@ -22,7 +22,7 @@ class ModalSheet extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(Insets.sm),
               decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
                 borderRadius: Corners.medBorderRadius,
               ),
               child: child,

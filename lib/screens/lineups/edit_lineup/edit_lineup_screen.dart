@@ -175,7 +175,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         child: Text(
           'Options',
           style: TextStyles.title1.copyWith(
-            color: AppColors.of(context).onPrimaryContainer,
+            color: AppColors.of(context).onButtonContainer,
           ),
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(

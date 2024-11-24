@@ -91,7 +91,7 @@ class StatSelectorTable extends StatelessWidget {
         splashColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
-        canvasColor: Theme.of(context).scaffoldBackgroundColor,
+        canvasColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       ),
       child: FormBuilderDropdown<AgeGroup>(
         name: EditPaddlerFieldNames.ageGroup,

@@ -28,7 +28,7 @@ class CustomFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentColor = AppColors.of(context).onPrimaryContainer;
+    final contentColor = AppColors.of(context).onButtonContainer;
 
     return DefaultTextStyle.merge(
       style: TextStyle(color: contentColor),
@@ -51,7 +51,7 @@ class CustomFAB extends StatelessWidget {
                     : const StadiumBorder(),
                 color: Color.alphaBlend(
                   overlay,
-                  AppColors.of(context).primaryContainer,
+                  AppColors.of(context).buttonContainer,
                 ),
               ),
               child: child,

@@ -14,10 +14,12 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color largeSurface;
   final Color errorSurface;
   final Color neutralContent;
-  final Color primaryContainer;
-  final Color onPrimaryContainer;
+  final Color buttonContainer;
+  final Color onButtonContainer;
   final Color tabHighlightColor;
   final Color responsiveOverlayColor;
+  final Color outline;
+  final Color outlineVariant;
   final bool isDark;
 
   const AppColors._({
@@ -28,10 +30,12 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.largeSurface,
     required this.errorSurface,
     required this.neutralContent,
-    required this.primaryContainer,
-    required this.onPrimaryContainer,
+    required this.buttonContainer,
+    required this.onButtonContainer,
     required this.tabHighlightColor,
     required this.responsiveOverlayColor,
+    required this.outline,
+    required this.outlineVariant,
     required this.isDark,
   });
 
@@ -40,33 +44,39 @@ class AppColors extends ThemeExtension<AppColors> {
       case ThemeType.light:
         return AppColors._(
           primary: _primaryRed,
-          // The default M3 light on/background color.
+          // The default M3 light on/surface color.
           background: Color(0xFFFEF7FF),
           onBackground: Color(0xFF1D1B20),
           smallSurface: Colors.black.withOpacity(0.07),
           largeSurface: Colors.black.withOpacity(0.04),
           errorSurface: _primaryRed.withOpacity(0.25),
           neutralContent: Colors.black.withOpacity(0.5),
-          primaryContainer: Colors.black,
-          onPrimaryContainer: Colors.white,
-          tabHighlightColor: _primaryRed.withOpacity(0.2),
+          buttonContainer: Colors.black,
+          onButtonContainer: Colors.white,
+          tabHighlightColor: _primaryRed.withOpacity(0.4),
           responsiveOverlayColor: Colors.white.withOpacity(0.5),
+          outline: Color(0xFF79747E),
+          outlineVariant: Color(0xFFCAC4D0),
           isDark: false,
         );
       case ThemeType.dark:
         return AppColors._(
           primary: _primaryRed,
-          // The default M3 dark on/background color.
+          //TODO: maybe alpha blend surfaces here rather than in UI
+          // The default M3 dark on/surface color.
           background: Color(0xFF141218),
           onBackground: Color(0xFFE6E0E9),
           smallSurface: Colors.white.withOpacity(0.07),
           largeSurface: Colors.white.withOpacity(0.04),
-          errorSurface: _primaryRed.withOpacity(0.25),
+          errorSurface: _primaryRed.withOpacity(0.35),
           neutralContent: Colors.white.withOpacity(0.5),
-          primaryContainer: Colors.white,
-          onPrimaryContainer: Colors.black,
-          tabHighlightColor: _primaryRed.withOpacity(0.5),
+          buttonContainer: Colors.white,
+          onButtonContainer: Colors.black,
+          // Meets 3:1 contrast on background.
+          tabHighlightColor: _primaryRed.withOpacity(0.68),
           responsiveOverlayColor: Colors.black.withOpacity(0.5),
+          outline: Color(0xFF938F99),
+          outlineVariant: Color(0xFF49454F),
           isDark: true,
         );
     }
@@ -83,7 +93,13 @@ class AppColors extends ThemeExtension<AppColors> {
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
     return themeData.copyWith(
-      colorScheme: themeData.colorScheme.copyWith(primary: primary),
+      colorScheme: themeData.colorScheme.copyWith(
+        primary: primary,
+        surface: background,
+        onSurface: onBackground,
+        outline: outline,
+        outlineVariant: outlineVariant,
+      ),
     );
   }
 
@@ -99,10 +115,12 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? largeSurface,
     Color? errorSurface,
     Color? neutralContent,
-    Color? primaryContainer,
-    Color? onPrimaryContainer,
+    Color? buttonContainer,
+    Color? onButtonContainer,
     Color? tabHighlightColor,
     Color? responsiveOverlayColor,
+    Color? outline,
+    Color? outlineVariant,
     bool? isDark,
   }) {
     return AppColors._(
@@ -113,11 +131,13 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: largeSurface ?? this.largeSurface,
       errorSurface: errorSurface ?? this.errorSurface,
       neutralContent: neutralContent ?? this.neutralContent,
-      primaryContainer: primaryContainer ?? this.primaryContainer,
-      onPrimaryContainer: onPrimaryContainer ?? this.onPrimaryContainer,
+      buttonContainer: buttonContainer ?? this.buttonContainer,
+      onButtonContainer: onButtonContainer ?? this.onButtonContainer,
       tabHighlightColor: tabHighlightColor ?? this.tabHighlightColor,
       responsiveOverlayColor:
           responsiveOverlayColor ?? this.responsiveOverlayColor,
+      outline: outline ?? this.outline,
+      outlineVariant: outlineVariant ?? this.outlineVariant,
       isDark: isDark ?? this.isDark,
     );
   }
@@ -134,14 +154,15 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       errorSurface: Color.lerp(errorSurface, other.errorSurface, t)!,
       neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
-      primaryContainer:
-          Color.lerp(primaryContainer, other.primaryContainer, t)!,
-      onPrimaryContainer:
-          Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
+      buttonContainer: Color.lerp(buttonContainer, other.buttonContainer, t)!,
+      onButtonContainer:
+          Color.lerp(onButtonContainer, other.onButtonContainer, t)!,
       tabHighlightColor:
           Color.lerp(tabHighlightColor, other.tabHighlightColor, t)!,
       responsiveOverlayColor:
           Color.lerp(responsiveOverlayColor, other.responsiveOverlayColor, t)!,
+      outline: Color.lerp(outline, other.outline, t)!,
+      outlineVariant: Color.lerp(outlineVariant, other.outlineVariant, t)!,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }

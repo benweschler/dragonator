@@ -80,7 +80,7 @@ class _PaddlerOptionsButton extends StatelessWidget {
           ),
           color: Color.alphaBlend(
             AppColors.of(context).smallSurface,
-            Theme.of(context).scaffoldBackgroundColor,
+            AppColors.of(context).background,
           ),
         ),
         child: Icon(

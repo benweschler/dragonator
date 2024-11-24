@@ -43,8 +43,8 @@ class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
           widget.onFiltered(option);
         }),
       )),
-      fillColor: isActive ? AppColors.of(context).primaryContainer : null,
-      contentColor: isActive ? AppColors.of(context).onPrimaryContainer : null,
+      fillColor: isActive ? AppColors.of(context).buttonContainer : null,
+      contentColor: isActive ? AppColors.of(context).onButtonContainer : null,
       child: Row(
         children: [
           Text(

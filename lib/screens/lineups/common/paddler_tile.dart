@@ -24,10 +24,7 @@ class PaddlerTile extends StatelessWidget {
       ),
       child: Text(
         '${paddler.firstName} ${paddler.lastName}',
-        style: TextStyles.body1.copyWith(
-          //TODO: hard to see?
-          color: AppColors.of(context).onBackground,
-        ),
+        style: TextStyles.body1,
         textAlign: TextAlign.center,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,

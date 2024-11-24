@@ -143,7 +143,7 @@ class _ThemeWindow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Insets.sm),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: appColors.background,
         borderRadius: Corners.medBorderRadius,
       ),
       child: Column(
