@@ -18,3 +18,11 @@ DocumentReference<Map<String, dynamic>> _getLineupsDoc(String teamID) {
       .collection('details')
       .doc('lineups');
 }
+
+DocumentReference<Map<String, dynamic>> _getBoatsDoc(String teamID) {
+  return FirebaseFirestore.instance
+      .collection('teams')
+      .doc(teamID)
+      .collection('details')
+      .doc('boats');
+}
