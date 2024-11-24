@@ -1,14 +1,48 @@
 import 'dart:math' as math;
 
-import 'package:flutter/rendering.dart';
+import 'package:dragonator/styles/theme.dart';
+import 'package:flutter/widgets.dart';
 
-class BoatSegmentPainter extends CustomPainter {
+import 'constants.dart';
+
+Widget boatSegmentBuilder(BuildContext context, int index) {
+  final CustomPainter painter;
+  const maxBowIndex = kBoatEndExtent - 1;
+  if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
+    return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
+  } else if (maxBowIndex < index &&
+      index < kBoatCapacity ~/ 2 - maxBowIndex) {
+    painter = _BoatSegmentPainter(
+      rowNumber: index,
+      outlineColor: AppColors.of(context).onBackground,
+      fillColor: AppColors.of(context).largeSurface,
+      segmentHeight: kGridRowHeight,
+    );
+  } else {
+    painter = _BoatEndPainter(
+      outlineColor: AppColors.of(context).onBackground,
+      fillColor: AppColors.of(context).largeSurface,
+      segmentHeight: kGridRowHeight,
+      isBow: index == maxBowIndex,
+      boatEndExtent: kBoatEndExtent,
+      boatCapacity: kBoatCapacity,
+    );
+  }
+
+  return SizedBox(
+    width: double.infinity,
+    height: kGridRowHeight,
+    child: CustomPaint(painter: painter),
+  );
+}
+
+class _BoatSegmentPainter extends CustomPainter {
   final int rowNumber;
   final Color outlineColor;
   final Color fillColor;
   final double segmentHeight;
 
-  const BoatSegmentPainter({
+  const _BoatSegmentPainter({
     required this.rowNumber,
     required this.outlineColor,
     required this.fillColor,
@@ -52,10 +86,10 @@ class BoatSegmentPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BoatSegmentPainter oldDelegate) => false;
+  bool shouldRepaint(_BoatSegmentPainter oldDelegate) => false;
 }
 
-class BoatEndPainter extends CustomPainter {
+class _BoatEndPainter extends CustomPainter {
   final Color outlineColor;
   final Color fillColor;
   final double segmentHeight;
@@ -63,7 +97,7 @@ class BoatEndPainter extends CustomPainter {
   final int boatEndExtent;
   final int boatCapacity;
 
-  const BoatEndPainter({
+  const _BoatEndPainter({
     required this.outlineColor,
     required this.fillColor,
     required this.segmentHeight,
@@ -189,7 +223,7 @@ class BoatEndPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BoatEndPainter oldDelegate) => false;
+  bool shouldRepaint(_BoatEndPainter oldDelegate) => false;
 }
 
 TextPainter _getRowTextPainter(String label, Color color) {

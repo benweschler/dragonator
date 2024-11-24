@@ -3,7 +3,6 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
-import 'package:dragonator/screens/lineups/edit_lineup/boat_painters.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
@@ -15,48 +14,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'common/boat_segment_builder.dart';
+
 class LineupScreen extends StatelessWidget {
   final String lineupID;
 
   const LineupScreen({super.key, required this.lineupID});
-
-  Widget _rowBuilder(BuildContext context, int index) {
-    final CustomPainter painter;
-    const maxBowIndex = kBoatEndExtent - 1;
-    if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
-      return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
-    } else if (maxBowIndex < index &&
-        index < kBoatCapacity ~/ 2 - maxBowIndex) {
-      painter = BoatSegmentPainter(
-        rowNumber: index,
-        outlineColor: AppColors.of(context).onBackground,
-        fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: kGridRowHeight,
-      );
-    } else {
-      painter = BoatEndPainter(
-        outlineColor: AppColors.of(context).onBackground,
-        fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: kGridRowHeight,
-        isBow: index == maxBowIndex,
-        boatEndExtent: kBoatEndExtent,
-        boatCapacity: kBoatCapacity,
-      );
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      height: kGridRowHeight,
-      child: CustomPaint(painter: painter),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final rosterModel = context.watch<RosterModel>();
     final lineup = rosterModel.getLineup(lineupID)!;
 
-    //TODO: standardize
     final List<Paddler?> paddlerList =
         lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
 
@@ -94,7 +63,7 @@ class LineupScreen extends StatelessWidget {
                 Column(
                   children: [
                     for (int i = 0; i < kBoatCapacity / 2 + 1; i++)
-                      _rowBuilder(context, i),
+                      boatSegmentBuilder(context, i),
                   ],
                 ),
                 CustomMultiChildLayout(

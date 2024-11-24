@@ -1,6 +1,7 @@
 import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/screens/lineups/common/boat_segment_builder.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal_sheet.dart';
@@ -17,7 +18,6 @@ import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'boat_painters.dart';
 import 'com_overlay.dart';
 
 // Weight of boat in pounds.
@@ -73,38 +73,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         if (paddler == null) return;
         setState(() => _paddlerList[index] = paddler);
       },
-    );
-  }
-
-  Widget _rowBuilder(BuildContext context, int index) {
-    final CustomPainter painter;
-    const maxBowIndex = kBoatEndExtent - 1;
-    //TODO: combine with row builder on lineup screen
-    if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
-      return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
-    } else if (maxBowIndex < index &&
-        index < kBoatCapacity ~/ 2 - maxBowIndex) {
-      painter = BoatSegmentPainter(
-        rowNumber: index,
-        outlineColor: AppColors.of(context).onBackground,
-        fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: kGridRowHeight,
-      );
-    } else {
-      painter = BoatEndPainter(
-        outlineColor: AppColors.of(context).onBackground,
-        fillColor: AppColors.of(context).largeSurface,
-        segmentHeight: kGridRowHeight,
-        isBow: index == maxBowIndex,
-        boatEndExtent: kBoatEndExtent,
-        boatCapacity: kBoatCapacity,
-      );
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      height: kGridRowHeight,
-      child: CustomPaint(painter: painter),
     );
   }
 
@@ -187,7 +155,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         buildDefaultDragDetectors: false,
         itemBuilder: _itemBuilder,
         rowHeight: kGridRowHeight,
-        rowBuilder: _rowBuilder,
+        rowBuilder: boatSegmentBuilder,
         header: const SizedBox(height: headerPadding),
         footer: SizedBox(height: footerPadding),
         overlay: Selector<SettingsModel, bool>(
