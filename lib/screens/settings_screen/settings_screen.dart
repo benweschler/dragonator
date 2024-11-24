@@ -220,6 +220,7 @@ class _TeamTile extends StatelessWidget {
           icon: Icons.delete_rounded,
           onTap: () {},
           label: 'Delete',
+          isDestructiveAction: true,
         ),
       ])),
       child: Row(

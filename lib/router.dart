@@ -199,6 +199,7 @@ class AppRouter {
         path != RoutePaths.forgotPassword) {
       //TODO: this should probably be put somewhere else.
       context.read<RosterModel>().clear();
+      context.read<SettingsModel>().clear();
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isAppInitialized && path != RoutePaths.splash) {

@@ -11,6 +11,7 @@ class SettingsModel extends Notifier {
   bool _isInitialized = false;
 
   Future<void> initialize() async {
+    if(_isInitialized) return;
     _sharedPreferences = await SharedPreferencesWithCache.create(
       cacheOptions: SharedPreferencesWithCacheOptions(
         allowList: {'theme', 'show-com-overlay'},
@@ -18,6 +19,11 @@ class SettingsModel extends Notifier {
     );
     _isInitialized = true;
     notify();
+  }
+
+  void clear() {
+    if(_isInitialized) _sharedPreferences.clear();
+    _isInitialized = false;
   }
 
   /// The active theme for the app.

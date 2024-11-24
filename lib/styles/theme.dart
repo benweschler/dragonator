@@ -13,6 +13,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color smallSurface;
   final Color largeSurface;
   final Color primarySurface;
+  final Color error;
   final Color errorSurface;
   final Color neutralContent;
   final Color buttonContainer;
@@ -30,6 +31,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.smallSurface,
     required this.largeSurface,
     required this.primarySurface,
+    required this.error,
     required this.errorSurface,
     required this.neutralContent,
     required this.buttonContainer,
@@ -52,7 +54,8 @@ class AppColors extends ThemeExtension<AppColors> {
           smallSurface: Colors.black.withOpacity(0.07),
           largeSurface: Colors.black.withOpacity(0.04),
           primarySurface: _primaryRed.withOpacity(0.1),
-          errorSurface: _primaryRed.withOpacity(0.25),
+          error: Color(0xFFB3261E),
+          errorSurface: Color(0xFFeb3026).withOpacity(0.25),
           neutralContent: Colors.black.withOpacity(0.5),
           buttonContainer: Colors.black,
           onButtonContainer: Colors.white,
@@ -71,6 +74,7 @@ class AppColors extends ThemeExtension<AppColors> {
           smallSurface: Colors.white.withOpacity(0.07),
           largeSurface: Colors.white.withOpacity(0.04),
           primarySurface: _primaryRed.withOpacity(0.1),
+          error: Color(0xFFF54D47),
           errorSurface: _primaryRed.withOpacity(0.35),
           neutralContent: Colors.white.withOpacity(0.5),
           buttonContainer: Colors.white,
@@ -117,6 +121,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? smallSurface,
     Color? largeSurface,
     Color? primarySurface,
+    Color? error,
     Color? errorSurface,
     Color? neutralContent,
     Color? buttonContainer,
@@ -134,6 +139,7 @@ class AppColors extends ThemeExtension<AppColors> {
       smallSurface: smallSurface ?? this.smallSurface,
       largeSurface: largeSurface ?? this.largeSurface,
       primarySurface: primarySurface ?? this.primarySurface,
+      error: error ?? this.error,
       errorSurface: errorSurface ?? this.errorSurface,
       neutralContent: neutralContent ?? this.neutralContent,
       buttonContainer: buttonContainer ?? this.buttonContainer,
@@ -157,6 +163,7 @@ class AppColors extends ThemeExtension<AppColors> {
       smallSurface: Color.lerp(smallSurface, other.smallSurface, t)!,
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       primarySurface: Color.lerp(primarySurface, other.primarySurface, t)!,
+      error: Color.lerp(error, other.error, t)!,
       errorSurface: Color.lerp(errorSurface, other.errorSurface, t)!,
       neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
       buttonContainer: Color.lerp(buttonContainer, other.buttonContainer, t)!,

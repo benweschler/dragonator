@@ -42,6 +42,7 @@ class LabeledTable extends StatelessWidget {
       ),
       const SizedBox(height: Insets.xs),
       Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: row.stats
             .map(_wrapElement)
             .separate(const SizedBox(width: Insets.med))

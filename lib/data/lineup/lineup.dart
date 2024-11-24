@@ -5,8 +5,6 @@ part 'lineup.freezed.dart';
 
 part 'lineup.g.dart';
 
-// Define equality only based on id using Equatable. This means that two Lineups
-// are equal if their ids are equal.
 @Freezed(equal: false)
 class Lineup extends Equatable with _$Lineup {
   const Lineup._();

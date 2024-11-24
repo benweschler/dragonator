@@ -13,6 +13,7 @@ class CustomInputDecoration extends InputDecoration {
   }) : super(
           filled: true,
           fillColor: colors.largeSurface,
+          //TODO: not used when no error text?
           errorStyle: TextStyles.caption.copyWith(
             color: colors.primary,
             fontWeight: FontWeight.w500,
@@ -37,11 +38,11 @@ class CustomInputDecoration extends InputDecoration {
             borderRadius: Corners.medBorderRadius,
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: colors.primary),
+            borderSide: BorderSide(width: 1, color: colors.error),
             borderRadius: Corners.medBorderRadius,
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2, color: colors.primary),
+            borderSide: BorderSide(width: 2, color: colors.error),
             borderRadius: Corners.medBorderRadius,
           ),
         );
