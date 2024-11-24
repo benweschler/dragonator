@@ -155,12 +155,11 @@ class AppRouter {
                         // TODO: navigating to paddler details goes to roster screen.
                         AppRoute(
                           path: 'add-paddler',
-                          pageBuilder: (state) => FadeTransitionPage(
-                            child: AddPaddlerToLineupScreen(
-                              editedLineupPaddlers:
-                                  (state.extra as Map)['editedLineupPaddlers'],
-                              addPaddler: (state.extra as Map)['addPaddler'],
-                            ),
+                          parentNavigatorKey: _rootNavigatorKey,
+                          builder: (state) => AddPaddlerToLineupScreen(
+                            editedLineupPaddlers:
+                                (state.extra as Map)['editedLineupPaddlers'],
+                            addPaddler: (state.extra as Map)['addPaddler'],
                           ),
                         ),
                       ],

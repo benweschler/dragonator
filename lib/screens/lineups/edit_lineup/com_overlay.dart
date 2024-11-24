@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 
 class COMOverlay extends ImplicitlyAnimatedWidget {
   final Offset com;
-  final double headerInset;
-  final double footerInset;
+  final double topInset;
+  final double bottomInset;
+  final double leftAlignment;
+  final double rightAlignment;
 
   const COMOverlay({
     super.key,
     required super.duration,
     required this.com,
-    this.headerInset = 0,
-    this.footerInset = 0,
+    this.topInset = 0,
+    this.bottomInset = 0,
+    this.leftAlignment = 0,
+    this.rightAlignment = 1,
   }) : super(curve: Curves.easeOutQuad);
 
   @override
@@ -51,8 +55,10 @@ class _COMOverlayState extends ImplicitlyAnimatedWidgetState<COMOverlay> {
             com: _comAnimation.value,
             scrollOffset: position.pixels,
             color: AppColors.of(context).onBackground,
-            headerInset: widget.headerInset,
-            footerInset: widget.footerInset,
+            topInset: widget.topInset,
+            bottomInset: widget.bottomInset,
+            leftAlignment: widget.leftAlignment,
+            rightAlignment: widget.rightAlignment,
           ),
         );
       },
@@ -64,21 +70,26 @@ class _COMPainter extends CustomPainter {
   final Offset com;
   final double scrollOffset;
   final Color color;
-  final double headerInset;
-  final double footerInset;
+  final double topInset;
+  final double bottomInset;
+  final double leftAlignment;
+  final double rightAlignment;
 
   const _COMPainter({
     required this.com,
     required this.scrollOffset,
     required this.color,
-    required this.headerInset,
-    required this.footerInset,
+    required this.topInset,
+    required this.bottomInset,
+    required this.leftAlignment,
+    required this.rightAlignment,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final x = size.width * com.dx;
-    final y = (size.height - headerInset - footerInset) * com.dy + headerInset;
+    final x = size.width * leftAlignment +
+        (size.width * (rightAlignment - leftAlignment)) * com.dx;
+    final y = (size.height - topInset - bottomInset) * com.dy + topInset;
 
     final paint = Paint()
       ..color = color
@@ -103,9 +114,7 @@ class _COMPainter extends CustomPainter {
     final textPadding = 5.0;
     getTextPainter(String text) => TextPainter(
           text: TextSpan(
-            text: text,
-            style: TextStyles.body2.copyWith(color: color)
-          ),
+              text: text, style: TextStyles.body2.copyWith(color: color)),
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );

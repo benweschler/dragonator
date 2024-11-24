@@ -110,9 +110,12 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   }
 
   Offset _calculateCOM() {
-    const relativeLeftPos = 0.25;
-    const relativeRightPos = 0.75;
+    // The relative positions of the paddlers from the left edge of the boat.
+    const relativeLeftXPos = 0;
+    const relativeRightXPos = 1;
     final int numRows = (kBoatCapacity / 2).ceil() + 1;
+    // The paddler is in the middle of its row, so count all rows up to this row
+    // plus the first half of this row.
     double relativeYPos(int row) => (0.5 + row) / numRows;
 
     //The boat's COM is assumed to be at its center.
@@ -123,32 +126,23 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     // The total mass on the boat; boat weight + paddler weight.
     double total = _kBoatWeight;
 
-    for (int i = 1; i < kBoatCapacity - 1; i++) {
+    for (int i = 0; i < kBoatCapacity; i++) {
       final paddler = _paddlerList[i];
       if (paddler == null) continue;
 
+      // The drummer and steers person sit along the midline of the boat.
+      if (i == 0 || i == kBoatCapacity - 1) {
+        xWeighted += paddler.weight * 0.5;
+      }
       // Even indices are on the right, and odd indices are on the left.
-      if (i % 2 == 0) {
-        xWeighted += paddler.weight * relativeRightPos;
+      else if (i % 2 == 0) {
+        xWeighted += paddler.weight * relativeRightXPos;
       } else {
-        xWeighted += paddler.weight * relativeLeftPos;
+        xWeighted += paddler.weight * relativeLeftXPos;
       }
 
       yWeighted += paddler.weight * relativeYPos((i / 2).ceil());
       total += paddler.weight;
-    }
-
-    if (_paddlerList.first != null) {
-      // Add the drummer.
-      total += _paddlerList.first!.weight;
-      yWeighted += _paddlerList.first!.weight * relativeYPos(0);
-      xWeighted += _paddlerList.first!.weight * 0.5;
-    }
-    if (_paddlerList.last != null) {
-      // Add the steers person.
-      total += _paddlerList.last!.weight;
-      yWeighted += _paddlerList.last!.weight * relativeYPos(numRows - 1);
-      xWeighted += _paddlerList.last!.weight * 0.5;
     }
 
     return Offset(xWeighted / total, yWeighted / total);
@@ -157,7 +151,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   @override
   Widget build(BuildContext context) {
     const headerPadding = Insets.med;
-    const footerPadding = Insets.med;
+    final footerPadding =
+        Insets.med + MediaQuery.of(context).viewPadding.bottom;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -198,9 +193,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         rowHeight: kGridRowHeight,
         rowBuilder: _rowBuilder,
         header: const SizedBox(height: headerPadding),
-        footer: SizedBox(
-          height: footerPadding + MediaQuery.of(context).viewPadding.bottom,
-        ),
+        footer: SizedBox(height: footerPadding),
         overlay: ValueListenableBuilder(
           valueListenable: _comVisibility,
           builder: (_, visible, child) => Visibility(
@@ -210,8 +203,10 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           child: COMOverlay(
             duration: const Duration(milliseconds: 250),
             com: _calculateCOM(),
-            headerInset: headerPadding,
-            footerInset: footerPadding,
+            topInset: headerPadding,
+            bottomInset: footerPadding,
+            leftAlignment: 0.25,
+            rightAlignment: 0.75,
           ),
         ),
         keyBuilder: (index) => ValueKey(index),
