@@ -1,4 +1,4 @@
-import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
@@ -13,7 +13,6 @@ class ChangeThemeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = context.read<AppModel>();
     final String label;
     final Widget themeWindow;
 
@@ -52,59 +51,62 @@ class ChangeThemeButton extends StatelessWidget {
         break;
     }
 
-    return ResponsiveButton.large(
-      onTap: () => appModel.themeMode = themeMode,
-      builder: (overlay) => AspectRatio(
-        aspectRatio: 0.65,
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: Corners.lgBorderRadius,
-                color: AppColors.of(context).largeSurface,
-                border: Border.all(
-                  color: appModel.themeMode == themeMode
-                      ? AppColors.of(context).primary
-                      : Colors.transparent,
+    return Selector<SettingsModel, ThemeMode>(
+      selector: (_, model) => model.themeMode,
+      builder: (_, currentThemeMode, child) => ResponsiveButton.large(
+        onTap: () => context.read<SettingsModel>().setThemeMode(themeMode),
+        builder: (overlay) => AspectRatio(
+          aspectRatio: 0.65,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.lgBorderRadius,
+                  color: AppColors.of(context).largeSurface,
+                  border: Border.all(
+                    color: currentThemeMode == themeMode
+                        ? AppColors.of(context).primary
+                        : Colors.transparent,
+                  ),
+                ),
+                child: child,
+              ),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: overlay,
+                    borderRadius: Corners.lgBorderRadius,
+                  ),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(Insets.lg),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: Corners.medBorderRadius,
-                          border: Border.all(
-                            color: AppColors.of(context).smallSurface,
-                            width: 2,
-                          ),
-                        ),
-                        child: Material(
-                          elevation: 8,
-                          borderRadius: Corners.medBorderRadius,
-                          child: themeWindow,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: Insets.lg),
-                    Text(
-                      label,
-                      style: TextStyles.body1
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
+            ],
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(Insets.lg),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.medBorderRadius,
+                  border: Border.all(
+                    color: AppColors.of(context).smallSurface,
+                    width: 2,
+                  ),
+                ),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: Corners.medBorderRadius,
+                  child: themeWindow,
                 ),
               ),
             ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: overlay,
-                  borderRadius: Corners.lgBorderRadius,
-                ),
-              ),
+            const SizedBox(height: Insets.lg),
+            Text(
+              label,
+              style: TextStyles.body1.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
         ),

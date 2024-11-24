@@ -1,8 +1,7 @@
+import 'package:dragonator/commands/user_commands.dart';
 import 'package:dragonator/data/user/app_user.dart';
-import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart' show ThemeMode;
 
 class AppModel extends Notifier {
   final Notifier routerRefreshNotifier = Notifier();
@@ -11,45 +10,33 @@ class AppModel extends Notifier {
     FirebaseAuth.instance.authStateChanges().listen((authUser) {
       _isLoggedIn = authUser != null;
       if (_user != null && authUser == null) {
-        _isInitialized = false;
+        _isAppInitialized = false;
         _user = null;
       }
       routerRefreshNotifier.notify();
     });
   }
 
+  //TODO: user and app management should be move to auth state changes?
+  Future<void> loadUser() async {
+    _user = await getUserCommand(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   /// Whether a user is logged into the app.
   bool _isLoggedIn = false;
 
   /// Whether the app has been initialized with user data.
-  bool _isInitialized = false;
-
-  /// The active theme for the app.
-  ThemeMode _themeMode = ThemeMode.light;
-
-  ThemeMode get themeMode => _themeMode;
-
-  set themeMode(themeMode) => notify(() => _themeMode = themeMode);
-
-  ThemeType get lightThemeType {
-    if (themeMode == ThemeMode.dark) return ThemeType.dark;
-    return ThemeType.light;
-  }
-
-  ThemeType get darkThemeType {
-    if (themeMode == ThemeMode.light) return ThemeType.light;
-    return ThemeType.dark;
-  }
+  bool _isAppInitialized = false;
 
   /// The user that is currently signed in.
   AppUser? _user;
 
   bool get isLoggedIn => _isLoggedIn;
 
-  bool get isInitialized => _isInitialized;
+  bool get isAppInitialized => _isAppInitialized;
 
-  set isInitialized(bool value) {
-    _isInitialized = value;
+  set isAppInitialized(bool value) {
+    _isAppInitialized = value;
     routerRefreshNotifier.notify();
   }
 

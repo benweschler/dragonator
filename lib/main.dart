@@ -1,6 +1,7 @@
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/models/settings_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,13 +19,14 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final appModel = AppModel();
-
   final rosterModel = RosterModel();
+  final settingsModel = SettingsModel();
 
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: rosterModel),
       ChangeNotifierProvider.value(value: appModel),
+      ChangeNotifierProvider.value(value: settingsModel),
     ],
     child: DragonatorApp(AppRouter(appModel).router),
   ));
@@ -45,10 +47,14 @@ class DragonatorApp extends StatelessWidget {
         title: 'Dragonator',
         debugShowCheckedModeBanner: false,
         theme: AppColors.fromType(
-          context.select<AppModel, ThemeType>((model) => model.lightThemeType),
+          context.select<SettingsModel, ThemeType>(
+            (model) => model.lightThemeType,
+          ),
         ).toThemeData(),
         darkTheme: AppColors.fromType(
-          context.select<AppModel, ThemeType>((model) => model.darkThemeType),
+          context.select<SettingsModel, ThemeType>(
+            (model) => model.darkThemeType,
+          ),
         ).toThemeData(),
         routerConfig: router,
       ),
@@ -57,7 +63,9 @@ class DragonatorApp extends StatelessWidget {
 
   /// Whether the app's current theme is dark.
   bool _resolveIsDark(BuildContext context) {
-    switch (context.read<AppModel>().themeMode) {
+    switch (context.select<SettingsModel, ThemeMode>(
+      (model) => model.themeMode,
+    )) {
       case ThemeMode.system:
         return MediaQuery.platformBrightnessOf(context) == Brightness.dark;
       case ThemeMode.light:

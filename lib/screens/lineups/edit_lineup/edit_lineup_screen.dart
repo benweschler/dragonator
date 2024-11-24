@@ -8,6 +8,7 @@ import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -38,8 +39,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   // This is mutable state. The paddler list is updated on reorder through set
   // state.
   late final List<Paddler?> _paddlerList;
-
-  final _comVisibility = ValueNotifier(true);
 
   @override
   void initState() {
@@ -178,11 +177,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(
           com: _calculateCOM(),
-          overlayVisibilityNotifier: _comVisibility,
-          toggleOverlay: (value) => _comVisibility.value = value,
         )),
       ),
-      //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
       body: AnimatedReorderableGrid(
         length: _paddlerList.length,
@@ -194,8 +190,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         rowBuilder: _rowBuilder,
         header: const SizedBox(height: headerPadding),
         footer: SizedBox(height: footerPadding),
-        overlay: ValueListenableBuilder(
-          valueListenable: _comVisibility,
+        overlay: Selector<SettingsModel, bool>(
+          selector: (_, model) => model.showComOverlay,
           builder: (_, visible, child) => Visibility(
             visible: visible,
             child: child!,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
+import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_to_lineup_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
@@ -200,13 +201,14 @@ class AppRouter {
       context.read<RosterModel>().clear();
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
-      if (!appModel.isInitialized && path != RoutePaths.splash) {
+      if (!appModel.isAppInitialized && path != RoutePaths.splash) {
         Bootstrapper(
           appModel: appModel,
           rosterModel: context.read<RosterModel>(),
+          settingsModel: context.read<SettingsModel>(),
         ).initializeApp();
         return RoutePaths.splash;
-      } else if (appModel.isInitialized && path == RoutePaths.splash) {
+      } else if (appModel.isAppInitialized && path == RoutePaths.splash) {
         return RoutePaths.roster;
       }
     }

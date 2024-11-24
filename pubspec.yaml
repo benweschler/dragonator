@@ -53,6 +53,7 @@ dependencies:
       url: https://github.com/benweschler/animated_reorderable_grid.git
       ref: main
   defer_pointer: ^0.0.2
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

@@ -1,20 +1,18 @@
+import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
 import 'package:dragonator/widgets/platform_aware/platform_aware_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditLineupOptionsModalSheet extends StatelessWidget {
   final Offset com;
-  final ValueNotifier<bool> overlayVisibilityNotifier;
-  final ValueChanged<bool> toggleOverlay;
 
   const EditLineupOptionsModalSheet({
     super.key,
     required this.com,
-    required this.overlayVisibilityNotifier,
-    required this.toggleOverlay,
   });
 
   @override
@@ -47,12 +45,13 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ValueListenableBuilder(
-                      valueListenable: overlayVisibilityNotifier,
-                      builder: (_, value, __) => PlatformAwareSwitch(
-                        onChanged: (value) => toggleOverlay(value),
-                        value: value,
-                      ),
+                    Consumer<SettingsModel>(
+                      builder: (_, model, __) {
+                        return PlatformAwareSwitch(
+                          onChanged: (value) => model.setShowComOverlay(value),
+                          value: model.showComOverlay,
+                        );
+                      }
                     ),
                   ],
                 ),
