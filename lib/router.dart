@@ -142,6 +142,10 @@ class AppRouter {
                   routes: [
                     AppRoute(
                       path: 'edit-lineup/:id',
+                      // Use the root navigator to block any other actions while
+                      // a lineup is being edited. e.g. a lineup should not be
+                      // renamed or paddler changed/deleted during editing.
+                      parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (state) => FadeTransitionPage(
                         child: EditLineupScreen(
                           lineupID: state.pathParameters['id']!,

@@ -54,8 +54,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Future<void> _saveLineup() {
     // TODO: could throw an error if one of these paddlers was deleted. Must check if paddlers are deleted. Maybe also check if lineup was deleted, renamed, i.e. other properties changed.
     return context.read<RosterModel>().setLineup(_lineup.copyWith(
-      paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
-    ));
+          paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
+        ));
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -159,19 +159,20 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     const headerPadding = Insets.med;
     const footerPadding = Insets.med;
 
-    return CustomScaffold(
-      addScreenInset: false,
-      leading: CustomIconButton(
-        onTap: context.pop,
-        icon: Icons.close_rounded,
-      ),
-      center: Text('Edit ${_lineup.name}', style: TextStyles.title1),
-      trailing: CustomIconButton(
-        onTap: () async {
-          await _saveLineup();
-          if(context.mounted) context.pop();
-        },
-        icon: Icons.check_rounded,
+    return Scaffold(
+      appBar: CustomAppBar(
+        leading: CustomIconButton(
+          onTap: context.pop,
+          icon: Icons.close_rounded,
+        ),
+        center: Text('Edit ${_lineup.name}', style: TextStyles.title1),
+        trailing: CustomIconButton(
+          onTap: () async {
+            await _saveLineup();
+            if (context.mounted) context.pop();
+          },
+          icon: Icons.check_rounded,
+        ),
       ),
       floatingActionButton: CustomFAB.extended(
         child: Text(
@@ -188,7 +189,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       ),
       //TODO: add an overlay wrapper inside of the reorderable grid implementation
       //TODO: add clipBehavior to reorderable grid
-      child: AnimatedReorderableGrid(
+      body: AnimatedReorderableGrid(
         length: _paddlerList.length,
         crossAxisCount: 2,
         overriddenRowCounts: const [(0, 1), (kBoatCapacity ~/ 2, 1)],
@@ -197,7 +198,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         rowHeight: kGridRowHeight,
         rowBuilder: _rowBuilder,
         header: const SizedBox(height: headerPadding),
-        footer: const SizedBox(height: footerPadding),
+        footer: SizedBox(
+          height: footerPadding + MediaQuery.of(context).viewPadding.bottom,
+        ),
         overlay: ValueListenableBuilder(
           valueListenable: _comVisibility,
           builder: (_, visible, child) => Visibility(
