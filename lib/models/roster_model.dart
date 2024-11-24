@@ -222,7 +222,8 @@ class RosterModel extends Notifier {
 
   //* LINEUP SETTERS *//
 
-  void setLineup(Lineup lineup) => _setLineupCommand(lineup, _currentTeamID!);
+  Future<void> setLineup(Lineup lineup) =>
+      _setLineupCommand(lineup, _currentTeamID!);
 
   void deleteLineup(String lineupID) =>
       _deleteLineupCommand(lineupID, _currentTeamID!);

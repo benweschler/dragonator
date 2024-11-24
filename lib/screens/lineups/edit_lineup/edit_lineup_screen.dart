@@ -23,7 +23,6 @@ import 'com_overlay.dart';
 //TODO: change this once boats are user-defined. the com of the boat can also be user-defined.
 const double _kBoatWeight = 800;
 
-//TODO: fix color theming in whole file!
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
 
@@ -52,6 +51,13 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         _lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
   }
 
+  Future<void> _saveLineup() {
+    // TODO: could throw an error if one of these paddlers was deleted. Must check if paddlers are deleted. Maybe also check if lineup was deleted, renamed, i.e. other properties changed.
+    return context.read<RosterModel>().setLineup(_lineup.copyWith(
+      paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
+    ));
+  }
+
   Widget _itemBuilder(BuildContext context, int index) {
     final paddler = _paddlerList[index];
     if (paddler != null) {
@@ -63,7 +69,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     }
 
     return AddPaddlerTile(
-      //TODO: implement
       editedNullablePaddlers: _paddlerList,
       addPaddler: (paddler) {
         if (paddler == null) return;
@@ -104,7 +109,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     );
   }
 
-  //TODO: returns NaN if no paddlers
   Offset _calculateCOM() {
     const relativeLeftPos = 0.25;
     const relativeRightPos = 0.75;
@@ -163,11 +167,9 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       ),
       center: Text('Edit ${_lineup.name}', style: TextStyles.title1),
       trailing: CustomIconButton(
-        onTap: () {
-          context.read<RosterModel>().setLineup(_lineup.copyWith(
-                paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
-              ));
-          context.pop();
+        onTap: () async {
+          await _saveLineup();
+          if(context.mounted) context.pop();
         },
         icon: Icons.check_rounded,
       ),

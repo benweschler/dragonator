@@ -4,14 +4,12 @@ import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigator_utils.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class EditPaddlerTile extends StatelessWidget {
@@ -110,7 +108,8 @@ class _PaddlerContextMenu extends StatelessWidget {
     return ContextMenu([
       ContextMenuAction(
         icon: Icons.info_outline_rounded,
-        onTap: () => context.push(RoutePaths.paddler(paddlerID)),
+        //TODO: don't push to the paddler detail screen. should only show abbreviated info without actions, especially edit.
+        onTap: () {},//=> context.push(RoutePaths.paddler(paddlerID)),
         label: 'Information',
       ),
       ContextMenuAction(
