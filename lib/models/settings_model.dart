@@ -1,7 +1,10 @@
+import 'package:dragonator/commands/firestore_references.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
+
+part '../commands/settings_commands.dart';
 
 /// The default theme mode, used when the user is not logged in.
 const ThemeMode _kDefaultThemeMode = ThemeMode.system;
@@ -73,5 +76,12 @@ class SettingsModel extends Notifier {
         _sharedPreferences.setBool('show-com-overlay', false);
     }
     notify();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'theme': themeMode,
+      'show-com-overlay': showComOverlay,
+    };
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dragonator/commands/firestore_references.dart';
 import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/data/user/app_user.dart';
 import 'package:dragonator/data/lineup/lineup.dart';
@@ -17,8 +18,6 @@ part '../commands/lineup_commands.dart';
 
 part '../commands/boat_commands.dart';
 
-part '../commands/firestore_references.dart';
-
 //TODO: add documentation
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
@@ -34,7 +33,7 @@ class RosterModel extends Notifier {
     assert(_lineupIDMap.isEmpty);
 
     // Load teams
-    final teamsQuery = _teamsCollection.where('owners', arrayContains: user.id);
+    final teamsQuery = teamsCollection.where('owners', arrayContains: user.id);
     final QuerySnapshot snapshot = await teamsQuery.get();
     // Updates the teamIDMap
     _updateTeams(snapshot);
@@ -46,18 +45,16 @@ class RosterModel extends Notifier {
     notify();
   }
 
-  //TODO: this should be modified to be used when switching teams. logging out should replace the roster model.
-  void clear() {
-    _teamIDMap.clear();
+  void clear() async {
     _currentTeamID = null;
-    _teamsSubscription?.cancel();
+    _teamIDMap.clear();
     _paddlerIDMap.clear();
-    _paddlersSubscription?.cancel();
     _lineupIDMap.clear();
-    _lineupsSubscription?.cancel();
     _boatIDMap.clear();
-    _boatsSubscription?.cancel();
-    //TODO: add once lineups are pulled from db cancel subscription
+    await _teamsSubscription?.cancel();
+    await _paddlersSubscription?.cancel();
+    await _lineupsSubscription?.cancel();
+    await _boatsSubscription?.cancel();
   }
 
   //* LOAD DATA *//
@@ -77,7 +74,7 @@ class RosterModel extends Notifier {
     return _loadTeamDetail(
       _paddlersSubscription,
       _getTeamPaddlersCommand,
-      _getPaddlersDoc,
+      getPaddlersDoc,
       _paddlerIDMap,
       Paddler.fromFirestore,
       _onPaddlerDocUpdate,
@@ -88,7 +85,7 @@ class RosterModel extends Notifier {
     return _loadTeamDetail(
       _lineupsSubscription,
       _getTeamLineupsCommand,
-      _getLineupsDoc,
+      getLineupsDoc,
       _lineupIDMap,
       Lineup.fromFirestore,
       _onLineupDocUpdate,
@@ -99,7 +96,7 @@ class RosterModel extends Notifier {
     return _loadTeamDetail(
       _boatsSubscription,
       _getTeamBoatsCommand,
-      _getBoatsDoc,
+      getBoatsDoc,
       _boatIDMap,
       Boat.fromFirestore,
       _onBoatDocUpdate,

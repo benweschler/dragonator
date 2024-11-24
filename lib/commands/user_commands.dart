@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dragonator/commands/firestore_references.dart';
 import 'package:dragonator/data/user/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -9,7 +9,6 @@ Future<void> createUserCommand({
   required String password,
 }) async {
   final firebaseAuth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
 
   final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
     email: email,
@@ -23,13 +22,11 @@ Future<void> createUserCommand({
     email: email,
   );
 
-  await firestore.collection('users').doc(user.id).set(user.toJson());
+  await getUserDoc(user.id).set(user.toJson());
 }
 
 Future<AppUser> getUserCommand(String userID) async {
-  final firestore = FirebaseFirestore.instance;
-
-  final snapshot = await firestore.collection('users').doc(userID).get();
+  final snapshot = await getUserDoc(userID).get();
   Map<String, dynamic> userData = snapshot.data()!;
 
   return AppUser.fromJson(userData);
