@@ -1,3 +1,4 @@
+import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -100,21 +101,24 @@ class _COMPainter extends CustomPainter {
     );
 
     final textPadding = 5.0;
-    buildTextPainter(String text) => TextPainter(
-          text: TextSpan(text: text),
+    getTextPainter(String text) => TextPainter(
+          text: TextSpan(
+            text: text,
+            style: TextStyles.body2.copyWith(color: color)
+          ),
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
 
     // COM x-position
-    var tp = buildTextPainter('${(com.dx * 100).round()}%');
+    var tp = getTextPainter('${(com.dx * 100).round()}%');
     tp.layout();
     // Keep the text at the top of the viewport as the parent reorderable grid
     // scrolls.
     tp.paint(canvas, Offset(x + 10, scrollOffset));
 
     // COM y-position
-    tp = buildTextPainter('${(com.dy * 100).round()}%');
+    tp = getTextPainter('${(com.dy * 100).round()}%');
     tp.layout();
     tp.paint(canvas, Offset(textPadding, y - tp.height - textPadding));
   }
