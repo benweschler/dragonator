@@ -22,6 +22,8 @@ Team _$TeamFromJson(Map<String, dynamic> json) {
 mixin _$Team {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  @_BoatMapConverter()
+  Map<String, Boat> get boats => throw _privateConstructorUsedError;
 
   /// Serializes this Team to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +39,8 @@ abstract class $TeamCopyWith<$Res> {
   factory $TeamCopyWith(Team value, $Res Function(Team) then) =
       _$TeamCopyWithImpl<$Res, Team>;
   @useResult
-  $Res call({String id, String name});
+  $Res call(
+      {String id, String name, @_BoatMapConverter() Map<String, Boat> boats});
 }
 
 /// @nodoc
@@ -57,6 +60,7 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? boats = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -67,6 +71,10 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      boats: null == boats
+          ? _value.boats
+          : boats // ignore: cast_nullable_to_non_nullable
+              as Map<String, Boat>,
     ) as $Val);
   }
 }
@@ -78,7 +86,8 @@ abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
       __$$TeamImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name});
+  $Res call(
+      {String id, String name, @_BoatMapConverter() Map<String, Boat> boats});
 }
 
 /// @nodoc
@@ -95,6 +104,7 @@ class __$$TeamImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? boats = null,
   }) {
     return _then(_$TeamImpl(
       id: null == id
@@ -105,6 +115,10 @@ class __$$TeamImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      boats: null == boats
+          ? _value._boats
+          : boats // ignore: cast_nullable_to_non_nullable
+              as Map<String, Boat>,
     ));
   }
 }
@@ -112,7 +126,12 @@ class __$$TeamImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TeamImpl extends _Team {
-  const _$TeamImpl({required this.id, required this.name}) : super._();
+  const _$TeamImpl(
+      {required this.id,
+      required this.name,
+      @_BoatMapConverter() required final Map<String, Boat> boats})
+      : _boats = boats,
+        super._();
 
   factory _$TeamImpl.fromJson(Map<String, dynamic> json) =>
       _$$TeamImplFromJson(json);
@@ -121,6 +140,14 @@ class _$TeamImpl extends _Team {
   final String id;
   @override
   final String name;
+  final Map<String, Boat> _boats;
+  @override
+  @_BoatMapConverter()
+  Map<String, Boat> get boats {
+    if (_boats is EqualUnmodifiableMapView) return _boats;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_boats);
+  }
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
@@ -139,7 +166,10 @@ class _$TeamImpl extends _Team {
 }
 
 abstract class _Team extends Team {
-  const factory _Team({required final String id, required final String name}) =
+  const factory _Team(
+          {required final String id,
+          required final String name,
+          @_BoatMapConverter() required final Map<String, Boat> boats}) =
       _$TeamImpl;
   const _Team._() : super._();
 
@@ -149,6 +179,9 @@ abstract class _Team extends Team {
   String get id;
   @override
   String get name;
+  @override
+  @_BoatMapConverter()
+  Map<String, Boat> get boats;
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.

@@ -25,7 +25,6 @@ class RosterModel extends Notifier {
   StreamSubscription? _teamsSubscription;
   StreamSubscription? _paddlersSubscription;
   StreamSubscription? _lineupsSubscription;
-  StreamSubscription? _boatsSubscription;
 
   Future<void> initialize(AppUser user) async {
     assert(_paddlerIDMap.isEmpty);
@@ -50,11 +49,9 @@ class RosterModel extends Notifier {
     _teamIDMap.clear();
     _paddlerIDMap.clear();
     _lineupIDMap.clear();
-    _boatIDMap.clear();
     await _teamsSubscription?.cancel();
     await _paddlersSubscription?.cancel();
     await _lineupsSubscription?.cancel();
-    await _boatsSubscription?.cancel();
   }
 
   //* LOAD DATA *//
@@ -67,7 +64,6 @@ class RosterModel extends Notifier {
     _currentTeamID = newTeamID;
     await _loadTeamPaddlers();
     await _loadTeamLineups();
-    await _loadTeamBoats();
   }
 
   Future<void> _loadTeamPaddlers() {
@@ -92,17 +88,6 @@ class RosterModel extends Notifier {
     );
   }
 
-  Future<void> _loadTeamBoats() {
-    return _loadTeamDetail(
-      _boatsSubscription,
-      _getTeamBoatsCommand,
-      getBoatsDoc,
-      _boatIDMap,
-      Boat.fromFirestore,
-      _onBoatDocUpdate,
-    );
-  }
-
   Future<void> _loadTeamDetail<T extends dynamic>(
     StreamSubscription? updateSubscription,
     GetTeamDetailCommand getTeamDetailCommand,
@@ -119,7 +104,7 @@ class RosterModel extends Notifier {
 
     final Map<String, dynamic> details =
         await getTeamDetailCommand(_currentTeamID!);
-    for (final detailEntry in details.entries) {
+    for (var detailEntry in details.entries) {
       idMap[detailEntry.key] = fromFirestore(
         id: detailEntry.key,
         data: detailEntry.value,
@@ -144,7 +129,7 @@ class RosterModel extends Notifier {
   }
 
   void _updateTeams(QuerySnapshot snapshot) {
-    for (final docChange in snapshot.docChanges) {
+    for (var docChange in snapshot.docChanges) {
       final id = docChange.doc.id;
 
       if (docChange.type == DocumentChangeType.removed) {
@@ -162,10 +147,6 @@ class RosterModel extends Notifier {
 
   void _onLineupDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return _updateTeamDetail(snapshot, _lineupIDMap, Lineup.fromFirestore);
-  }
-
-  void _onBoatDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    return _updateTeamDetail(snapshot, _boatIDMap, Boat.fromFirestore);
   }
 
   void _updateTeamDetail<T extends dynamic>(
@@ -203,10 +184,7 @@ class RosterModel extends Notifier {
 
   final Map<String, Paddler> _paddlerIDMap = {};
 
-  //TODO: dummy Data
   final Map<String, Lineup> _lineupIDMap = {};
-
-  final Map<String, Boat> _boatIDMap = {};
 
   //* TEAM GETTERS *//
 
@@ -229,12 +207,6 @@ class RosterModel extends Notifier {
   Iterable<Lineup> get lineups => _lineupIDMap.values;
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
-
-  //* BOAT GETTERS *//
-
-  Iterable<Boat> get boats => _boatIDMap.values;
-
-  Boat? getBoat(String boatID) => _boatIDMap[boatID];
 
   //* TEAM SETTERS *//
 
@@ -266,12 +238,6 @@ class RosterModel extends Notifier {
 
   void deleteLineup(String lineupID) =>
       _deleteLineupCommand(lineupID, _currentTeamID!);
-
-  //* BOAT SETTERS *//
-
-  Future<void> setBoat(Boat boat) => _setBoatCommand(boat, _currentTeamID!);
-
-  void deleteBoat(String boatID) => _deleteBoatCommand(boatID, _currentTeamID!);
 }
 
 typedef GetTeamDetailCommand = Future<Map<String, dynamic>> Function(

@@ -1,3 +1,4 @@
+import 'package:dragonator/data/boat/boat.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,6 +15,7 @@ class Team extends Equatable with _$Team {
   const factory Team({
     required String id,
     required String name,
+    @_BoatMapConverter() required Map<String, Boat> boats,
   }) = _Team;
 
   factory Team.fromJson(Map<String, Object?> json) => _$TeamFromJson(json);
@@ -29,9 +31,37 @@ class Team extends Equatable with _$Team {
     required String name,
     required String userID,
   }) {
-    return {'name': name, 'owners': [userID]};
+    return {
+      'name': name,
+      'boats': {},
+      'owners': [userID],
+    };
   }
 
   @override
   List<Object?> get props => [id];
+}
+
+class _BoatMapConverter
+    implements JsonConverter<Map<String, Boat>, Map<String, dynamic>> {
+  const _BoatMapConverter();
+
+  @override
+  Map<String, Boat> fromJson(Map<String, dynamic> json) {
+    return {
+      for (var boatEntry in json.entries)
+        boatEntry.key: Boat.fromFirestore(
+          id: boatEntry.key,
+          data: boatEntry.value,
+        )
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJson(Map<String, Boat> boatMap) {
+    return {
+      for (var boatEntry in boatMap.entries)
+        boatEntry.key: boatEntry.value.toFirestore()
+    };
+  }
 }

@@ -269,7 +269,7 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
   path += '?';
 
   int index = 0;
-  for (final entry in queryParams.entries) {
+  for (var entry in queryParams.entries) {
     if (entry.value == null) continue;
     path += '${entry.key}=${entry.value}';
     if (index < queryParams.length - 1) path += '&';

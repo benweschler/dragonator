@@ -102,7 +102,7 @@ class StatSelectorTable extends StatelessWidget {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: Validators.required(),
         items: [
-          for (final ageGroup in AgeGroup.values)
+          for (var ageGroup in AgeGroup.values)
             DropdownMenuItem(
               value: ageGroup,
               child: Text(ageGroup.toString()),
