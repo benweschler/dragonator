@@ -66,12 +66,12 @@ class DragonatorApp extends StatelessWidget {
     switch (context.select<SettingsModel, ThemeMode>(
       (model) => model.themeMode,
     )) {
-      case ThemeMode.system:
-        return MediaQuery.platformBrightnessOf(context) == Brightness.dark;
       case ThemeMode.light:
         return false;
       case ThemeMode.dark:
         return true;
+      case ThemeMode.system:
+        return MediaQuery.platformBrightnessOf(context) == Brightness.dark;
     }
   }
 }

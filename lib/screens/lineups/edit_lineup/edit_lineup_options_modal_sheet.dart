@@ -45,6 +45,7 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(width: Insets.med),
                     Consumer<SettingsModel>(
                       builder: (_, model, __) {
                         return PlatformAwareSwitch(

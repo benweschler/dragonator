@@ -80,7 +80,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: Insets.lg),
                 Text(
-                  'v1.0.0 — Made with ❤️ and zero calculus',
+                  'v0.2.0 — Made with ❤️ and zero calculus',
                   style: TextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

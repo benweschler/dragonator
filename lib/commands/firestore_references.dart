@@ -7,6 +7,10 @@ DocumentReference<Map<String, dynamic>> getUserDoc(String userID) {
   return FirebaseFirestore.instance.doc('users/$userID');
 }
 
+DocumentReference<Map<String, dynamic>> getSettingsDoc(String userID) {
+  return FirebaseFirestore.instance.doc('users/$userID/details/settings');
+}
+
 DocumentReference<Map<String, dynamic>> getPaddlersDoc(String teamID) {
   return FirebaseFirestore.instance.doc('teams/$teamID/details/paddlers');
 }

@@ -1,6 +1,7 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 import 'modal_sheet.dart';
@@ -47,8 +48,7 @@ class ContextMenuAction extends StatelessWidget {
   Widget build(BuildContext context) {
     Color? color = isDestructiveAction ? AppColors.of(context).error : null;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return ResponsiveStrokeButton(
       onTap: () {
         onTap();
         // Modal sheets are shown on the root navigator.
