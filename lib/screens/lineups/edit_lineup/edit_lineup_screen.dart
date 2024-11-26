@@ -8,7 +8,7 @@ import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal
 import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';

@@ -5,7 +5,7 @@ import 'package:dragonator/screens/roster_screen/sorting_options_menu.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/utils/paddler_sorting.dart';
 import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/custom_filter_chip.dart';

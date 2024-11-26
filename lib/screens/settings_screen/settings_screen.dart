@@ -3,11 +3,12 @@ import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/settings_screen/boats_popup.dart';
 import 'package:dragonator/screens/settings_screen/change_theme_button.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -200,29 +201,12 @@ class _TeamTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveStrokeButton(
-      onTap: () => context.showModal(ContextMenu([
-        ContextMenuAction(
-          icon: Icons.edit_rounded,
-          onTap: () => context.push(RoutePaths.nameTeam(team.id)),
-          label: 'Rename',
-        ),
-        ContextMenuAction(
-          icon: Icons.groups_rounded,
-          onTap: () async {
-            context.read<RosterModel>().setCurrentTeam(team.id).then((_) {
-              if (context.mounted) context.go(RoutePaths.roster);
-            });
-          },
-          label: 'View Roster',
-        ),
-        //TODO: must implement screen if user has no teams and if current team is deleted.
-        ContextMenuAction(
-          icon: Icons.delete_rounded,
-          onTap: () {},
-          label: 'Delete',
-          isDestructiveAction: true,
-        ),
-      ])),
+      onTap: () {
+        context.showModal(_TeamContextMenu(
+          team: team,
+          rootContext: context,
+        ));
+      },
       child: Row(
         children: [
           Expanded(
@@ -238,5 +222,51 @@ class _TeamTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _TeamContextMenu extends StatelessWidget {
+  final Team team;
+  final BuildContext rootContext;
+
+  const _TeamContextMenu({required this.team, required this.rootContext});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextMenu([
+      ContextMenuAction(
+        icon: Icons.edit_rounded,
+        label: 'Rename',
+        onTap: () => context.push(RoutePaths.nameTeam(team.id)),
+      ),
+      ContextMenuAction(
+        icon: Icons.groups_rounded,
+        label: 'Roster',
+        onTap: () async {
+          context.read<RosterModel>().setCurrentTeam(team.id).then((_) {
+            if (context.mounted) context.go(RoutePaths.roster);
+          });
+        },
+      ),
+      ContextMenuAction(
+        icon: Icons.rowing_rounded,
+        label: 'Boats',
+        autoPop: false,
+        onTap: () async {
+          context.pop();
+          await Future.delayed(Timings.long);
+
+          if(!rootContext.mounted) return;
+          rootContext.showPopup(BoatsPopup(team));
+        },
+      ),
+      //TODO: must implement screen if user has no teams and if current team is deleted.
+      ContextMenuAction(
+        icon: Icons.delete_rounded,
+        label: 'Delete',
+        isDestructiveAction: true,
+        onTap: () {},
+      ),
+    ]);
   }
 }

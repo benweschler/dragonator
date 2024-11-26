@@ -29,6 +29,7 @@ abstract class Corners {
 abstract class Timings {
   static const Duration short = Duration(milliseconds: 150);
   static const Duration med = Duration(milliseconds: 300);
+  static const Duration long = Duration(milliseconds: 400);
 }
 
 /// Fonts - A list of Font Families, used by the TextStyles class to create

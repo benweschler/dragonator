@@ -3,6 +3,7 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'modal_sheet.dart';
 
@@ -32,16 +33,18 @@ class ContextMenu extends StatelessWidget {
 
 class ContextMenuAction extends StatelessWidget {
   final IconData icon;
-  final GestureTapCallback onTap;
   final String label;
   final bool isDestructiveAction;
+  final bool autoPop;
+  final GestureTapCallback onTap;
 
   const ContextMenuAction({
     super.key,
     required this.icon,
-    required this.onTap,
     required this.label,
     this.isDestructiveAction = false,
+    this.autoPop = true,
+    required this.onTap,
   });
 
   @override
@@ -52,7 +55,7 @@ class ContextMenuAction extends StatelessWidget {
       onTap: () {
         onTap();
         // Modal sheets are shown on the root navigator.
-        Navigator.of(context, rootNavigator: true).pop();
+        if(autoPop) context.pop();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -6,7 +6,7 @@ import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';

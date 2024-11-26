@@ -71,17 +71,17 @@ class PaddlerScreen extends StatelessWidget {
                 const SizedBox(height: Insets.xl),
                 //TODO: implement actions
                 ActionButtonCard([
-                  ActionButton(
+                  CardActionButton(
                     onTap: () {},
                     label: 'Add to team',
                     icon: Icons.add_rounded,
                   ),
-                  ActionButton(
+                  CardActionButton(
                     onTap: () {},
                     label: 'View active lineups',
                     icon: Icons.library_books_rounded,
                   ),
-                  ActionButton(
+                  CardActionButton(
                     onTap: () async {
                       await context
                           .read<RosterModel>()

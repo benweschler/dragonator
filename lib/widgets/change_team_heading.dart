@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

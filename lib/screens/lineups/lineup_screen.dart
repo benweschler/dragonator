@@ -5,7 +5,7 @@ import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/navigator_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';

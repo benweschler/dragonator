@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 const double _actionButtonPadding = Insets.med;
 
+//TODO: this is dumb
 class ActionButtonCard extends StatelessWidget {
-  final List<ActionButton> actionButtons;
+  final List<CardActionButton> actionButtons;
 
   const ActionButtonCard(this.actionButtons, {super.key});
 
@@ -32,12 +33,12 @@ class ActionButtonCard extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
+class CardActionButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final IconData icon;
   final String label;
 
-  const ActionButton({
+  const CardActionButton({
     super.key,
     required this.onTap,
     required this.icon,
