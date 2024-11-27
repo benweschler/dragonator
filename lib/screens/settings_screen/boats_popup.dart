@@ -221,6 +221,11 @@ class _EditBoat extends StatelessWidget {
     if (context.mounted) Navigator.pop(context);
   }
 
+  Future<void> _deleteBoat(BuildContext context) async {
+    await context.read<RosterModel>().deleteBoat(boat.id, teamID);
+    if (context.mounted) Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -280,11 +285,26 @@ class _EditBoat extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Insets.xl),
-            ExpandingStadiumButton(
-              onTap: () => _saveBoat(context),
-              color: AppColors.of(context).buttonContainer,
-              textColor: AppColors.of(context).onButtonContainer,
-              label: 'Save',
+            Row(
+              children: [
+                Expanded(
+                  child: ExpandingStadiumButton(
+                    onTap: () => _saveBoat(context),
+                    color: AppColors.of(context).buttonContainer,
+                    textColor: AppColors.of(context).onButtonContainer,
+                    label: 'Save',
+                  ),
+                ),
+                SizedBox(width: Insets.med),
+                Expanded(
+                  child: ExpandingStadiumButton(
+                    onTap: () => _deleteBoat(context),
+                    color: AppColors.of(context).error,
+                    textColor: Colors.white,
+                    label: 'Delete',
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: Insets.sm),
             ExpandingTextButton(
