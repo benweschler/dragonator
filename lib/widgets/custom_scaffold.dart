@@ -126,7 +126,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     BuildContext fromHeroContext,
     BuildContext toHeroContext,
   ) {
-    return CrossFadeTransition(
+    return FadeOutInTransition(
       animation: flightDirection == HeroFlightDirection.push
           ? animation
           : ReverseAnimation(animation),

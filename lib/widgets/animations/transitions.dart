@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CrossFadeTransition extends AnimatedWidget {
+class FadeOutInTransition extends AnimatedWidget {
   final Animation<double> animation;
   final Widget firstChild;
   final Widget secondChild;
 
-  const CrossFadeTransition({
+  const FadeOutInTransition({
     super.key,
     required this.animation,
     required this.firstChild,

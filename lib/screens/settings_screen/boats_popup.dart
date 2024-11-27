@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class BoatsPopup extends StatelessWidget {
   final String teamID;
@@ -39,13 +40,14 @@ class BoatsPopup extends StatelessWidget {
                 }
 
                 return Navigator(
+                  observers: [HeroController()],
                   onGenerateRoute: (settings) {
                     Widget content;
                     if (settings.name == '/') {
                       content = _BoatList(team);
                     } else {
-                      var id = Uri.parse(settings.name!).pathSegments.first;
-                      content = _EditBoat(team.boats[id]!, team.id);
+                      var id = Uri.parse(settings.name!).queryParameters['id'];
+                      content = _EditBoat(team.boats[id], team.id);
                     }
                     return FadeTransitionPage(child: content)
                         .createRoute(context);
@@ -58,60 +60,50 @@ class BoatsPopup extends StatelessWidget {
   }
 }
 
-class _BoatList extends StatefulWidget {
+class _BoatList extends StatelessWidget {
   final Team team;
 
   const _BoatList(this.team);
 
   @override
-  State<_BoatList> createState() => _BoatListState();
-}
-
-class _BoatListState extends State<_BoatList> {
-  final _controller = ScrollController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '${widget.team.name} Boats',
+          '${team.name} Boats',
           textAlign: TextAlign.center,
           style: TextStyles.title1,
         ),
         const SizedBox(height: Insets.med),
         Flexible(
           child: SingleChildScrollView(
-            controller: _controller,
             child: Column(
               children: [
-                if (widget.team.boats.isEmpty)
+                if (team.boats.isEmpty)
                   Text('This team doesn\'t have any boats yet.')
                 else
-                  for (var boat in widget.team.boats.values) _BoatTile(boat),
+                  for (var boat in team.boats.values) _BoatTile(boat),
               ].separate(Divider(height: Insets.xl)).toList(),
             ),
           ),
         ),
         const SizedBox(height: Insets.xl),
-        ExpandingStadiumButton(
-          onTap: () => _controller.position.animateTo(
-            _controller.position.maxScrollExtent,
-            duration: Timings.med,
-            curve: Curves.easeOutQuart,
+        Hero(
+          tag: 'action button',
+          flightShuttleBuilder: _shuttleBuilder,
+          child: ExpandingStadiumButton(
+            onTap: () => Navigator.of(context).pushNamed('/set'),
+            color: AppColors.of(context).primary,
+            label: 'Add Boat',
           ),
-          color: AppColors.of(context).primary,
-          label: 'Add Boat',
         ),
         const SizedBox(height: Insets.sm),
-        ExpandingTextButton(onTap: context.pop, text: 'Done'),
+        Hero(
+          tag: 'pop button',
+          flightShuttleBuilder: _shuttleBuilder,
+          child: ExpandingTextButton(onTap: context.pop, text: 'Done'),
+        ),
       ],
     );
   }
@@ -125,7 +117,7 @@ class _BoatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed('/${boat.id}'),
+      onTap: () => Navigator.of(context).pushNamed('/set?id=${boat.id}'),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,7 +190,8 @@ class _BoatTile extends StatelessWidget {
 }
 
 class _EditBoat extends StatelessWidget {
-  final Boat boat;
+  /// If null, creates a new boat.
+  final Boat? boat;
   final String teamID;
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
@@ -210,19 +203,28 @@ class _EditBoat extends StatelessWidget {
     }
 
     final formData = _formKey.currentState!.value;
-    await context.read<RosterModel>().setBoat(
-          boat.copyWith(
+    final Boat boat;
+    if (this.boat == null) {
+      boat = Boat(
+        id: Uuid().v4(),
+        name: formData['name'],
+        capacity: int.parse(formData['capacity']),
+        weight: double.parse(formData['weight']),
+      );
+    } else {
+      boat = this.boat!.copyWith(
             name: formData['name'],
             capacity: int.parse(formData['capacity']),
             weight: double.parse(formData['weight']),
-          ),
-          teamID,
-        );
+          );
+    }
+
+    await context.read<RosterModel>().setBoat(boat, teamID);
     if (context.mounted) Navigator.pop(context);
   }
 
   Future<void> _deleteBoat(BuildContext context) async {
-    await context.read<RosterModel>().deleteBoat(boat.id, teamID);
+    await context.read<RosterModel>().deleteBoat(boat!.id, teamID);
     if (context.mounted) Navigator.pop(context);
   }
 
@@ -239,24 +241,25 @@ class _EditBoat extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Edit ${boat.name}',
+              boat != null ? 'Edit ${boat!.name}' : 'Add boat',
               textAlign: TextAlign.center,
               style: TextStyles.title1,
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'name',
-              initialValue: boat.name,
+              initialValue: boat?.name,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: Validators.required(errorText: 'Enter a name.'),
               decoration: CustomInputDecoration(
                 AppColors.of(context),
+                hintText: 'Name',
               ),
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'capacity',
-              initialValue: boat.capacity.toString(),
+              initialValue: boat?.capacity.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -266,13 +269,14 @@ class _EditBoat extends StatelessWidget {
               ),
               decoration: CustomInputDecoration(
                 AppColors.of(context),
+                hintText: 'Capacity',
                 suffix: const Text('paddlers', style: TextStyles.body2),
               ),
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'weight',
-              initialValue: boat.weight.toString(),
+              initialValue: boat?.weight.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -281,6 +285,7 @@ class _EditBoat extends StatelessWidget {
               ),
               decoration: CustomInputDecoration(
                 AppColors.of(context),
+                hintText: 'Weight',
                 suffix: const Text('lbs', style: TextStyles.body2),
               ),
             ),
@@ -288,32 +293,100 @@ class _EditBoat extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: ExpandingStadiumButton(
-                    onTap: () => _saveBoat(context),
-                    color: AppColors.of(context).buttonContainer,
-                    textColor: AppColors.of(context).onButtonContainer,
-                    label: 'Save',
+                  child: Hero(
+                    tag: boat == null ? 'action button' : '',
+                    flightShuttleBuilder: _shuttleBuilder,
+                    child: ExpandingStadiumButton(
+                      onTap: () => _saveBoat(context),
+                      color: AppColors.of(context).buttonContainer,
+                      textColor: AppColors.of(context).onButtonContainer,
+                      label: 'Save',
+                    ),
                   ),
                 ),
-                SizedBox(width: Insets.med),
-                Expanded(
-                  child: ExpandingStadiumButton(
-                    onTap: () => _deleteBoat(context),
-                    color: AppColors.of(context).error,
-                    textColor: Colors.white,
-                    label: 'Delete',
+                if (boat != null) ...[
+                  SizedBox(width: Insets.med),
+                  Expanded(
+                    child: ExpandingStadiumButton(
+                      onTap: () => _deleteBoat(context),
+                      color: AppColors.of(context).error,
+                      textColor: Colors.white,
+                      label: 'Delete',
+                    ),
                   ),
-                ),
+                ]
               ],
             ),
             const SizedBox(height: Insets.sm),
-            ExpandingTextButton(
-              onTap: Navigator.of(context).pop,
-              text: 'Cancel',
+            Hero(
+              tag: 'pop button',
+              flightShuttleBuilder: _shuttleBuilder,
+              child: ExpandingTextButton(
+                onTap: Navigator.of(context).pop,
+                text: 'Cancel',
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+/// Cross fades the children while interpolated between their sizes.
+Widget _shuttleBuilder(
+  BuildContext flightContext,
+  Animation<double> animation,
+  HeroFlightDirection flightDirection,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+) {
+  final Hero fromHero = fromHeroContext.widget as Hero;
+  final Hero toHero = toHeroContext.widget as Hero;
+
+  final MediaQueryData? toMediaQueryData = MediaQuery.maybeOf(toHeroContext);
+  final MediaQueryData? fromMediaQueryData =
+      MediaQuery.maybeOf(fromHeroContext);
+
+  if (toMediaQueryData == null || fromMediaQueryData == null) {
+    return toHero.child;
+  }
+
+  final EdgeInsets fromHeroPadding = fromMediaQueryData.padding;
+  final EdgeInsets toHeroPadding = toMediaQueryData.padding;
+
+  final firstAnimation = animation.drive(CurveTween(curve: Curves.easeIn)).drive(Tween<double>(begin: 1.0, end: 0.0));
+  final secondAnimation = animation.drive(CurveTween(curve: Curves.easeOut));
+  final isForward = animation.isForwardOrCompleted;
+
+  return AnimatedBuilder(
+    animation: animation,
+    builder: (BuildContext context, Widget? child) {
+      return MediaQuery(
+        data: toMediaQueryData.copyWith(
+          padding: (flightDirection == HeroFlightDirection.push)
+              ? EdgeInsetsTween(
+                  begin: fromHeroPadding,
+                  end: toHeroPadding,
+                ).evaluate(animation)
+              : EdgeInsetsTween(
+                  begin: toHeroPadding,
+                  end: fromHeroPadding,
+                ).evaluate(animation),
+        ),
+        child: AnimatedCrossFade.defaultLayoutBuilder(
+          FadeTransition(
+            opacity: isForward ? firstAnimation : secondAnimation,
+            child: fromHero,
+          ),
+          UniqueKey(),
+          FadeTransition(
+            opacity: isForward ? secondAnimation : firstAnimation,
+            child: toHero,
+          ),
+          UniqueKey(),
+        ),
+      );
+    },
+  );
 }
