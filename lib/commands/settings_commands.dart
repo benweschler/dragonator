@@ -1,7 +1,7 @@
 part of '../models/settings_model.dart';
 
-const String themeKey = 'theme';
-const String showComKey = 'showComOverlay';
+const String _themeKey = 'theme';
+const String _showComKey = 'showComOverlay';
 
 Future<Map<String, dynamic>> _getSettingsCommand(String userID) async {
   final snapshot = await getSettingsDoc(userID).get();

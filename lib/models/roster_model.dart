@@ -208,11 +208,6 @@ class RosterModel extends Notifier {
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
 
-  //* BOAT GETTERS *//
-
-  Iterable<Boat>? getTeamBoats(String teamID) =>
-      _teamIDMap[teamID]?.boats.values;
-
   //* TEAM SETTERS *//
 
   Future<void> setCurrentTeam(String teamID) async {
@@ -243,6 +238,14 @@ class RosterModel extends Notifier {
 
   void deleteLineup(String lineupID) =>
       _deleteLineupCommand(lineupID, _currentTeamID!);
+
+  //* BOAT SETTERS *//
+
+  Future<void> setBoat(Boat boat, String teamID) =>
+      _setBoatCommand(boat, teamID);
+
+  Future<void> deleteBoat(String boatID, String teamID) =>
+      _deleteBoatCommand(boatID, teamID);
 }
 
 typedef GetTeamDetailCommand = Future<Map<String, dynamic>> Function(

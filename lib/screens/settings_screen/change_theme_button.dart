@@ -54,7 +54,7 @@ class ChangeThemeButton extends StatelessWidget {
     return Selector<SettingsModel, ThemeMode>(
       selector: (_, model) => model.themeMode,
       builder: (_, currentThemeMode, child) => ResponsiveButton.large(
-        onTap: () => context.read<SettingsModel>().setThemeMode(themeMode),
+        onTap: () => context.read<SettingsModel>().setThemeMode(themeMode.name),
         builder: (overlay) => AspectRatio(
           aspectRatio: 0.65,
           child: Stack(

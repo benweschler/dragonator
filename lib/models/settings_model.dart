@@ -19,7 +19,7 @@ class SettingsModel extends Notifier {
     if (!_isInitialized) {
       _sharedPreferences = await SharedPreferencesWithCache.create(
         cacheOptions: SharedPreferencesWithCacheOptions(
-          allowList: {themeKey, showComKey},
+          allowList: {_themeKey, _showComKey},
         ),
       );
       _isInitialized = true;
@@ -31,7 +31,6 @@ class SettingsModel extends Notifier {
   /// Deletes the stored preferences. Should be used when a user logs out.
   void clear() {
     if (_isInitialized) _sharedPreferences.clear();
-    notify();
   }
 
   void _updateFromFirestore() async {
@@ -43,13 +42,13 @@ class SettingsModel extends Notifier {
     // Allow different devices to use different theme modes. Only pull the most
     // recently used theme mode pulled from Firestore if there is no stored
     // theme mode.
-    final storedThemePref = _sharedPreferences.getString(themeKey);
-    if (storedThemePref == null && data.containsKey(themeKey)) {
-      setThemeMode(data[themeKey]);
+    final storedThemePref = _sharedPreferences.getString(_themeKey);
+    if (storedThemePref == null && data.containsKey(_themeKey)) {
+      setThemeMode(data[_themeKey]);
     }
     // Always pull COM overlay preferences from Firestore.
-    if (data.containsKey(showComKey)) {
-      setShowComOverlay(data[showComKey]);
+    if (data.containsKey(_showComKey)) {
+      setShowComOverlay(data[_showComKey]);
     }
   }
 
@@ -59,7 +58,7 @@ class SettingsModel extends Notifier {
   ThemeMode get themeMode {
     if (!_isInitialized) return _kDefaultThemeMode;
 
-    final pref = _sharedPreferences.getString(themeKey);
+    final pref = _sharedPreferences.getString(_themeKey);
     return switch (pref) {
       'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
@@ -79,22 +78,22 @@ class SettingsModel extends Notifier {
   }
 
   bool get showComOverlay =>
-      _sharedPreferences.getBool(showComKey) ?? false;
+      _sharedPreferences.getBool(_showComKey) ?? false;
 
   //* SETTINGS SETTERS *//
 
   //TODO: theme mode and com overlay probably don't have to be stored in a database. Store more important settings once present (i.e. make discoverable).
-  setThemeMode(ThemeMode themeMode) {
-    _sharedPreferences.setString(themeKey, themeMode.name);
+  setThemeMode(String themeModeName) {
+    _sharedPreferences.setString(_themeKey, themeModeName);
     final userID = FirebaseAuth.instance.currentUser!.uid;
-    _setSettingsCommand({themeKey: themeMode.name}, userID);
+    _setSettingsCommand({_themeKey: themeModeName}, userID);
     notify();
   }
 
   setShowComOverlay(bool showComOverlay) {
-    _sharedPreferences.setBool(showComKey, showComOverlay);
+    _sharedPreferences.setBool(_showComKey, showComOverlay);
     final userID = FirebaseAuth.instance.currentUser!.uid;
-    _setSettingsCommand({showComKey: showComOverlay}, userID);
+    _setSettingsCommand({_showComKey: showComOverlay}, userID);
     notify();
   }
 }
