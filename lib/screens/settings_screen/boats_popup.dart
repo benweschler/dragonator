@@ -50,8 +50,6 @@ class _BoatsPopupState extends State<BoatsPopup> {
                 if (team == null) {
                   context.pop();
                   team = _cachedTeam;
-                } else {
-                  _cachedTeam = team;
                 }
 
                 final path = context.watch<_PopupNavigator>().path;
@@ -59,9 +57,11 @@ class _BoatsPopupState extends State<BoatsPopup> {
                 if (path.startsWith('/set')) {
                   final boatID = Uri.parse(path).queryParameters['id'];
                   pages.add(_PopupTransitionPage(
-                    child: _EditBoat(team.boats[boatID], team.id),
+                    child: _EditBoat(_cachedTeam.boats[boatID], team.id),
                   ));
                 }
+
+                _cachedTeam = team;
 
                 return Navigator(
                   observers: [HeroController()],
@@ -342,7 +342,9 @@ class _EditBoatState extends State<_EditBoat> {
               children: [
                 Expanded(
                   child: Hero(
-                    tag: widget.boat == null ? 'action button' : '',
+                    //TODO: might want to remove hero with two buttons
+                    //tag: widget.boat == null ? 'action button' : '',
+                    tag: 'action button',
                     flightShuttleBuilder: _heroFlightShuttleBuilder,
                     child: ExpandingStadiumButton(
                       onTap: () => _saveBoat(context),
@@ -409,6 +411,7 @@ Widget _heroFlightShuttleBuilder(
   final secondAnimation = animation.drive(CurveTween(curve: Curves.easeOut));
   final isForward = animation.isForwardOrCompleted;
 
+  //TODO: causes flicker if button moves down on push
   return AnimatedBuilder(
     animation: animation,
     builder: (BuildContext context, Widget? child) {
