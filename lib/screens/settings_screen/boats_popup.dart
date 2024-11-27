@@ -88,7 +88,11 @@ class _PopupNavigator extends Notifier {
 
   void pushNamed(String path) => notify(() => _path = path);
 
-  void home() => notify(() => _path = '/');
+  static void popHome(BuildContext context) {
+    _PopupNavigator.of(context)
+      .._path = '/'
+      ..notify();
+  }
 }
 
 class _BoatList extends StatelessWidget {
@@ -222,13 +226,19 @@ class _BoatTile extends StatelessWidget {
   }
 }
 
-class _EditBoat extends StatelessWidget {
+class _EditBoat extends StatefulWidget {
   /// If null, creates a new boat.
   final Boat? boat;
   final String teamID;
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
-  _EditBoat(this.boat, this.teamID);
+  const _EditBoat(this.boat, this.teamID);
+
+  @override
+  State<_EditBoat> createState() => _EditBoatState();
+}
+
+class _EditBoatState extends State<_EditBoat> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   Future<void> _saveBoat(BuildContext context) async {
     if (!_formKey.currentState!.saveAndValidate()) {
@@ -237,7 +247,7 @@ class _EditBoat extends StatelessWidget {
 
     final formData = _formKey.currentState!.value;
     final Boat boat;
-    if (this.boat == null) {
+    if (widget.boat == null) {
       boat = Boat(
         id: Uuid().v4(),
         name: formData['name'],
@@ -245,20 +255,22 @@ class _EditBoat extends StatelessWidget {
         weight: double.parse(formData['weight']),
       );
     } else {
-      boat = this.boat!.copyWith(
-            name: formData['name'],
-            capacity: int.parse(formData['capacity']),
-            weight: double.parse(formData['weight']),
-          );
+      boat = widget.boat!.copyWith(
+        name: formData['name'],
+        capacity: int.parse(formData['capacity']),
+        weight: double.parse(formData['weight']),
+      );
     }
 
-    await context.read<RosterModel>().setBoat(boat, teamID);
-    if (context.mounted) Navigator.pop(context);
+    await context.read<RosterModel>().setBoat(boat, widget.teamID);
+    if (context.mounted) _PopupNavigator.popHome(context);
   }
 
   Future<void> _deleteBoat(BuildContext context) async {
-    await context.read<RosterModel>().deleteBoat(boat!.id, teamID);
-    if (context.mounted) Navigator.pop(context);
+    await context
+        .read<RosterModel>()
+        .deleteBoat(widget.boat!.id, widget.teamID);
+    if (context.mounted) _PopupNavigator.popHome(context);
   }
 
   @override
@@ -274,14 +286,14 @@ class _EditBoat extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              boat != null ? 'Edit ${boat!.name}' : 'Add boat',
+              widget.boat != null ? 'Edit ${widget.boat!.name}' : 'Add boat',
               textAlign: TextAlign.center,
               style: TextStyles.title1,
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'name',
-              initialValue: boat?.name,
+              initialValue: widget.boat?.name,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: Validators.required(errorText: 'Enter a name.'),
               decoration: CustomInputDecoration(
@@ -292,7 +304,7 @@ class _EditBoat extends StatelessWidget {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'capacity',
-              initialValue: boat?.capacity.toString(),
+              initialValue: widget.boat?.capacity.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -309,9 +321,8 @@ class _EditBoat extends StatelessWidget {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'weight',
-              initialValue: _formatDouble(boat?.weight),
-              keyboardType:
-                  TextInputType.numberWithOptions(decimal: true),
+              initialValue: _formatDouble(widget.boat?.weight),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp(r'\d+(\.\d*)?'),
@@ -332,7 +343,7 @@ class _EditBoat extends StatelessWidget {
               children: [
                 Expanded(
                   child: Hero(
-                    tag: boat == null ? 'action button' : '',
+                    tag: widget.boat == null ? 'action button' : '',
                     flightShuttleBuilder: _shuttleBuilder,
                     child: ExpandingStadiumButton(
                       onTap: () => _saveBoat(context),
@@ -342,7 +353,7 @@ class _EditBoat extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (boat != null) ...[
+                if (widget.boat != null) ...[
                   SizedBox(width: Insets.med),
                   Expanded(
                     child: ExpandingStadiumButton(
@@ -360,7 +371,7 @@ class _EditBoat extends StatelessWidget {
               tag: 'pop button',
               flightShuttleBuilder: _shuttleBuilder,
               child: ExpandingTextButton(
-                onTap: _PopupNavigator.of(context).home,
+                onTap: () => _PopupNavigator.popHome(context),
                 text: 'Cancel',
               ),
             ),
@@ -432,7 +443,7 @@ Widget _shuttleBuilder(
 }
 
 String? _formatDouble(double? n) {
-  if(n == null) return null;
+  if (n == null) return null;
 
   return n.toInt() == n ? n.toStringAsFixed(0) : '$n';
 }
