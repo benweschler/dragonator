@@ -1,7 +1,6 @@
 import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
@@ -59,7 +58,7 @@ class _BoatsPopupState extends State<BoatsPopup> {
                 var pages = <Page>[MaterialPage(child: _BoatList(team))];
                 if (path.startsWith('/set')) {
                   final boatID = Uri.parse(path).queryParameters['id'];
-                  pages.add(FadeTransitionPage(
+                  pages.add(_PopupTransitionPage(
                     child: _EditBoat(team.boats[boatID], team.id),
                   ));
                 }
@@ -126,7 +125,7 @@ class _BoatList extends StatelessWidget {
         const SizedBox(height: Insets.xl),
         Hero(
           tag: 'action button',
-          flightShuttleBuilder: _shuttleBuilder,
+          flightShuttleBuilder: _heroFlightShuttleBuilder,
           child: ExpandingStadiumButton(
             onTap: () => _PopupNavigator.of(context).pushNamed('/set'),
             color: AppColors.of(context).primary,
@@ -136,7 +135,7 @@ class _BoatList extends StatelessWidget {
         const SizedBox(height: Insets.sm),
         Hero(
           tag: 'pop button',
-          flightShuttleBuilder: _shuttleBuilder,
+          flightShuttleBuilder: _heroFlightShuttleBuilder,
           child: ExpandingTextButton(onTap: context.pop, text: 'Done'),
         ),
       ],
@@ -344,7 +343,7 @@ class _EditBoatState extends State<_EditBoat> {
                 Expanded(
                   child: Hero(
                     tag: widget.boat == null ? 'action button' : '',
-                    flightShuttleBuilder: _shuttleBuilder,
+                    flightShuttleBuilder: _heroFlightShuttleBuilder,
                     child: ExpandingStadiumButton(
                       onTap: () => _saveBoat(context),
                       color: AppColors.of(context).buttonContainer,
@@ -369,7 +368,7 @@ class _EditBoatState extends State<_EditBoat> {
             const SizedBox(height: Insets.sm),
             Hero(
               tag: 'pop button',
-              flightShuttleBuilder: _shuttleBuilder,
+              flightShuttleBuilder: _heroFlightShuttleBuilder,
               child: ExpandingTextButton(
                 onTap: () => _PopupNavigator.popHome(context),
                 text: 'Cancel',
@@ -383,7 +382,7 @@ class _EditBoatState extends State<_EditBoat> {
 }
 
 /// Cross fades the children while interpolated between their sizes.
-Widget _shuttleBuilder(
+Widget _heroFlightShuttleBuilder(
   BuildContext flightContext,
   Animation<double> animation,
   HeroFlightDirection flightDirection,
@@ -439,6 +438,15 @@ Widget _shuttleBuilder(
         ),
       );
     },
+  );
+}
+
+class _PopupTransitionPage extends CustomTransitionPage {
+  _PopupTransitionPage({required super.child})
+      : super(
+    transitionDuration: Duration(milliseconds: 250),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(opacity: animation, child: child),
   );
 }
 
