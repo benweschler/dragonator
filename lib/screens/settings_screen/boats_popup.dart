@@ -5,6 +5,7 @@ import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/utils/notifier.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -16,48 +17,78 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-class BoatsPopup extends StatelessWidget {
+class BoatsPopup extends StatefulWidget {
   final String teamID;
 
   const BoatsPopup(this.teamID, {super.key});
 
   @override
+  State<BoatsPopup> createState() => _BoatsPopupState();
+}
+
+class _BoatsPopupState extends State<BoatsPopup> {
+  late Team _cachedTeam;
+
+  @override
+  void initState() {
+    super.initState();
+    _cachedTeam = context.read<RosterModel>().getTeam(widget.teamID)!;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PopupDialog(
       child: AnimatedSize(
-        duration: Duration(milliseconds: 400),
+        duration: Timings.long,
         curve: Curves.fastEaseInToSlowEaseOut,
         child: IntrinsicHeight(
-          //TODO: current: selector should be around routes because it doesn't update them since they're instantiated in a closure.
-          child: Selector<RosterModel, Team?>(
-              selector: (context, model) => model.getTeam(teamID),
+          child: ChangeNotifierProvider(
+            create: (_) => _PopupNavigator(),
+            child: Selector<RosterModel, Team?>(
+              selector: (context, model) => model.getTeam(widget.teamID),
               builder: (context, team, child) {
                 // True if this team is deleted during editing.
                 if (team == null) {
                   context.pop();
-                  //TODO: this will cause a visual jump if the current team is deleted.
-                  return Container();
+                  team = _cachedTeam;
+                } else {
+                  _cachedTeam = team;
+                }
+
+                final path = context.watch<_PopupNavigator>().path;
+                var pages = <Page>[MaterialPage(child: _BoatList(team))];
+                if (path.startsWith('/set')) {
+                  final boatID = Uri.parse(path).queryParameters['id'];
+                  pages.add(FadeTransitionPage(
+                    child: _EditBoat(team.boats[boatID], team.id),
+                  ));
                 }
 
                 return Navigator(
                   observers: [HeroController()],
-                  onGenerateRoute: (settings) {
-                    Widget content;
-                    if (settings.name == '/') {
-                      content = _BoatList(team);
-                    } else {
-                      var id = Uri.parse(settings.name!).queryParameters['id'];
-                      content = _EditBoat(team.boats[id], team.id);
-                    }
-                    return FadeTransitionPage(child: content)
-                        .createRoute(context);
-                  },
+                  pages: pages,
+                  onDidRemovePage: (_) {},
                 );
-              }),
+              },
+            ),
+          ),
         ),
       ),
     );
   }
+}
+
+class _PopupNavigator extends Notifier {
+  String _path = '/';
+
+  String get path => _path;
+
+  static _PopupNavigator of(BuildContext context) =>
+      context.read<_PopupNavigator>();
+
+  void pushNamed(String path) => notify(() => _path = path);
+
+  void home() => notify(() => _path = '/');
 }
 
 class _BoatList extends StatelessWidget {
@@ -93,7 +124,7 @@ class _BoatList extends StatelessWidget {
           tag: 'action button',
           flightShuttleBuilder: _shuttleBuilder,
           child: ExpandingStadiumButton(
-            onTap: () => Navigator.of(context).pushNamed('/set'),
+            onTap: () => _PopupNavigator.of(context).pushNamed('/set'),
             color: AppColors.of(context).primary,
             label: 'Add Boat',
           ),
@@ -116,8 +147,55 @@ class _BoatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final boatDetails = Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Capacity:', style: TextStyles.body1),
+            SizedBox(height: Insets.xs),
+            Text('Weight:', style: TextStyles.body1),
+          ],
+        ),
+        Expanded(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(TextSpan(children: [
+                  TextSpan(
+                    text: '${boat.capacity}',
+                    style: TextStyles.body1,
+                  ),
+                  TextSpan(
+                    text: '  paddlers',
+                    style: TextStyles.body2.copyWith(
+                      color: AppColors.of(context).neutralContent,
+                    ),
+                  ),
+                ])),
+                Text.rich(TextSpan(children: [
+                  TextSpan(
+                    text: _formatDouble(boat.weight),
+                    style: TextStyles.body1,
+                  ),
+                  TextSpan(
+                    text: '  lbs',
+                    style: TextStyles.body2.copyWith(
+                      color: AppColors.of(context).neutralContent,
+                    ),
+                  ),
+                ])),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed('/set?id=${boat.id}'),
+      onTap: () => _PopupNavigator.of(context).pushNamed('/set?id=${boat.id}'),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,52 +211,7 @@ class _BoatTile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Insets.xs),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Capacity:', style: TextStyles.body1),
-                        SizedBox(height: Insets.xs),
-                        Text('Weight:', style: TextStyles.body1),
-                      ],
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text.rich(TextSpan(children: [
-                              TextSpan(
-                                text: '${boat.capacity}',
-                                style: TextStyles.body1,
-                              ),
-                              TextSpan(
-                                text: '  paddlers',
-                                style: TextStyles.body2.copyWith(
-                                  color: AppColors.of(context).neutralContent,
-                                ),
-                              ),
-                            ])),
-                            Text.rich(TextSpan(children: [
-                              TextSpan(
-                                text: '${boat.weight}',
-                                style: TextStyles.body1,
-                              ),
-                              TextSpan(
-                                text: '  lbs',
-                                style: TextStyles.body2.copyWith(
-                                  color: AppColors.of(context).neutralContent,
-                                ),
-                              ),
-                            ])),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                boatDetails,
               ],
             ),
           ),
@@ -276,11 +309,16 @@ class _EditBoat extends StatelessWidget {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'weight',
-              initialValue: boat?.weight.toString(),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              initialValue: _formatDouble(boat?.weight),
+              keyboardType:
+                  TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'\d+(\.\d*)?'),
+                ),
+              ],
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: Validators.required(
+              validator: Validators.isDouble(
                 errorText: 'Enter the boat\'s weight.',
               ),
               decoration: CustomInputDecoration(
@@ -322,7 +360,7 @@ class _EditBoat extends StatelessWidget {
               tag: 'pop button',
               flightShuttleBuilder: _shuttleBuilder,
               child: ExpandingTextButton(
-                onTap: Navigator.of(context).pop,
+                onTap: _PopupNavigator.of(context).home,
                 text: 'Cancel',
               ),
             ),
@@ -355,7 +393,9 @@ Widget _shuttleBuilder(
   final EdgeInsets fromHeroPadding = fromMediaQueryData.padding;
   final EdgeInsets toHeroPadding = toMediaQueryData.padding;
 
-  final firstAnimation = animation.drive(CurveTween(curve: Curves.easeIn)).drive(Tween<double>(begin: 1.0, end: 0.0));
+  final firstAnimation = animation
+      .drive(CurveTween(curve: Curves.easeIn))
+      .drive(Tween<double>(begin: 1.0, end: 0.0));
   final secondAnimation = animation.drive(CurveTween(curve: Curves.easeOut));
   final isForward = animation.isForwardOrCompleted;
 
@@ -389,4 +429,10 @@ Widget _shuttleBuilder(
       );
     },
   );
+}
+
+String? _formatDouble(double? n) {
+  if(n == null) return null;
+
+  return n.toInt() == n ? n.toStringAsFixed(0) : '$n';
 }

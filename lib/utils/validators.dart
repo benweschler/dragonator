@@ -21,6 +21,12 @@ abstract class Validators {
           ? errorText ?? ''
           : null;
 
+  /// Checks if the field value is a double and non-empty.
+  static String? Function(String?) isDouble({String? errorText}) =>
+          (value) => required().call(value) != null || double.tryParse(value!) == null
+          ? errorText ?? ''
+          : null;
+
   /// Checks if the field value is an email and is non-empty.
   //TODO: this validator is not as rigorous as firebase's validator
   static String? Function(String?) email({String? errorText}) => (value) {
