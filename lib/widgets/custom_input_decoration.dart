@@ -13,6 +13,7 @@ class CustomInputDecoration extends InputDecoration {
   }) : super(
           filled: true,
           fillColor: colors.largeSurface,
+          errorMaxLines: 2,
           //TODO: not used when no error text?
           errorStyle: TextStyles.caption.copyWith(
             color: colors.primary,

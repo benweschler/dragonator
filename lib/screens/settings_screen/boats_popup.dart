@@ -1,5 +1,6 @@
 import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/data/team/team.dart';
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class BoatsPopup extends StatelessWidget {
   final Team team;
@@ -32,7 +34,7 @@ class BoatsPopup extends StatelessWidget {
                 content = _BoatList(team);
               } else {
                 var id = Uri.parse(settings.name!).pathSegments.first;
-                content = _EditBoat(team.boats[id]!);
+                content = _EditBoat(team.boats[id]!, team.id);
               }
               return FadeTransitionPage(child: content).createRoute(context);
             },
@@ -178,8 +180,27 @@ class _BoatTile extends StatelessWidget {
 
 class _EditBoat extends StatelessWidget {
   final Boat boat;
+  final String teamID;
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
-  const _EditBoat(this.boat);
+  _EditBoat(this.boat, this.teamID);
+
+  Future<void> _saveBoat(BuildContext context) async {
+    if (!_formKey.currentState!.saveAndValidate()) {
+      return;
+    }
+
+    final formData = _formKey.currentState!.value;
+    await context.read<RosterModel>().setBoat(
+          boat.copyWith(
+            name: formData['name'],
+            capacity: int.parse(formData['capacity']),
+            weight: double.parse(formData['weight']),
+          ),
+          teamID,
+        );
+    if(context.mounted) Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,62 +209,71 @@ class _EditBoat extends StatelessWidget {
       // Add a background color to obscure the previous route during a push
       // animation.
       color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Edit ${boat.name}',
-            textAlign: TextAlign.center,
-            style: TextStyles.title1,
-          ),
-          const SizedBox(height: Insets.med),
-          //TODO: current
-          FormBuilderTextField(
-            name: 'name',
-            initialValue: boat.name,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: Validators.required(),
-            decoration: CustomInputDecoration(AppColors.of(context)),
-          ),
-          const SizedBox(height: Insets.med),
-          FormBuilderTextField(
-            name: 'capacity',
-            initialValue: boat.capacity.toString(),
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: Validators.isInt(),
-            decoration: CustomInputDecoration(
-              AppColors.of(context),
-              suffix: const Text('paddlers', style: TextStyles.body2),
+      child: FormBuilder(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Edit ${boat.name}',
+              textAlign: TextAlign.center,
+              style: TextStyles.title1,
             ),
-          ),
-          const SizedBox(height: Insets.med),
-          FormBuilderTextField(
-            name: 'weight',
-            initialValue: boat.weight.toString(),
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: Validators.isInt(),
-            decoration: CustomInputDecoration(
-              AppColors.of(context),
-              suffix: const Text('lbs', style: TextStyles.body2),
+            const SizedBox(height: Insets.med),
+            FormBuilderTextField(
+              name: 'name',
+              initialValue: boat.name,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: Validators.required(errorText: 'Enter a name.'),
+              decoration: CustomInputDecoration(
+                AppColors.of(context),
+              ),
             ),
-          ),
-          const SizedBox(height: Insets.xl),
-          ExpandingStadiumButton(
-            onTap: () {},
-            color: AppColors.of(context).buttonContainer,
-            textColor: AppColors.of(context).onButtonContainer,
-            label: 'Save',
-          ),
-          const SizedBox(height: Insets.sm),
-          ExpandingTextButton(
-            onTap: Navigator.of(context).pop,
-            text: 'Cancel',
-          ),
-        ],
+            const SizedBox(height: Insets.med),
+            FormBuilderTextField(
+              name: 'capacity',
+              initialValue: boat.capacity.toString(),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: Validators.isInt(
+                errorText:
+                    'Enter the number of paddlers in the boat, including the drummer and steers person.',
+              ),
+              decoration: CustomInputDecoration(
+                AppColors.of(context),
+                suffix: const Text('paddlers', style: TextStyles.body2),
+              ),
+            ),
+            const SizedBox(height: Insets.med),
+            FormBuilderTextField(
+              name: 'weight',
+              initialValue: boat.weight.toString(),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: Validators.required(
+                errorText: 'Enter the boat\'s weight.',
+              ),
+              decoration: CustomInputDecoration(
+                AppColors.of(context),
+                suffix: const Text('lbs', style: TextStyles.body2),
+              ),
+            ),
+            const SizedBox(height: Insets.xl),
+            ExpandingStadiumButton(
+              onTap: () => _saveBoat(context),
+              color: AppColors.of(context).buttonContainer,
+              textColor: AppColors.of(context).onButtonContainer,
+              label: 'Save',
+            ),
+            const SizedBox(height: Insets.sm),
+            ExpandingTextButton(
+              onTap: Navigator.of(context).pop,
+              text: 'Cancel',
+            ),
+          ],
+        ),
       ),
     );
   }

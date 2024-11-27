@@ -20,7 +20,7 @@ class SignUpScreen extends StatelessWidget {
 
   SignUpScreen({super.key});
 
-  Future<void> signUp(AppModel appModel) async {
+  Future<void> _signUp(AppModel appModel) async {
     final formData = _formKey.currentState!.value;
 
     await createUserCommand(
@@ -207,7 +207,7 @@ class SignUpScreen extends StatelessWidget {
                       if (!_formKey.currentState!.saveAndValidate()) {
                         return;
                       }
-                      return signUp(context.read<AppModel>());
+                      return _signUp(context.read<AppModel>());
                     },
                     //TODO: add error handling
                     catchError: (error) => _errorNotifier.value = error.message,
