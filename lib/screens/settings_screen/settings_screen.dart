@@ -33,20 +33,12 @@ class SettingsScreen extends StatelessWidget {
 
             return ListView(
               children: [
-                Row(
-                  children: [
-                    const Text('Profile', style: TextStyles.h2),
-                    const Spacer(),
-                    CustomIconButton(onTap: () {}, icon: Icons.edit_rounded),
-                  ],
-                ),
-                const SizedBox(height: Insets.sm),
                 _ProfileInfo(user),
                 const SizedBox(height: Insets.xl),
                 const Text('Theme', style: TextStyles.h2),
                 const SizedBox(height: Insets.sm),
                 themeButtonRow!,
-                const SizedBox(height: Insets.lg),
+                const SizedBox(height: Insets.xl),
                 Row(
                   children: [
                     const Text('Teams', style: TextStyles.h2),
@@ -61,15 +53,13 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: Insets.sm),
                 const _TeamCard(),
-                const SizedBox(height: Insets.xl),
-                const Divider(height: 0.5, thickness: 0.5),
-                const SizedBox(height: Insets.xl),
+                const Divider(height: Insets.xl * 2),
                 ResponsiveStrokeButton(
                   onTap: () => showLicensePage(
                     context: context,
                     useRootNavigator: true,
                   ),
-                  child: const Text(
+                  child:  Text(
                     'About Dragonator',
                     style: TextStyles.body1,
                   ),
@@ -77,14 +67,12 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: Insets.med),
                 ResponsiveStrokeButton(
                   onTap: FirebaseAuth.instance.signOut,
-                  child: const Text('Log Out', style: TextStyles.body1),
+                  child:  Text('Log Out', style: TextStyles.body1),
                 ),
                 const SizedBox(height: Insets.lg),
                 Text(
                   'v0.2.0 — Made with ❤️ and zero calculus',
-                  style: TextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyles.caption,
                 ),
                 const SizedBox(height: Insets.lg),
               ],
@@ -116,45 +104,29 @@ class _ProfileInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Name',
-                style: TextStyles.caption.copyWith(
-                  color: AppColors.of(context).neutralContent,
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    '${user.firstName} ${user.lastName}',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: Insets.xl),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Email',
-                  style: TextStyles.caption.copyWith(
-                    color: AppColors.of(context).neutralContent,
-                  ),
-                ),
-                Text(user.email),
-              ],
+    context.read<AppModel>().user;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${user.firstName} ${user.lastName}',
+              //TODO: may want to actually define this
+              style: TextStyles.h2.copyWith(fontSize: 24),
             ),
+            CustomIconButton(icon: Icons.edit_rounded, onTap: () {}),
+          ],
+        ),
+        Text(
+          user.email,
+          style: TextStyles.body1.copyWith(
+            fontWeight: FontWeight.w500,
+            color: AppColors.of(context).neutralContent,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -256,7 +228,7 @@ class _TeamContextMenu extends StatelessWidget {
           context.pop();
           await Future.delayed(Timings.long);
 
-          if(!rootContext.mounted) return;
+          if (!rootContext.mounted) return;
           rootContext.showPopup(BoatsPopup(team.id));
         },
       ),
