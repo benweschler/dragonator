@@ -257,7 +257,7 @@ class _TeamContextMenu extends StatelessWidget {
           await Future.delayed(Timings.long);
 
           if(!rootContext.mounted) return;
-          rootContext.showPopup(BoatsPopup(team));
+          rootContext.showPopup(BoatsPopup(team.id));
         },
       ),
       //TODO: must implement screen if user has no teams and if current team is deleted.

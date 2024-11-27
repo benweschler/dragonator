@@ -39,7 +39,7 @@ class Team extends Equatable with _$Team {
   }
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, name, boats];
 }
 
 class _BoatMapConverter

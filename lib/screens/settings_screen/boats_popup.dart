@@ -16,9 +16,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class BoatsPopup extends StatelessWidget {
-  final Team team;
+  final String teamID;
 
-  const BoatsPopup(this.team, {super.key});
+  const BoatsPopup(this.teamID, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +27,31 @@ class BoatsPopup extends StatelessWidget {
         duration: Duration(milliseconds: 400),
         curve: Curves.fastEaseInToSlowEaseOut,
         child: IntrinsicHeight(
-          child: Navigator(
-            onGenerateRoute: (settings) {
-              Widget content;
-              if (settings.name == '/') {
-                content = _BoatList(team);
-              } else {
-                var id = Uri.parse(settings.name!).pathSegments.first;
-                content = _EditBoat(team.boats[id]!, team.id);
-              }
-              return FadeTransitionPage(child: content).createRoute(context);
-            },
-          ),
+          //TODO: current: selector should be around routes because it doesn't update them since they're instantiated in a closure.
+          child: Selector<RosterModel, Team?>(
+              selector: (context, model) => model.getTeam(teamID),
+              builder: (context, team, child) {
+                // True if this team is deleted during editing.
+                if (team == null) {
+                  context.pop();
+                  //TODO: this will cause a visual jump if the current team is deleted.
+                  return Container();
+                }
+
+                return Navigator(
+                  onGenerateRoute: (settings) {
+                    Widget content;
+                    if (settings.name == '/') {
+                      content = _BoatList(team);
+                    } else {
+                      var id = Uri.parse(settings.name!).pathSegments.first;
+                      content = _EditBoat(team.boats[id]!, team.id);
+                    }
+                    return FadeTransitionPage(child: content)
+                        .createRoute(context);
+                  },
+                );
+              }),
         ),
       ),
     );
@@ -88,29 +101,14 @@ class _BoatListState extends State<_BoatList> {
           ),
         ),
         const SizedBox(height: Insets.xl),
-        Row(
-          children: [
-            Expanded(
-              child: ExpandingStadiumButton(
-                onTap: () => _controller.position.animateTo(
-                  _controller.position.maxScrollExtent,
-                  duration: Timings.med,
-                  curve: Curves.easeOutQuart,
-                ),
-                color: AppColors.of(context).primary,
-                label: 'Add Boat',
-              ),
-            ),
-            SizedBox(width: Insets.med),
-            Expanded(
-              child: ExpandingStadiumButton(
-                onTap: () => Navigator.of(context).pushNamed('/three'),
-                color: AppColors.of(context).buttonContainer,
-                textColor: AppColors.of(context).onButtonContainer,
-                label: 'Edit',
-              ),
-            ),
-          ],
+        ExpandingStadiumButton(
+          onTap: () => _controller.position.animateTo(
+            _controller.position.maxScrollExtent,
+            duration: Timings.med,
+            curve: Curves.easeOutQuart,
+          ),
+          color: AppColors.of(context).primary,
+          label: 'Add Boat',
         ),
         const SizedBox(height: Insets.sm),
         ExpandingTextButton(onTap: context.pop, text: 'Done'),
@@ -126,54 +124,75 @@ class _BoatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          boat.name,
-          style: TextStyles.title1.copyWith(
-            fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushNamed('/${boat.id}'),
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  boat.name,
+                  style: TextStyles.title1.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: Insets.xs),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Capacity:', style: TextStyles.body1),
+                        SizedBox(height: Insets.xs),
+                        Text('Weight:', style: TextStyles.body1),
+                      ],
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(TextSpan(children: [
+                              TextSpan(
+                                text: '${boat.capacity}',
+                                style: TextStyles.body1,
+                              ),
+                              TextSpan(
+                                text: '  paddlers',
+                                style: TextStyles.body2.copyWith(
+                                  color: AppColors.of(context).neutralContent,
+                                ),
+                              ),
+                            ])),
+                            Text.rich(TextSpan(children: [
+                              TextSpan(
+                                text: '${boat.weight}',
+                                style: TextStyles.body1,
+                              ),
+                              TextSpan(
+                                text: '  lbs',
+                                style: TextStyles.body2.copyWith(
+                                  color: AppColors.of(context).neutralContent,
+                                ),
+                              ),
+                            ])),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: Insets.xs),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Capacity:', style: TextStyles.body1),
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                text: '${boat.capacity}',
-                style: TextStyles.body1,
-              ),
-              TextSpan(
-                text: '  paddlers',
-                style: TextStyles.body2.copyWith(
-                  color: AppColors.of(context).neutralContent,
-                ),
-              ),
-            ])),
-          ],
-        ),
-        SizedBox(height: Insets.xs),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Weight:', style: TextStyles.body1),
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                text: '${boat.weight}',
-                style: TextStyles.body1,
-              ),
-              TextSpan(
-                text: '  lbs',
-                style: TextStyles.body2.copyWith(
-                  color: AppColors.of(context).neutralContent,
-                ),
-              ),
-            ])),
-          ],
-        ),
-      ],
+          Icon(Icons.chevron_right_rounded),
+        ],
+      ),
     );
   }
 }
@@ -199,7 +218,7 @@ class _EditBoat extends StatelessWidget {
           ),
           teamID,
         );
-    if(context.mounted) Navigator.pop(context);
+    if (context.mounted) Navigator.pop(context);
   }
 
   @override
