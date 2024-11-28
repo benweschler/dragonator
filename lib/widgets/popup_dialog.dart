@@ -30,10 +30,8 @@ class PopupDialog extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: Corners.medBorderRadius,
               elevation: 15,
-              child: Padding(
-                padding: const EdgeInsets.all(Insets.lg),
-                child: child,
-              ),
+              // Do not add padding to avoid clipping shadows.
+              child: child,
             ).animate().slideY(
                   // The the default duration of the transition animation in
                   // showDialog.

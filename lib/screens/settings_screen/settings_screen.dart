@@ -59,15 +59,12 @@ class SettingsScreen extends StatelessWidget {
                     context: context,
                     useRootNavigator: true,
                   ),
-                  child:  Text(
-                    'About Dragonator',
-                    style: TextStyles.body1,
-                  ),
+                  child: Text('About Dragonator', style: TextStyles.body1),
                 ),
                 const SizedBox(height: Insets.med),
                 ResponsiveStrokeButton(
                   onTap: FirebaseAuth.instance.signOut,
-                  child:  Text('Log Out', style: TextStyles.body1),
+                  child: Text('Log Out', style: TextStyles.body1),
                 ),
                 const SizedBox(height: Insets.lg),
                 Text(
@@ -114,7 +111,7 @@ class _ProfileInfo extends StatelessWidget {
             Text(
               '${user.firstName} ${user.lastName}',
               //TODO: may want to actually define this
-              style: TextStyles.h2.copyWith(fontSize: 24),
+              style: TextStyles.h2.copyWith(fontSize: 26),
             ),
             CustomIconButton(icon: Icons.edit_rounded, onTap: () {}),
           ],

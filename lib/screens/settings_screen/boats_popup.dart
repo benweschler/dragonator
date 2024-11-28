@@ -53,11 +53,22 @@ class _BoatsPopupState extends State<BoatsPopup> {
                 }
 
                 final path = context.watch<_PopupNavigator>().path;
-                var pages = <Page>[MaterialPage(child: _BoatList(team))];
+                var pages = <Page>[
+                  MaterialPage(
+                    child: Padding(
+                      padding: EdgeInsets.all(Insets.lg),
+                      child: _BoatList(team),
+                    ),
+                  ),
+                ];
+
                 if (path.startsWith('/set')) {
                   final boatID = Uri.parse(path).queryParameters['id'];
                   pages.add(_PopupTransitionPage(
-                    child: _EditBoat(_cachedTeam.boats[boatID], team.id),
+                    child: Padding(
+                      padding: EdgeInsets.all(Insets.lg),
+                      child: _EditBoat(_cachedTeam.boats[boatID], team.id),
+                    ),
                   ));
                 }
 
@@ -447,10 +458,10 @@ Widget _heroFlightShuttleBuilder(
 class _PopupTransitionPage extends CustomTransitionPage {
   _PopupTransitionPage({required super.child})
       : super(
-    transitionDuration: Duration(milliseconds: 250),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        FadeTransition(opacity: animation, child: child),
-  );
+          transitionDuration: Duration(milliseconds: 250),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+        );
 }
 
 String? _formatDouble(double? n) {
