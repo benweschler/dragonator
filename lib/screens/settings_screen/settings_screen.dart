@@ -27,68 +27,62 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       child: Center(
-        //TODO: weird consumer AppModel dependence
-        child: Consumer<AppModel>(
-          builder: (_, model, themeButtonRow) {
-            final user = model.user;
-
-            return ListView(
+        child: ListView(
+          children: [
+            _ProfileInfo(
+              context.select<AppModel, AppUser>((model) => model.user),
+            ),
+            const SizedBox(height: Insets.xl),
+            const Text('Theme', style: TextStyles.h2),
+            const SizedBox(height: Insets.sm),
+            Row(
+              children: <Widget>[
+                const Expanded(
+                  child: ChangeThemeButton(themeMode: ThemeMode.light),
+                ),
+                const Expanded(
+                  child: ChangeThemeButton(themeMode: ThemeMode.dark),
+                ),
+                const Expanded(
+                  child: ChangeThemeButton(themeMode: ThemeMode.system),
+                ),
+              ].separate(const SizedBox(width: Insets.sm)).toList(),
+            ),
+            const SizedBox(height: Insets.xl),
+            Row(
               children: [
-                _ProfileInfo(user),
-                const SizedBox(height: Insets.xl),
-                const Text('Theme', style: TextStyles.h2),
-                const SizedBox(height: Insets.sm),
-                themeButtonRow!,
-                const SizedBox(height: Insets.xl),
-                Row(
-                  children: [
-                    const Text('Teams', style: TextStyles.h2),
-                    const Spacer(),
-                    // Create team
-                    CustomIconButton(
-                      // Creates a team when no ID is passed
-                      onTap: () => context.push(RoutePaths.nameTeam()),
-                      icon: Icons.add_rounded,
-                    ),
-                  ],
+                const Text('Teams', style: TextStyles.h2),
+                const Spacer(),
+                // Create team
+                CustomIconButton(
+                  // Creates a team when no ID is passed
+                  onTap: () => context.push(RoutePaths.nameTeam()),
+                  icon: Icons.add_rounded,
                 ),
-                const SizedBox(height: Insets.sm),
-                const _TeamCard(),
-                const Divider(height: Insets.xl * 2),
-                ResponsiveStrokeButton(
-                  onTap: () => showLicensePage(
-                    context: context,
-                    useRootNavigator: true,
-                  ),
-                  child: Text('About Dragonator', style: TextStyles.body1),
-                ),
-                const SizedBox(height: Insets.med),
-                ResponsiveStrokeButton(
-                  onTap: FirebaseAuth.instance.signOut,
-                  child: Text('Log Out', style: TextStyles.body1),
-                ),
-                const SizedBox(height: Insets.lg),
-                Text(
-                  'v0.2.0 — Made with ❤️ and zero calculus',
-                  style: TextStyles.caption,
-                ),
-                const SizedBox(height: Insets.lg),
               ],
-            );
-          },
-          child: Row(
-            children: <Widget>[
-              const Expanded(
-                child: ChangeThemeButton(themeMode: ThemeMode.light),
+            ),
+            const SizedBox(height: Insets.sm),
+            const _TeamCard(),
+            const Divider(height: Insets.xl * 2),
+            ResponsiveStrokeButton(
+              onTap: () => showLicensePage(
+                context: context,
+                useRootNavigator: true,
               ),
-              const Expanded(
-                child: ChangeThemeButton(themeMode: ThemeMode.dark),
-              ),
-              const Expanded(
-                child: ChangeThemeButton(themeMode: ThemeMode.system),
-              ),
-            ].separate(const SizedBox(width: Insets.sm)).toList(),
-          ),
+              child: Text('About Dragonator', style: TextStyles.body1),
+            ),
+            const SizedBox(height: Insets.med),
+            ResponsiveStrokeButton(
+              onTap: FirebaseAuth.instance.signOut,
+              child: Text('Log Out', style: TextStyles.body1),
+            ),
+            const SizedBox(height: Insets.lg),
+            Text(
+              'v0.2.0 — Made with ❤️ and zero calculus',
+              style: TextStyles.caption,
+            ),
+            const SizedBox(height: Insets.lg),
+          ],
         ),
       ),
     );

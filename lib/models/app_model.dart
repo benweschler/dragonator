@@ -3,6 +3,7 @@ import 'package:dragonator/data/user/app_user.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+//TODO: must add realtime listener to user doc.
 class AppModel extends Notifier {
   final Notifier routerRefreshNotifier = Notifier();
 
