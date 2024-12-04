@@ -4,6 +4,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/utils/team_dependent_modal.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -25,103 +26,91 @@ class BoatsPopup extends StatefulWidget {
   State<BoatsPopup> createState() => _BoatsPopupState();
 }
 
-class _BoatsPopupState extends State<BoatsPopup> {
-  late Team _cachedTeam;
-
-  @override
-  void initState() {
-    super.initState();
-    _cachedTeam = context.read<RosterModel>().getTeam(widget.teamID)!;
-  }
-
-  Route _routeBuilder(String path, Team team) {
-    if (path.startsWith('/set')) {
-      final boatID = Uri.parse(path).queryParameters['id'];
-      return _PopupTransitionPage(
-        child: Padding(
-          padding: EdgeInsets.all(Insets.lg),
-          child: _EditBoat(team.boats[boatID], team.id),
-        ),
-      ).createRoute(context);
-    }
-
-
-    return MaterialPageRoute(
-      builder: (context) => Padding(
-        padding: EdgeInsets.all(Insets.lg),
-        child: _BoatList(team),
-      ),
-    );
-  }
-
+class _BoatsPopupState extends State<BoatsPopup> with TeamDependentModal{
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
-      child: Selector<RosterModel, Team?>(
-        selector: (context, model) => model.getTeam(widget.teamID),
-        builder: (context, team, child) {
-          // True if this team is deleted during editing.
-          if (team == null) {
-            context.pop();
-            team = _cachedTeam;
-          } else {
-            _cachedTeam = team;
+      child: ModalNavigator(
+        routeBuilder: (path) {
+          if (path!.startsWith('/set')) {
+            final boatID = Uri.parse(path).queryParameters['id'];
+            final boats = context
+                .read<RosterModel>()
+                .getTeam(widget.teamID)!
+                .boats[boatID];
+
+            return _PopupTransitionPage(
+              child: Padding(
+                padding: EdgeInsets.all(Insets.lg),
+                child: _EditBoat(boats, widget.teamID),
+              ),
+            ).createRoute(context);
           }
 
-          return ModalNavigator(
-            routeBuilder: (path) => _routeBuilder(path!, team!),
+          return MaterialPageRoute(
+            builder: (context) => Padding(
+              padding: EdgeInsets.all(Insets.lg),
+              child: _BoatList(widget.teamID),
+            ),
           );
         },
       ),
     );
   }
+
+  @override
+  String get teamID => widget.teamID;
 }
 
 class _BoatList extends StatelessWidget {
-  final Team team;
+  final String teamID;
 
-  const _BoatList(this.team);
+  const _BoatList(this.teamID);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          '${team.name} Boats',
-          textAlign: TextAlign.center,
-          style: TextStyles.title1,
-        ),
-        const SizedBox(height: Insets.med),
-        Flexible(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                if (team.boats.isEmpty)
-                  Text('This team doesn\'t have any boats yet.')
-                else
-                  for (var boat in team.boats.values) _BoatTile(boat),
-              ].separate(Divider(height: Insets.xl)).toList(),
+    return Selector<RosterModel, Team?>(
+      selector: (context, model) => model.getTeam(teamID),
+      shouldRebuild: (previous, next) => next != null,
+      builder: (context, team, child) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${team!.name} Boats',
+            textAlign: TextAlign.center,
+            style: TextStyles.title1,
+          ),
+          const SizedBox(height: Insets.med),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (team.boats.isEmpty)
+                    Text('This team doesn\'t have any boats yet.')
+                  else
+                    for (var boat in team.boats.values) _BoatTile(boat),
+                ].separate(Divider(height: Insets.xl)).toList(),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: Insets.xl),
-        Hero(
-          tag: 'action button',
-          flightShuttleBuilder: _heroFlightShuttleBuilder,
-          child: ExpandingStadiumButton(
-            onTap: () => Navigator.of(context).pushNamed('/set'),
-            color: AppColors.of(context).primary,
-            label: 'Add Boat',
+          const SizedBox(height: Insets.xl),
+          Hero(
+            tag: 'action button',
+            flightShuttleBuilder: _heroFlightShuttleBuilder,
+            child: ExpandingStadiumButton(
+              onTap: () => Navigator.of(context).pushNamed('/set'),
+              color: AppColors.of(context).primary,
+              label: 'Add Boat',
+            ),
           ),
-        ),
-        const SizedBox(height: Insets.sm),
-        Hero(
-          tag: 'pop button',
-          flightShuttleBuilder: _heroFlightShuttleBuilder,
-          child: ExpandingTextButton(onTap: context.pop, text: 'Done'),
-        ),
-      ],
+          const SizedBox(height: Insets.sm),
+          Hero(
+            tag: 'pop button',
+            flightShuttleBuilder: _heroFlightShuttleBuilder,
+            child: ExpandingTextButton(onTap: context.pop, text: 'Done'),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -208,23 +197,13 @@ class _BoatTile extends StatelessWidget {
   }
 }
 
-class _EditBoat extends StatefulWidget {
+class _EditBoat extends StatelessWidget {
   /// If null, creates a new boat.
   final Boat? boat;
   final String teamID;
-
-  const _EditBoat(this.boat, this.teamID);
-
-  @override
-  State<_EditBoat> createState() => _EditBoatState();
-}
-
-class _EditBoatState extends State<_EditBoat> {
-  // Don't update the shown boat if the corresponding boat on the team (i.e. the
-  // boat passed to this widget) is update while editing. Edits should follow a
-  // last write wins policy.
-  late final Boat? _boat = widget.boat;
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
+
+  _EditBoat(this.boat, this.teamID);
 
   Future<void> _saveBoat(BuildContext context) async {
     if (!_formKey.currentState!.saveAndValidate()) {
@@ -232,28 +211,28 @@ class _EditBoatState extends State<_EditBoat> {
     }
 
     final formData = _formKey.currentState!.value;
-    final Boat boat;
-    if (_boat == null) {
-      boat = Boat(
+    final Boat savedBoat;
+    if (boat == null) {
+      savedBoat = Boat(
         id: Uuid().v4(),
         name: formData['name'],
         capacity: int.parse(formData['capacity']),
         weight: double.parse(formData['weight']),
       );
     } else {
-      boat = _boat.copyWith(
+      savedBoat = boat!.copyWith(
         name: formData['name'],
         capacity: int.parse(formData['capacity']),
         weight: double.parse(formData['weight']),
       );
     }
 
-    await context.read<RosterModel>().setBoat(boat, widget.teamID);
+    await context.read<RosterModel>().setBoat(savedBoat, teamID);
     if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   Future<void> _deleteBoat(BuildContext context) async {
-    await context.read<RosterModel>().deleteBoat(_boat!.id, widget.teamID);
+    await context.read<RosterModel>().deleteBoat(boat!.id, teamID);
     if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
@@ -270,14 +249,14 @@ class _EditBoatState extends State<_EditBoat> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              _boat != null ? 'Edit ${_boat.name}' : 'Add boat',
+              boat != null ? 'Edit ${boat!.name}' : 'Add boat',
               textAlign: TextAlign.center,
               style: TextStyles.title1,
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'name',
-              initialValue: _boat?.name,
+              initialValue: boat?.name,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: Validators.required(errorText: 'Enter a name.'),
               decoration: CustomInputDecoration(
@@ -288,7 +267,7 @@ class _EditBoatState extends State<_EditBoat> {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'capacity',
-              initialValue: _boat?.capacity.toString(),
+              initialValue: boat?.capacity.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -305,7 +284,7 @@ class _EditBoatState extends State<_EditBoat> {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'weight',
-              initialValue: _boat?.formattedWeight,
+              initialValue: boat?.formattedWeight,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -339,7 +318,7 @@ class _EditBoatState extends State<_EditBoat> {
                     ),
                   ),
                 ),
-                if (_boat != null) ...[
+                if (boat != null) ...[
                   SizedBox(width: Insets.med),
                   Expanded(
                     child: ExpandingStadiumButton(

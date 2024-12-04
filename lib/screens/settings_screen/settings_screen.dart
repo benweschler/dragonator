@@ -9,6 +9,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
+import 'package:dragonator/utils/team_dependent_modal.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -172,7 +173,7 @@ class _TeamTile extends StatelessWidget {
     return ResponsiveStrokeButton(
       onTap: () {
         context.showModal(_TeamContextMenu(
-          team: team,
+          teamID: team.id,
           rootContext: context,
         ));
       },
@@ -194,25 +195,31 @@ class _TeamTile extends StatelessWidget {
   }
 }
 
-class _TeamContextMenu extends StatelessWidget {
-  final Team team;
+class _TeamContextMenu extends StatefulWidget {
+  final String teamID;
   final BuildContext rootContext;
 
-  const _TeamContextMenu({required this.team, required this.rootContext});
+  const _TeamContextMenu({required this.teamID, required this.rootContext});
 
+  @override
+  State<_TeamContextMenu> createState() => _TeamContextMenuState();
+}
+
+class _TeamContextMenuState extends State<_TeamContextMenu>
+    with TeamDependentModal {
   @override
   Widget build(BuildContext context) {
     return ContextMenu([
       ContextMenuAction(
         icon: Icons.edit_rounded,
         label: 'Rename',
-        onTap: () => context.push(RoutePaths.nameTeam(team.id)),
+        onTap: () => context.push(RoutePaths.nameTeam(widget.teamID)),
       ),
       ContextMenuAction(
         icon: Icons.groups_rounded,
         label: 'Roster',
         onTap: () async {
-          context.read<RosterModel>().setCurrentTeam(team.id).then((_) {
+          context.read<RosterModel>().setCurrentTeam(widget.teamID).then((_) {
             if (context.mounted) context.go(RoutePaths.roster);
           });
         },
@@ -225,8 +232,8 @@ class _TeamContextMenu extends StatelessWidget {
           context.pop();
           await Future.delayed(Timings.long);
 
-          if (!rootContext.mounted) return;
-          rootContext.showPopup(BoatsPopup(team.id));
+          if (!widget.rootContext.mounted) return;
+          widget.rootContext.showPopup(BoatsPopup(widget.teamID));
         },
       ),
       //TODO: must implement screen if user has no teams and if current team is deleted.
@@ -238,4 +245,7 @@ class _TeamContextMenu extends StatelessWidget {
       ),
     ]);
   }
+
+  @override
+  String get teamID => widget.teamID;
 }
