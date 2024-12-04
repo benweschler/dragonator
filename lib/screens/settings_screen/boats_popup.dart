@@ -7,7 +7,7 @@ import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
-import 'package:dragonator/widgets/nested_navigator.dart';
+import 'package:dragonator/widgets/modal_navigator.dart';
 import 'package:dragonator/widgets/popup_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,51 +34,44 @@ class _BoatsPopupState extends State<BoatsPopup> {
     _cachedTeam = context.read<RosterModel>().getTeam(widget.teamID)!;
   }
 
-  List<Page> _pageBuilder(String path, Team team) {
-    var pages = <Page>[
-      MaterialPage(
-        child: Padding(
-          padding: EdgeInsets.all(Insets.lg),
-          child: _BoatList(team),
-        ),
-      ),
-    ];
-
+  Route _routeBuilder(String path, Team team) {
     if (path.startsWith('/set')) {
       final boatID = Uri.parse(path).queryParameters['id'];
-      pages.add(_PopupTransitionPage(
+      return _PopupTransitionPage(
         child: Padding(
           padding: EdgeInsets.all(Insets.lg),
           child: _EditBoat(team.boats[boatID], team.id),
         ),
-      ));
+      ).createRoute(context);
     }
 
-    return pages;
+
+    return MaterialPageRoute(
+      builder: (context) => Padding(
+        padding: EdgeInsets.all(Insets.lg),
+        child: _BoatList(team),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
-      child: AnimatedSize(
-        duration: Timings.long,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        child: Selector<RosterModel, Team?>(
-          selector: (context, model) => model.getTeam(widget.teamID),
-          builder: (context, team, child) {
-            // True if this team is deleted during editing.
-            if (team == null) {
-              context.pop();
-              team = _cachedTeam;
-            } else {
-              _cachedTeam = team;
-            }
+      child: Selector<RosterModel, Team?>(
+        selector: (context, model) => model.getTeam(widget.teamID),
+        builder: (context, team, child) {
+          // True if this team is deleted during editing.
+          if (team == null) {
+            context.pop();
+            team = _cachedTeam;
+          } else {
+            _cachedTeam = team;
+          }
 
-            return NestedNavigator(
-              pagesBuilder: (path) => _pageBuilder(path, team!),
-            );
-          },
-        ),
+          return ModalNavigator(
+            routeBuilder: (path) => _routeBuilder(path!, team!),
+          );
+        },
       ),
     );
   }
@@ -117,7 +110,7 @@ class _BoatList extends StatelessWidget {
           tag: 'action button',
           flightShuttleBuilder: _heroFlightShuttleBuilder,
           child: ExpandingStadiumButton(
-            onTap: () => NestedNavigator.of(context).pushNamed('/set'),
+            onTap: () => Navigator.of(context).pushNamed('/set'),
             color: AppColors.of(context).primary,
             label: 'Add Boat',
           ),
@@ -188,7 +181,7 @@ class _BoatTile extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: () => NestedNavigator.of(context).pushNamed('/set?id=${boat.id}'),
+      onTap: () => Navigator.of(context).pushNamed('/set?id=${boat.id}'),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,12 +249,12 @@ class _EditBoatState extends State<_EditBoat> {
     }
 
     await context.read<RosterModel>().setBoat(boat, widget.teamID);
-    if (context.mounted) NestedNavigator.of(context).popHome();
+    if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   Future<void> _deleteBoat(BuildContext context) async {
     await context.read<RosterModel>().deleteBoat(_boat!.id, widget.teamID);
-    if (context.mounted) NestedNavigator.of(context).popHome();
+    if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
