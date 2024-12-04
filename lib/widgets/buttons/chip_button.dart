@@ -21,17 +21,24 @@ class ChipButton extends StatelessWidget {
     return ResponsiveButton(
       onTap: onTap,
       builder: (overlay) {
-        final contentColor = this.contentColor ??
-            Color.alphaBlend(overlay, AppColors.of(context).neutralContent);
+        final contentColor = Color.alphaBlend(
+          overlay,
+          this.contentColor ?? AppColors.of(context).neutralContent,
+        );
+        final outlineColor = Color.alphaBlend(
+          overlay,
+          this.fillColor ?? Theme.of(context).colorScheme.outlineVariant,
+        );
+        final fillColor = Color.alphaBlend(
+          overlay,
+          this.fillColor ?? AppColors.of(context).smallSurface,
+        );
 
         final decoration = ShapeDecoration(
           shape: StadiumBorder(
-            side: BorderSide(
-              //TODO: change to divider color once added to AppColors. This is the default M3 divider color.
-              color: fillColor ?? Theme.of(context).colorScheme.outlineVariant,
-            ),
+            side: BorderSide(color: outlineColor),
           ),
-          color: fillColor ?? AppColors.of(context).smallSurface,
+          color: fillColor,
         );
 
         return Container(

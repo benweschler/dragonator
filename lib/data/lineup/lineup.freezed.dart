@@ -22,6 +22,7 @@ Lineup _$LineupFromJson(Map<String, dynamic> json) {
 mixin _$Lineup {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get boatID => throw _privateConstructorUsedError;
   Iterable<String?> get paddlerIDs => throw _privateConstructorUsedError;
 
   /// Serializes this Lineup to a JSON map.
@@ -38,7 +39,8 @@ abstract class $LineupCopyWith<$Res> {
   factory $LineupCopyWith(Lineup value, $Res Function(Lineup) then) =
       _$LineupCopyWithImpl<$Res, Lineup>;
   @useResult
-  $Res call({String id, String name, Iterable<String?> paddlerIDs});
+  $Res call(
+      {String id, String name, String boatID, Iterable<String?> paddlerIDs});
 }
 
 /// @nodoc
@@ -58,6 +60,7 @@ class _$LineupCopyWithImpl<$Res, $Val extends Lineup>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? boatID = null,
     Object? paddlerIDs = null,
   }) {
     return _then(_value.copyWith(
@@ -68,6 +71,10 @@ class _$LineupCopyWithImpl<$Res, $Val extends Lineup>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      boatID: null == boatID
+          ? _value.boatID
+          : boatID // ignore: cast_nullable_to_non_nullable
               as String,
       paddlerIDs: null == paddlerIDs
           ? _value.paddlerIDs
@@ -84,7 +91,8 @@ abstract class _$$LineupImplCopyWith<$Res> implements $LineupCopyWith<$Res> {
       __$$LineupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, Iterable<String?> paddlerIDs});
+  $Res call(
+      {String id, String name, String boatID, Iterable<String?> paddlerIDs});
 }
 
 /// @nodoc
@@ -102,6 +110,7 @@ class __$$LineupImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? boatID = null,
     Object? paddlerIDs = null,
   }) {
     return _then(_$LineupImpl(
@@ -112,6 +121,10 @@ class __$$LineupImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      boatID: null == boatID
+          ? _value.boatID
+          : boatID // ignore: cast_nullable_to_non_nullable
               as String,
       paddlerIDs: null == paddlerIDs
           ? _value.paddlerIDs
@@ -125,7 +138,10 @@ class __$$LineupImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LineupImpl extends _Lineup {
   const _$LineupImpl(
-      {required this.id, required this.name, required this.paddlerIDs})
+      {required this.id,
+      required this.name,
+      required this.boatID,
+      required this.paddlerIDs})
       : super._();
 
   factory _$LineupImpl.fromJson(Map<String, dynamic> json) =>
@@ -135,6 +151,8 @@ class _$LineupImpl extends _Lineup {
   final String id;
   @override
   final String name;
+  @override
+  final String boatID;
   @override
   final Iterable<String?> paddlerIDs;
 
@@ -158,6 +176,7 @@ abstract class _Lineup extends Lineup {
   const factory _Lineup(
       {required final String id,
       required final String name,
+      required final String boatID,
       required final Iterable<String?> paddlerIDs}) = _$LineupImpl;
   const _Lineup._() : super._();
 
@@ -167,6 +186,8 @@ abstract class _Lineup extends Lineup {
   String get id;
   @override
   String get name;
+  @override
+  String get boatID;
   @override
   Iterable<String?> get paddlerIDs;
 

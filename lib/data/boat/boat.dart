@@ -27,6 +27,10 @@ class Boat extends Equatable with _$Boat {
   // Lineups in Firestore have their ID as their key rather than a data member.
   Map<String, dynamic> toFirestore() => toJson()..remove('id');
 
+  String get formattedWeight {
+    return weight.toInt() == weight ? weight.toStringAsFixed(0) : '$weight';
+  }
+
   @override
   List<Object?> get props => [id, name, capacity, weight];
 }

@@ -14,7 +14,7 @@ class NameLineupScreen extends StatelessWidget {
     final Lineup? lineup = lineupID != null
         ? context.read<RosterModel>().getLineup(lineupID!)
         : null;
-    //TODO: dummy
+
     final lineupNum = context.read<RosterModel>().lineups.length + 1;
     final defaultName = 'Lineup #$lineupNum';
 
@@ -24,6 +24,8 @@ class NameLineupScreen extends StatelessWidget {
                 Lineup(
                   id: '$lineupNum',
                   name: lineupName,
+                  //TODO: implement choosing a boat
+                  boatID: '',
                   paddlerIDs: const Iterable<String?>.empty(),
                 ),
           ),

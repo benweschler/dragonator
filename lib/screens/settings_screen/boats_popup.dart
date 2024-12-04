@@ -4,10 +4,10 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/notifier.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
+import 'package:dragonator/widgets/nested_navigator.dart';
 import 'package:dragonator/widgets/popup_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,74 +34,53 @@ class _BoatsPopupState extends State<BoatsPopup> {
     _cachedTeam = context.read<RosterModel>().getTeam(widget.teamID)!;
   }
 
+  List<Page> _pageBuilder(String path, Team team) {
+    var pages = <Page>[
+      MaterialPage(
+        child: Padding(
+          padding: EdgeInsets.all(Insets.lg),
+          child: _BoatList(team),
+        ),
+      ),
+    ];
+
+    if (path.startsWith('/set')) {
+      final boatID = Uri.parse(path).queryParameters['id'];
+      pages.add(_PopupTransitionPage(
+        child: Padding(
+          padding: EdgeInsets.all(Insets.lg),
+          child: _EditBoat(team.boats[boatID], team.id),
+        ),
+      ));
+    }
+
+    return pages;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
       child: AnimatedSize(
         duration: Timings.long,
         curve: Curves.fastEaseInToSlowEaseOut,
-        child: IntrinsicHeight(
-          child: ChangeNotifierProvider(
-            create: (_) => _PopupNavigator(),
-            child: Selector<RosterModel, Team?>(
-              selector: (context, model) => model.getTeam(widget.teamID),
-              builder: (context, team, child) {
-                // True if this team is deleted during editing.
-                if (team == null) {
-                  context.pop();
-                  team = _cachedTeam;
-                }
+        child: Selector<RosterModel, Team?>(
+          selector: (context, model) => model.getTeam(widget.teamID),
+          builder: (context, team, child) {
+            // True if this team is deleted during editing.
+            if (team == null) {
+              context.pop();
+              team = _cachedTeam;
+            } else {
+              _cachedTeam = team;
+            }
 
-                final path = context.watch<_PopupNavigator>().path;
-                var pages = <Page>[
-                  MaterialPage(
-                    child: Padding(
-                      padding: EdgeInsets.all(Insets.lg),
-                      child: _BoatList(team),
-                    ),
-                  ),
-                ];
-
-                if (path.startsWith('/set')) {
-                  final boatID = Uri.parse(path).queryParameters['id'];
-                  pages.add(_PopupTransitionPage(
-                    child: Padding(
-                      padding: EdgeInsets.all(Insets.lg),
-                      child: _EditBoat(_cachedTeam.boats[boatID], team.id),
-                    ),
-                  ));
-                }
-
-                _cachedTeam = team;
-
-                return Navigator(
-                  observers: [HeroController()],
-                  pages: pages,
-                  onDidRemovePage: (_) {},
-                );
-              },
-            ),
-          ),
+            return NestedNavigator(
+              pagesBuilder: (path) => _pageBuilder(path, team!),
+            );
+          },
         ),
       ),
     );
-  }
-}
-
-class _PopupNavigator extends Notifier {
-  String _path = '/';
-
-  String get path => _path;
-
-  static _PopupNavigator of(BuildContext context) =>
-      context.read<_PopupNavigator>();
-
-  void pushNamed(String path) => notify(() => _path = path);
-
-  static void popHome(BuildContext context) {
-    _PopupNavigator.of(context)
-      .._path = '/'
-      ..notify();
   }
 }
 
@@ -138,7 +117,7 @@ class _BoatList extends StatelessWidget {
           tag: 'action button',
           flightShuttleBuilder: _heroFlightShuttleBuilder,
           child: ExpandingStadiumButton(
-            onTap: () => _PopupNavigator.of(context).pushNamed('/set'),
+            onTap: () => NestedNavigator.of(context).pushNamed('/set'),
             color: AppColors.of(context).primary,
             label: 'Add Boat',
           ),
@@ -191,7 +170,7 @@ class _BoatTile extends StatelessWidget {
                 ])),
                 Text.rich(TextSpan(children: [
                   TextSpan(
-                    text: _formatDouble(boat.weight),
+                    text: boat.formattedWeight,
                     style: TextStyles.body1,
                   ),
                   TextSpan(
@@ -209,7 +188,7 @@ class _BoatTile extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: () => _PopupNavigator.of(context).pushNamed('/set?id=${boat.id}'),
+      onTap: () => NestedNavigator.of(context).pushNamed('/set?id=${boat.id}'),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,6 +227,10 @@ class _EditBoat extends StatefulWidget {
 }
 
 class _EditBoatState extends State<_EditBoat> {
+  // Don't update the shown boat if the corresponding boat on the team (i.e. the
+  // boat passed to this widget) is update while editing. Edits should follow a
+  // last write wins policy.
+  late final Boat? _boat = widget.boat;
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   Future<void> _saveBoat(BuildContext context) async {
@@ -257,7 +240,7 @@ class _EditBoatState extends State<_EditBoat> {
 
     final formData = _formKey.currentState!.value;
     final Boat boat;
-    if (widget.boat == null) {
+    if (_boat == null) {
       boat = Boat(
         id: Uuid().v4(),
         name: formData['name'],
@@ -265,7 +248,7 @@ class _EditBoatState extends State<_EditBoat> {
         weight: double.parse(formData['weight']),
       );
     } else {
-      boat = widget.boat!.copyWith(
+      boat = _boat.copyWith(
         name: formData['name'],
         capacity: int.parse(formData['capacity']),
         weight: double.parse(formData['weight']),
@@ -273,14 +256,12 @@ class _EditBoatState extends State<_EditBoat> {
     }
 
     await context.read<RosterModel>().setBoat(boat, widget.teamID);
-    if (context.mounted) _PopupNavigator.popHome(context);
+    if (context.mounted) NestedNavigator.of(context).popHome();
   }
 
   Future<void> _deleteBoat(BuildContext context) async {
-    await context
-        .read<RosterModel>()
-        .deleteBoat(widget.boat!.id, widget.teamID);
-    if (context.mounted) _PopupNavigator.popHome(context);
+    await context.read<RosterModel>().deleteBoat(_boat!.id, widget.teamID);
+    if (context.mounted) NestedNavigator.of(context).popHome();
   }
 
   @override
@@ -296,14 +277,14 @@ class _EditBoatState extends State<_EditBoat> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              widget.boat != null ? 'Edit ${widget.boat!.name}' : 'Add boat',
+              _boat != null ? 'Edit ${_boat.name}' : 'Add boat',
               textAlign: TextAlign.center,
               style: TextStyles.title1,
             ),
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'name',
-              initialValue: widget.boat?.name,
+              initialValue: _boat?.name,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: Validators.required(errorText: 'Enter a name.'),
               decoration: CustomInputDecoration(
@@ -314,7 +295,7 @@ class _EditBoatState extends State<_EditBoat> {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'capacity',
-              initialValue: widget.boat?.capacity.toString(),
+              initialValue: _boat?.capacity.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -331,7 +312,7 @@ class _EditBoatState extends State<_EditBoat> {
             const SizedBox(height: Insets.med),
             FormBuilderTextField(
               name: 'weight',
-              initialValue: _formatDouble(widget.boat?.weight),
+              initialValue: _boat?.formattedWeight,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -354,7 +335,7 @@ class _EditBoatState extends State<_EditBoat> {
                 Expanded(
                   child: Hero(
                     //TODO: might want to remove hero with two buttons
-                    //tag: widget.boat == null ? 'action button' : '',
+                    //tag: _cachedBoat == null ? 'action button' : '',
                     tag: 'action button',
                     flightShuttleBuilder: _heroFlightShuttleBuilder,
                     child: ExpandingStadiumButton(
@@ -365,7 +346,7 @@ class _EditBoatState extends State<_EditBoat> {
                     ),
                   ),
                 ),
-                if (widget.boat != null) ...[
+                if (_boat != null) ...[
                   SizedBox(width: Insets.med),
                   Expanded(
                     child: ExpandingStadiumButton(
@@ -383,7 +364,8 @@ class _EditBoatState extends State<_EditBoat> {
               tag: 'pop button',
               flightShuttleBuilder: _heroFlightShuttleBuilder,
               child: ExpandingTextButton(
-                onTap: () => _PopupNavigator.popHome(context),
+                onTap: () => Navigator.pop(context),
+                //onTap: () => NestedNavigator.popHome(context),
                 text: 'Cancel',
               ),
             ),
@@ -462,10 +444,4 @@ class _PopupTransitionPage extends CustomTransitionPage {
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               FadeTransition(opacity: animation, child: child),
         );
-}
-
-String? _formatDouble(double? n) {
-  if (n == null) return null;
-
-  return n.toInt() == n ? n.toStringAsFixed(0) : '$n';
 }

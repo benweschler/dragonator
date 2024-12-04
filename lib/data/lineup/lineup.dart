@@ -12,6 +12,7 @@ class Lineup extends Equatable with _$Lineup {
   const factory Lineup({
     required String id,
     required String name,
+    required String boatID,
     required Iterable<String?> paddlerIDs,
   }) = _Lineup;
 

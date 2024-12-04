@@ -144,6 +144,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           ),
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(
+          lineup: _lineup,
           com: _calculateCOM(),
         )),
       ),
