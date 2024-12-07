@@ -8,8 +8,9 @@ extension NavigationUtils on BuildContext {
       elevation: 0,
       backgroundColor: Colors.transparent,
       scrollControlDisabledMaxHeightRatio: 1,
-      builder: (_) => sheet,
       useRootNavigator: true,
+      useSafeArea: true,
+      builder: (_) => sheet,
     );
   }
 

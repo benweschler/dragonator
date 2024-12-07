@@ -17,15 +17,32 @@ class ModalSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _ModalSheetHandle(),
-            const SizedBox(height: Insets.xs),
-            Container(
-              margin: const EdgeInsets.all(Insets.sm),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-                borderRadius: Corners.medBorderRadius,
+            GestureDetector(
+              onTap: Navigator.of(context).pop,
+              behavior: HitTestBehavior.opaque,
+              child: Column(
+                children: [
+                  const _ModalSheetHandle(),
+                  const SizedBox(
+                    height: Insets.sm,
+                    width: double.infinity,
+                  ),
+                ],
               ),
-              child: child,
+            ),
+            Flexible(
+              child: Container(
+                margin: const EdgeInsets.only(
+                  left: Insets.sm,
+                  right: Insets.sm,
+                  bottom: Insets.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  borderRadius: Corners.medBorderRadius,
+                ),
+                child: child,
+              ),
             ),
           ],
         ),
@@ -46,6 +63,7 @@ class _ModalSheetHandleState extends State<_ModalSheetHandle>
   final _handelHeight = Insets.xs;
   final double _collapsedHandleWidth = 35;
   final double _expandedHandleWidth = 50;
+  late final Animation<double> _routeAnimation;
   bool _isExpanded = false;
 
   @override
@@ -53,9 +71,15 @@ class _ModalSheetHandleState extends State<_ModalSheetHandle>
     // dependOnInheritedWidgetOfExactType cannot be called in initState. It is
     //safe to call in didChangeDependencies, which is called immediately after
     // initState.
-    final routeAnimation = ModalRoute.of(context)!.animation!;
-    routeAnimation.addListener(() => updateHandle(routeAnimation));
+    _routeAnimation = ModalRoute.of(context)!.animation!;
+    _routeAnimation.addListener(() => updateHandle(_routeAnimation));
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _routeAnimation.removeListener(() => updateHandle(_routeAnimation));
+    super.dispose();
   }
 
   void updateHandle(Animation<double> routeAnimation) {
