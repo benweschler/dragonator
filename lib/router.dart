@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dragonator/bootstrapper.dart';
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/models/settings_model.dart';
@@ -203,11 +202,6 @@ class AppRouter {
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isAppInitialized && path != RoutePaths.splash) {
-        Bootstrapper(
-          appModel: appModel,
-          rosterModel: context.read<RosterModel>(),
-          settingsModel: context.read<SettingsModel>(),
-        ).initializeApp();
         return RoutePaths.splash;
       } else if (appModel.isAppInitialized && path == RoutePaths.splash) {
         return RoutePaths.roster;

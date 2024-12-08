@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dragonator/commands/firestore_references.dart';
@@ -19,6 +18,8 @@ part '../commands/lineup_commands.dart';
 
 part '../commands/boat_commands.dart';
 
+typedef TeamDeletedListener = void Function(String teamName, bool isCurrentTeam);
+
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
@@ -26,12 +27,18 @@ class RosterModel extends Notifier {
   StreamSubscription? _paddlersSubscription;
   StreamSubscription? _lineupsSubscription;
 
-  final Map<String, List<VoidCallback>> _onTeamDeletedListeners = {};
+  final Map<String, List<TeamDeletedListener>> _onTeamDeletedListeners = {};
+  late void Function(String) _showCurrentTeamDeletedDialog;
 
-  Future<void> initialize(AppUser user) async {
+  Future<void> initialize({
+    required AppUser user,
+    required void Function(String) showCurrentTeamDeletedDialog,
+  }) async {
     assert(_paddlerIDMap.isEmpty);
     assert(_teamIDMap.isEmpty);
     assert(_lineupIDMap.isEmpty);
+
+    _showCurrentTeamDeletedDialog = showCurrentTeamDeletedDialog;
 
     // Load teams
     final teamsQuery = teamsCollection.where('owners', arrayContains: user.id);
@@ -68,16 +75,19 @@ class RosterModel extends Notifier {
 
   //* LISTENERS *//
 
-  void addOnTeamDeletedListener(String teamID, VoidCallback listener) {
-    if(_onTeamDeletedListeners[teamID] == null) {
+  void addOnTeamDeletedListener(String teamID, TeamDeletedListener listener) {
+    if (_onTeamDeletedListeners[teamID] == null) {
       _onTeamDeletedListeners[teamID] = [listener];
     } else {
       _onTeamDeletedListeners[teamID]!.add(listener);
     }
   }
 
-  void removeOnTeamDeletedListener(String teamID, VoidCallback listener) {
+  void removeOnTeamDeletedListener(String teamID, TeamDeletedListener listener) {
     _onTeamDeletedListeners[teamID]?.remove(listener);
+    if (_onTeamDeletedListeners[teamID]?.isEmpty == true) {
+      _onTeamDeletedListeners.remove(teamID);
+    }
   }
 
   //* LOAD DATA *//
@@ -144,9 +154,10 @@ class RosterModel extends Notifier {
   //* UPDATE DATA *//
 
   void _onTeamsQueryUpdate(QuerySnapshot snapshot) {
+    final currentTeamName = currentTeam?.name;
     _updateTeams(snapshot);
-    if (!_teamIDMap.keys.contains(_currentTeamID)) {
-      _onCurrentTeamDeleted();
+    if (_currentTeamID != null && !_teamIDMap.keys.contains(_currentTeamID)) {
+      _onCurrentTeamDeleted(currentTeamName!, false);
     }
 
     notify();
@@ -157,8 +168,11 @@ class RosterModel extends Notifier {
       final id = docChange.doc.id;
 
       if (docChange.type == DocumentChangeType.removed) {
+        _onTeamDeletedListeners[id]?.forEach((listener) => listener(
+          _teamIDMap[id]!.name,
+          id == _currentTeamID,
+        ));
         _teamIDMap.remove(id);
-        _onTeamDeletedListeners[id]?.forEach((listener) => listener());
       } else {
         final teamData = docChange.doc.data() as Map<String, dynamic>;
         _teamIDMap[id] = Team.fromFirestore(id: id, data: teamData);
@@ -166,10 +180,14 @@ class RosterModel extends Notifier {
     }
   }
 
-  void _onCurrentTeamDeleted() {
+  void _onCurrentTeamDeleted(String deletedTeamName, bool userInitiated) {
     _updateCurrentTeamWithDetails(
       _teamIDMap.isEmpty ? null : _teamIDMap.keys.first,
     );
+    // Show a popup if a collaborator deletes the current team.
+    if(!userInitiated) {
+      _showCurrentTeamDeletedDialog(deletedTeamName);
+    }
   }
 
   void _onPaddlerDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -247,14 +265,22 @@ class RosterModel extends Notifier {
 
   Future<void> createTeam(String name) => _createTeamCommand(name);
 
-  Future<void> deleteTeam(String teamID) {
+  Future<void> deleteTeam(String teamID) async {
+    if(!_teamIDMap.containsKey(teamID)) return;
+
+    final teamName = _teamIDMap[teamID]!.name;
+    _onTeamDeletedListeners[teamID]?.forEach((listener) => listener(
+        teamName,
+        teamID == _currentTeamID,
+    ));
+
     // Update the current team prior to deleting it to distinguish between the
     // user deleting the current team and a collaborator deleting a current
     // team in _onTeamQueryUpdate.
     if (teamID == _currentTeamID) {
-      _onCurrentTeamDeleted();
+      _onCurrentTeamDeleted(_teamIDMap[teamID]!.name, true);
     }
-    _onTeamDeletedListeners[teamID]?.forEach((listener) => listener());
+
     return _deleteTeamCommand(teamID);
   }
 

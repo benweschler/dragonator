@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'popup_dialog.dart';
 
 class TeamDeletedPopup extends StatelessWidget {
-  const TeamDeletedPopup({super.key});
+  final String teamName;
+
+  const TeamDeletedPopup(this.teamName, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +20,14 @@ class TeamDeletedPopup extends StatelessWidget {
           children: [
             Text('Team Deleted', style: TextStyles.title1),
             const SizedBox(height: Insets.med),
-            Text(
-              //TODO: change to use team name
-              'This team has been deleted by another collaborator.',
-              style: TextStyles.body1,
-              textAlign: TextAlign.center,
-            ),
+            Text.rich(TextSpan(children: [
+              TextSpan(text: 'The team '),
+              TextSpan(
+                text: teamName,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextSpan(text: ' has been deleted by a collaborator.')
+            ])),
             const SizedBox(height: Insets.xl),
             ExpandingStadiumButton(
               onTap: Navigator.of(context).pop,

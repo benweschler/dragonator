@@ -216,6 +216,7 @@ class _LineupBoatOptions extends StatelessWidget {
   }
 }
 
+//TODO: throws error when increasing boat capacity
 class _ChangeBoatView extends StatefulWidget {
   final ValueChanged<Boat> onChangeBoat;
 
@@ -234,6 +235,8 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
     final boats = context.select<RosterModel, Map<String, Boat>>(
       (model) => model.currentTeam!.boats,
     );
+
+    print('Initial boat capacity: ${boats[_initialBoatID]?.capacity}');
 
     return Container(
       alignment: Alignment.center,
@@ -264,6 +267,9 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
               // True if the boat was deleted from the lineup before saving. No
               // boat will be selected if this is the case.
               if (boat == null) return;
+
+              print('Initial boat capacity check: ${boats[_initialBoatID]?.capacity}');
+              print('Selected boat capacity: ${boat.capacity}');
 
               final selectedBoatIDNotifier =
                   context.read<ValueNotifier<String>>();

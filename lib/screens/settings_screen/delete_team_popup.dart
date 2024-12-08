@@ -106,8 +106,8 @@ class _DeleteTeamPopupState extends State<DeleteTeamPopup>
                       onTap: () {
                         if (_controller.text == team.name) {
                           cancelTeamDependence();
-                          context.read<RosterModel>().deleteTeam(teamID);
                           context.pop();
+                          context.read<RosterModel>().deleteTeam(widget.teamID);
                         }
                       },
                       color: AppColors.of(context).error,
