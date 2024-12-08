@@ -5,7 +5,7 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
-import 'package:dragonator/widgets/popup_dialog.dart';
+import 'package:dragonator/widgets/popups/popup_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

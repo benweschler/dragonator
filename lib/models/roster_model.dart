@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dragonator/commands/firestore_references.dart';
@@ -25,6 +26,8 @@ class RosterModel extends Notifier {
   StreamSubscription? _paddlersSubscription;
   StreamSubscription? _lineupsSubscription;
 
+  final Map<String, List<VoidCallback>> _onTeamDeletedListeners = {};
+
   Future<void> initialize(AppUser user) async {
     assert(_paddlerIDMap.isEmpty);
     assert(_teamIDMap.isEmpty);
@@ -48,9 +51,33 @@ class RosterModel extends Notifier {
     _teamIDMap.clear();
     _paddlerIDMap.clear();
     _lineupIDMap.clear();
+    _onTeamDeletedListeners.clear();
     await _teamsSubscription?.cancel();
     await _paddlersSubscription?.cancel();
     await _lineupsSubscription?.cancel();
+  }
+
+  //* DATA *//
+
+  String? _currentTeamID;
+  final Map<String, Team> _teamIDMap = {};
+
+  final Map<String, Paddler> _paddlerIDMap = {};
+
+  final Map<String, Lineup> _lineupIDMap = {};
+
+  //* LISTENERS *//
+
+  void addOnTeamDeletedListener(String teamID, VoidCallback listener) {
+    if(_onTeamDeletedListeners[teamID] == null) {
+      _onTeamDeletedListeners[teamID] = [listener];
+    } else {
+      _onTeamDeletedListeners[teamID]!.add(listener);
+    }
+  }
+
+  void removeOnTeamDeletedListener(String teamID, VoidCallback listener) {
+    _onTeamDeletedListeners[teamID]?.remove(listener);
   }
 
   //* LOAD DATA *//
@@ -131,6 +158,7 @@ class RosterModel extends Notifier {
 
       if (docChange.type == DocumentChangeType.removed) {
         _teamIDMap.remove(id);
+        _onTeamDeletedListeners[id]?.forEach((listener) => listener());
       } else {
         final teamData = docChange.doc.data() as Map<String, dynamic>;
         _teamIDMap[id] = Team.fromFirestore(id: id, data: teamData);
@@ -180,15 +208,6 @@ class RosterModel extends Notifier {
     notify();
   }
 
-  //* DATA *//
-
-  String? _currentTeamID;
-  final Map<String, Team> _teamIDMap = {};
-
-  final Map<String, Paddler> _paddlerIDMap = {};
-
-  final Map<String, Lineup> _lineupIDMap = {};
-
   //* TEAM GETTERS *//
 
   Iterable<Team> get teams => _teamIDMap.values;
@@ -235,6 +254,7 @@ class RosterModel extends Notifier {
     if (teamID == _currentTeamID) {
       _onCurrentTeamDeleted();
     }
+    _onTeamDeletedListeners[teamID]?.forEach((listener) => listener());
     return _deleteTeamCommand(teamID);
   }
 

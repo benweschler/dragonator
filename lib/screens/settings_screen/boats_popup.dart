@@ -9,7 +9,7 @@ import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/modal_navigator.dart';
-import 'package:dragonator/widgets/popup_dialog.dart';
+import 'package:dragonator/widgets/popups/popup_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
