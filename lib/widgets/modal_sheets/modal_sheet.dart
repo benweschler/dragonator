@@ -63,7 +63,7 @@ class _ModalSheetHandleState extends State<_ModalSheetHandle>
   final _handelHeight = Insets.xs;
   final double _collapsedHandleWidth = 35;
   final double _expandedHandleWidth = 50;
-  late final Animation<double> _routeAnimation;
+  late Animation<double> _routeAnimation;
   bool _isExpanded = false;
 
   @override

@@ -41,13 +41,11 @@ class _SortingOptionsMenuState extends State<SortingOptionsMenu> {
               onDirectionChanged: (value) =>
                   setState(() => sortIncreasing = value),
             ),
-            ...widget.sortingStrategies
-                .map((strategy) => SelectionMenuTile(
-                      label: strategy,
-                      isSelected: selectedStrategy == strategy,
-                      onTap: () => setState(() => selectedStrategy = strategy),
-                    ))
-                ,
+            ...widget.sortingStrategies.map((strategy) => SelectionMenuTile(
+                  label: strategy,
+                  isSelected: selectedStrategy == strategy,
+                  onTap: () => setState(() => selectedStrategy = strategy),
+                )),
             //TODO: using divider here
           ].separate(const Divider(height: 0.5, thickness: 0.5)),
           ModalSheetButtonTile(
@@ -93,10 +91,7 @@ class _SortDirectionSelector extends StatelessWidget {
           const SizedBox(width: Insets.med),
           Expanded(
             child: Center(
-              child: Text(
-                sortIncreasing ? 'Ascending' : 'Descending',
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
+              child: Text(sortIncreasing ? 'Ascending' : 'Descending'),
             ),
           ),
           const SizedBox(width: Insets.med),

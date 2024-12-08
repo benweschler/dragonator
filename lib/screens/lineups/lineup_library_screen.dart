@@ -19,14 +19,12 @@ class LineupLibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RosterModel>(
-      builder: (_, rosterModel, __) {
+    return Selector<RosterModel, Iterable<Lineup>>(
+      selector: (context, model) => model.lineups,
+      builder: (_, lineups, __) {
         // Sort lineups alphabetically
-        final sortedLineups = context
-            .read<RosterModel>()
-            .lineups
-            .toList()
-            ..sort((a, b) => a.name.compareTo(b.name));
+        final sortedLineups = lineups.toList()
+          ..sort((a, b) => a.name.compareTo(b.name));
 
         return CustomScaffold(
           center: ChangeTeamHeading(),
@@ -41,7 +39,7 @@ class LineupLibraryScreen extends StatelessWidget {
               const Text('Lineups', style: TextStyles.h1),
               const SizedBox(height: Insets.sm),
               ...sortedLineups
-                  .map<Widget>((lineup) => LineupPreviewTile(lineup))
+                  .map<Widget>((lineup) => _LineupPreviewTile(lineup))
                   .separate(const Divider(height: 0.5, thickness: 0.5)),
             ],
           ),
@@ -51,10 +49,10 @@ class LineupLibraryScreen extends StatelessWidget {
   }
 }
 
-class LineupPreviewTile extends StatelessWidget {
+class _LineupPreviewTile extends StatelessWidget {
   final Lineup lineup;
 
-  const LineupPreviewTile(this.lineup, {super.key});
+  const _LineupPreviewTile(this.lineup);
 
   @override
   Widget build(BuildContext context) {

@@ -26,7 +26,8 @@ class NameLineupScreen extends StatelessWidget {
                   name: lineupName,
                   //TODO: implement choosing a boat
                   boatID: '',
-                  paddlerIDs: const Iterable<String?>.empty(),
+                  //TODO: because this must be the capacity of the boat, abstract this away into a create lineup method in RosterModel.
+                  paddlerIDs: Iterable<String?>.generate(22, (_) => null),
                 ),
           ),
       heading: 'Create Lineup',

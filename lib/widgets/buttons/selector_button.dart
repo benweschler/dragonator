@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class SelectorButton extends StatelessWidget {
   final bool selected;
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   const SelectorButton({
     super.key,
@@ -26,16 +26,18 @@ class SelectorButton extends StatelessWidget {
           shape: BoxShape.circle,
           //TODO: black should be onBackground
           border: Border.all(
-            color: selected ? Colors.transparent : AppColors.of(context).onBackground,
+            color: selected
+                ? Colors.transparent
+                : AppColors.of(context).outline,
           ),
         ),
         child: selected
-        //TODO: should be onAccent
+            //TODO: should be onPrimary
             ? const Icon(
-          Icons.check_rounded,
-          color: Colors.white,
-          size: Insets.lg,
-        )
+                Icons.check_rounded,
+                color: Colors.white,
+                size: Insets.lg,
+              )
             : null,
       ),
     );

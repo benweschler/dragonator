@@ -5,9 +5,10 @@ import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/popup_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-mixin TeamDependentModal<T extends StatefulWidget> on State<T> {
+mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
   late final RosterModel _rosterModel;
 
   String get teamID;
@@ -29,6 +30,7 @@ mixin TeamDependentModal<T extends StatefulWidget> on State<T> {
   void _checkTeamDeleted() {
     if (context.read<RosterModel>().getTeam(teamID) == null) {
       Navigator.of(context).pop();
+      //TODO: showing this popup should be managed by the roster model globally when the current team is deleted, and should be managed by an onTeamDeletedListener when not.
       context.showPopup(_TeamDeletedPopup());
     }
   }
@@ -64,4 +66,14 @@ class _TeamDeletedPopup extends StatelessWidget {
       ),
     );
   }
+}
+
+//TODO: this gotta go somewhere else
+class PopupTransitionPage<T> extends CustomTransitionPage<T> {
+  PopupTransitionPage({required super.child})
+      : super(
+    transitionDuration: Duration(milliseconds: 250),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(opacity: animation, child: child),
+  );
 }

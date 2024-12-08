@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
@@ -20,12 +19,7 @@ class ChangeTeamHeading extends StatelessWidget {
       if (teams.isEmpty) return SizedBox();
 
       return ResponsiveStrokeButton(
-        onTap: () => context.showModal(_TeamSelectionMenu(
-          teams: teams,
-          initiallySelectedTeamID: rosterModel.currentTeam!.id,
-          //TODO: add toast notification if team no longer exists
-          updateCurrentTeamID: (id) => rosterModel.setCurrentTeam(id),
-        )),
+        onTap: () => context.showModal(_TeamSelectionMenu()),
         child: LayoutBuilder(
           builder: (context, constraints) => ConstrainedBox(
             constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.75),
@@ -54,23 +48,22 @@ class ChangeTeamHeading extends StatelessWidget {
 }
 
 class _TeamSelectionMenu extends StatelessWidget {
-  final List<Team> teams;
-  final String initiallySelectedTeamID;
-  final ValueChanged<String> updateCurrentTeamID;
-
-  const _TeamSelectionMenu({
-    required this.teams,
-    required this.initiallySelectedTeamID,
-    required this.updateCurrentTeamID,
-  });
+  const _TeamSelectionMenu();
 
   @override
   Widget build(BuildContext context) {
-    return SelectionMenu(
-      items: teams.map((team) => team.name).toList(),
-      initiallySelectedIndex:
-          teams.indexWhere((team) => team.id == initiallySelectedTeamID),
-      onItemTap: (newTeamIndex) => updateCurrentTeamID(teams[newTeamIndex].id),
+    return Consumer<RosterModel>(
+      builder: (context, rosterModel, child) {
+        final teams = rosterModel.teams.toList();
+
+        return SelectionMenu(
+          items: teams.map((team) => team.name).toList(),
+          initiallySelectedIndex: teams
+              .indexWhere((team) => team.id == rosterModel.currentTeam!.id),
+          onItemTap: (newTeamIndex) =>
+              rosterModel.setCurrentTeam(teams[newTeamIndex].id),
+        );
+      },
     );
   }
 }

@@ -25,6 +25,7 @@ class LineupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final rosterModel = context.watch<RosterModel>();
     final lineup = rosterModel.getLineup(lineupID)!;
+    final boat = rosterModel.currentTeam!.boats[lineup.boatID]!;
 
     final List<Paddler?> paddlerList =
         lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
@@ -47,6 +48,7 @@ class LineupScreen extends StatelessWidget {
           ),
           ContextMenuAction(
             icon: Icons.delete_rounded,
+            //TODO: implement deleting lineups. context menu, lineup screen, and edit lineup screen should pop when that lineup is deleted.
             onTap: () {},
             label: 'Delete',
           ),
@@ -62,8 +64,8 @@ class LineupScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    for (int i = 0; i < kBoatCapacity / 2 + 1; i++)
-                      boatSegmentBuilder(context, i),
+                    for (int i = 0; i < boat.capacity / 2 + 1; i++)
+                      boatSegmentBuilder(context, i, boat.capacity),
                   ],
                 ),
                 CustomMultiChildLayout(

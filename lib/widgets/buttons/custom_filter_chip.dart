@@ -95,26 +95,23 @@ class _SelectFilterMenuState<T> extends State<_SelectFilterMenu<T>> {
   @override
   Widget build(BuildContext context) {
     return ModalSheet(
-      child: Scrollbar(
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...widget.options
-                  .map<Widget>((option) => SelectionMenuTile(
-                        label: option.toString(),
-                        isSelected: option == selectedMenuOption,
-                        onTap: () => onTap(option),
-                      ))
-                  .separate(const Divider(height: 0.5, thickness: 0.5)),
-              ModalSheetButtonTile(
-                color: AppColors.of(context).primary,
-                onTap: () => widget.onSave(selectedMenuOption),
-                label: 'Apply',
-              ),
-            ],
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...widget.options
+                .map<Widget>((option) => SelectionMenuTile(
+                      label: option.toString(),
+                      isSelected: option == selectedMenuOption,
+                      onTap: () => onTap(option),
+                    ))
+                .separate(const Divider(height: 0.5, thickness: 0.5)),
+            ModalSheetButtonTile(
+              color: AppColors.of(context).primary,
+              onTap: () => widget.onSave(selectedMenuOption),
+              label: 'Apply',
+            ),
+          ],
         ),
       ),
     );

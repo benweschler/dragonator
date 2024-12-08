@@ -208,6 +208,10 @@ class RosterModel extends Notifier {
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
 
+  Boat? getLineupBoat(String lineupID) {
+    return currentTeam?.boats[_lineupIDMap[lineupID]?.boatID];
+  }
+
   //* TEAM SETTERS *//
 
   Future<void> setCurrentTeam(String teamID) async {
@@ -236,13 +240,39 @@ class RosterModel extends Notifier {
   Future<void> setLineup(Lineup lineup) =>
       _setLineupCommand(lineup, _currentTeamID!);
 
+  Future<void> setLineupBoat(String lineupID, String boatID) async {
+    final lineup = getLineup(lineupID);
+    final boat = currentTeam!.boats[boatID];
+    if (boat == null || lineup == null) return;
+
+    final paddlerIDs = lineup.paddlerIDs.toList();
+    final newLineup = lineup.copyWith(
+      boatID: boatID,
+      paddlerIDs: List.generate(
+        boat.capacity,
+        (index) => index < paddlerIDs.length ? paddlerIDs[index] : null,
+      ),
+    );
+
+    _setLineupCommand(newLineup, _currentTeamID!);
+  }
+
   void deleteLineup(String lineupID) =>
       _deleteLineupCommand(lineupID, _currentTeamID!);
 
   //* BOAT SETTERS *//
 
-  Future<void> setBoat(Boat boat, String teamID) =>
-      _setBoatCommand(boat, teamID);
+  Future<void> setBoat(Boat boat, String teamID) async {
+    await _setBoatCommand(boat, teamID);
+    //TODO: should not be here. after removed, return above and remove async
+    for(Lineup lineup in _lineupIDMap.values.where((lineup) => lineup.boatID == boat.id)) {
+      var paddlerList = List<String?>.generate(
+        boat.capacity,
+            (index) => index < lineup.paddlerIDs.length ? lineup.paddlerIDs.toList()[index] : null,
+      );
+      await setLineup(lineup.copyWith(paddlerIDs: paddlerList));
+    }
+  }
 
   Future<void> deleteBoat(String boatID, String teamID) =>
       _deleteBoatCommand(boatID, teamID);

@@ -4,7 +4,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/team_dependent_modal.dart';
+import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -26,7 +26,7 @@ class BoatsPopup extends StatefulWidget {
   State<BoatsPopup> createState() => _BoatsPopupState();
 }
 
-class _BoatsPopupState extends State<BoatsPopup> with TeamDependentModal{
+class _BoatsPopupState extends State<BoatsPopup> with TeamDependentModalStateMixin{
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
@@ -34,15 +34,15 @@ class _BoatsPopupState extends State<BoatsPopup> with TeamDependentModal{
         routeBuilder: (path) {
           if (path!.startsWith('/set')) {
             final boatID = Uri.parse(path).queryParameters['id'];
-            final boats = context
+            final boat = context
                 .read<RosterModel>()
                 .getTeam(widget.teamID)!
                 .boats[boatID];
 
-            return _PopupTransitionPage(
+            return PopupTransitionPage(
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
-                child: _EditBoat(boats, widget.teamID),
+                child: _EditBoat(boat, widget.teamID),
               ),
             ).createRoute(context);
           }
@@ -246,7 +246,6 @@ class _EditBoat extends StatelessWidget {
       child: FormBuilder(
         key: _formKey,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               boat != null ? 'Edit ${boat!.name}' : 'Add boat',
@@ -265,12 +264,14 @@ class _EditBoat extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Insets.med),
+            //TODO: can't handle odd capacities.
             FormBuilderTextField(
               name: 'capacity',
               initialValue: boat?.capacity.toString(),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              //TODO: must be greater than 3: one paddler, one drummer, one steers person
               validator: Validators.isInt(
                 errorText:
                     'Enter the number of paddlers in the boat, including the drummer and steers person.',
@@ -348,7 +349,8 @@ class _EditBoat extends StatelessWidget {
   }
 }
 
-/// Cross fades the children while interpolated between their sizes.
+/// Cross fades the children while interpolating between their sizes.
+//TODO: should be put somewhere generalized
 Widget _heroFlightShuttleBuilder(
   BuildContext flightContext,
   Animation<double> animation,
@@ -407,13 +409,4 @@ Widget _heroFlightShuttleBuilder(
       );
     },
   );
-}
-
-class _PopupTransitionPage extends CustomTransitionPage {
-  _PopupTransitionPage({required super.child})
-      : super(
-          transitionDuration: Duration(milliseconds: 250),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(opacity: animation, child: child),
-        );
 }

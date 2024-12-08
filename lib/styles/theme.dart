@@ -61,6 +61,7 @@ class AppColors extends ThemeExtension<AppColors> {
           onButtonContainer: Colors.white,
           tabHighlight: _primaryRed.withOpacity(0.35),
           responsiveOverlay: Colors.white.withOpacity(0.5),
+          // The default M3 light outline/variant color.
           outline: Color(0xFF79747E),
           outlineVariant: Color(0xFFCAC4D0),
           isDark: false,
@@ -82,6 +83,7 @@ class AppColors extends ThemeExtension<AppColors> {
           // Meets 3:1 contrast on background.
           tabHighlight: _primaryRed.withOpacity(0.68),
           responsiveOverlay: Colors.black.withOpacity(0.5),
+          // The default M3 light outline/variant color.
           outline: Color(0xFF938F99),
           outlineVariant: Color(0xFF49454F),
           isDark: true,

@@ -5,13 +5,13 @@ import 'package:flutter/widgets.dart';
 
 import 'constants.dart';
 
-Widget boatSegmentBuilder(BuildContext context, int index) {
+Widget boatSegmentBuilder(BuildContext context, int index, int boatCapacity) {
   final CustomPainter painter;
   const maxBowIndex = kBoatEndExtent - 1;
-  if (index < maxBowIndex || index > kBoatCapacity ~/ 2 - maxBowIndex) {
+  if (index < maxBowIndex || index > boatCapacity ~/ 2 - maxBowIndex) {
     return SizedBox.fromSize(size: const Size.fromHeight(kGridRowHeight));
   } else if (maxBowIndex < index &&
-      index < kBoatCapacity ~/ 2 - maxBowIndex) {
+      index < boatCapacity ~/ 2 - maxBowIndex) {
     painter = _BoatSegmentPainter(
       rowNumber: index,
       outlineColor: AppColors.of(context).onBackground,
@@ -25,7 +25,7 @@ Widget boatSegmentBuilder(BuildContext context, int index) {
       segmentHeight: kGridRowHeight,
       isBow: index == maxBowIndex,
       boatEndExtent: kBoatEndExtent,
-      boatCapacity: kBoatCapacity,
+      boatCapacity: boatCapacity,
     );
   }
 

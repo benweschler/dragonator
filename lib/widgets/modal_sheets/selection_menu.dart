@@ -24,35 +24,31 @@ class SelectionMenu extends StatefulWidget {
 }
 
 class _SelectionMenuState extends State<SelectionMenu> {
-  late int selectedItemIndex = widget.initiallySelectedIndex;
+  late int _selectedItemIndex = widget.initiallySelectedIndex;
 
   @override
   Widget build(BuildContext context) {
     return ModalSheet(
-      child: Scrollbar(
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: List<Widget>.generate(
-              widget.items.length,
-              (index) => SelectionMenuTile(
-                label: widget.items[index],
-                isSelected: index == selectedItemIndex,
-                onTap: () {
-                  if (selectedItemIndex != index) {
-                    widget.onItemTap(index);
-                    setState(() => selectedItemIndex = index);
-                    HapticFeedback.lightImpact();
-                    context.pop();
-                  }
-                },
-              ),
-            )
-                //TODO: using divider here
-                .separate(const Divider(height: 0.5, thickness: 0.5))
-                .toList(),
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List<Widget>.generate(
+            widget.items.length,
+            (index) => SelectionMenuTile(
+              label: widget.items[index],
+              isSelected: index == _selectedItemIndex,
+              onTap: () {
+                if (_selectedItemIndex != index) {
+                  widget.onItemTap(index);
+                  setState(() => _selectedItemIndex = index);
+                  HapticFeedback.lightImpact();
+                  context.pop();
+                }
+              },
+            ),
+          )
+              .separate(const Divider(height: 0.5, thickness: 0.5))
+              .toList(),
         ),
       ),
     );

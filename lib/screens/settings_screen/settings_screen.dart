@@ -9,7 +9,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
-import 'package:dragonator/utils/team_dependent_modal.dart';
+import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -200,7 +200,7 @@ class _TeamContextMenu extends StatefulWidget {
 }
 
 class _TeamContextMenuState extends State<_TeamContextMenu>
-    with TeamDependentModal {
+    with TeamDependentModalStateMixin {
   @override
   Widget build(BuildContext context) {
     return ContextMenu([

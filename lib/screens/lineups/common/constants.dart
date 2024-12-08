@@ -1,5 +1,3 @@
-const int kBoatCapacity = 22;
-
 /// The number of segments that the bow extends through.
 const int kBoatEndExtent = 3;
 

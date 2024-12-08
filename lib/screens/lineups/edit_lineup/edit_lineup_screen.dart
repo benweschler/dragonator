@@ -1,3 +1,4 @@
+import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
@@ -20,10 +21,6 @@ import 'package:provider/provider.dart';
 
 import 'com_overlay.dart';
 
-// Weight of boat in pounds.
-//TODO: change this once boats are user-defined. the com of the boat can also be user-defined.
-const double _kBoatWeight = 800;
-
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
 
@@ -35,10 +32,8 @@ class EditLineupScreen extends StatefulWidget {
 
 class _EditLineupScreenState extends State<EditLineupScreen> {
   late final Lineup _lineup;
-
-  // This is mutable state. The paddler list is updated on reorder through set
-  // state.
-  late final List<Paddler?> _paddlerList;
+  late List<Paddler?> _paddlerList;
+  late Boat _boat;
 
   @override
   void initState() {
@@ -48,13 +43,25 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     _lineup = rosterModel.getLineup(widget.lineupID)!;
     _paddlerList =
         _lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
+    _boat = rosterModel.currentTeam!.boats[_lineup.boatID]!;
   }
 
   Future<void> _saveLineup() {
     // TODO: could throw an error if one of these paddlers was deleted. Must check if paddlers are deleted. Maybe also check if lineup was deleted, renamed, i.e. other properties changed.
     return context.read<RosterModel>().setLineup(_lineup.copyWith(
+          boatID: _boat.id,
           paddlerIDs: _paddlerList.map((paddler) => paddler?.id),
         ));
+  }
+
+  void _changeLineupBoat(Boat boat) {
+    setState(() {
+      _boat = boat;
+      _paddlerList = List<Paddler?>.generate(
+        boat.capacity,
+        (index) => index < _paddlerList.length ? _paddlerList[index] : null,
+      );
+    });
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -80,25 +87,25 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     // The relative positions of the paddlers from the left edge of the boat.
     const relativeLeftXPos = 0;
     const relativeRightXPos = 1;
-    final int numRows = (kBoatCapacity / 2).ceil() + 1;
+    final int numRows = (_boat.capacity / 2).ceil() + 1;
     // The paddler is in the middle of its row, so count all rows up to this row
     // plus the first half of this row.
     double relativeYPos(int row) => (0.5 + row) / numRows;
 
     //The boat's COM is assumed to be at its center.
     // Masses weighted by their x-distance from the origin.
-    double xWeighted = 0.5 * _kBoatWeight;
+    double xWeighted = 0.5 * _boat.weight;
     // Masses weighted by their y-distance from the origin.
-    double yWeighted = 0.5 * _kBoatWeight;
+    double yWeighted = 0.5 * _boat.weight;
     // The total mass on the boat; boat weight + paddler weight.
-    double total = _kBoatWeight;
+    double total = _boat.weight;
 
-    for (int i = 0; i < kBoatCapacity; i++) {
+    for (int i = 0; i < _boat.capacity; i++) {
       final paddler = _paddlerList[i];
       if (paddler == null) continue;
 
       // The drummer and steers person sit along the midline of the boat.
-      if (i == 0 || i == kBoatCapacity - 1) {
+      if (i == 0 || i == _boat.capacity - 1) {
         xWeighted += paddler.weight * 0.5;
       }
       // Even indices are on the right, and odd indices are on the left.
@@ -144,19 +151,24 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           ),
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(
-          lineup: _lineup,
+          lineupBoatID: _boat.id,
           com: _calculateCOM(),
+          onChangeBoat: _changeLineupBoat,
         )),
       ),
       //TODO: add clipBehavior to reorderable grid
       body: AnimatedReorderableGrid(
         length: _paddlerList.length,
         crossAxisCount: 2,
-        overriddenRowCounts: const [(0, 1), (kBoatCapacity ~/ 2, 1)],
+        overriddenRowCounts: [(0, 1), (_boat.capacity ~/ 2, 1)],
         buildDefaultDragDetectors: false,
         itemBuilder: _itemBuilder,
         rowHeight: kGridRowHeight,
-        rowBuilder: boatSegmentBuilder,
+        rowBuilder: (context, index) => boatSegmentBuilder(
+          context,
+          index,
+          _boat.capacity,
+        ),
         header: const SizedBox(height: headerPadding),
         footer: SizedBox(height: footerPadding),
         overlay: Selector<SettingsModel, bool>(
