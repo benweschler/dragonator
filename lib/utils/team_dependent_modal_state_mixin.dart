@@ -52,6 +52,7 @@ class _TeamDeletedPopup extends StatelessWidget {
             Text('Team Deleted', style: TextStyles.title1),
             const SizedBox(height: Insets.med),
             Text(
+              //TODO: change to using team name
               'This team has been deleted by another collaborator.',
               style: TextStyles.body1,
               textAlign: TextAlign.center,

@@ -18,7 +18,6 @@ part '../commands/lineup_commands.dart';
 
 part '../commands/boat_commands.dart';
 
-//TODO: add documentation
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
@@ -118,13 +117,11 @@ class RosterModel extends Notifier {
   //* UPDATE DATA *//
 
   void _onTeamsQueryUpdate(QuerySnapshot snapshot) {
-    final List<DocumentSnapshot> teamDocs = snapshot.docs;
-    if (!teamDocs.map((doc) => doc.id).contains(_currentTeamID)) {
-      //TODO: implement popup/refresh if current team is deleted
-      throw UnimplementedError('Current team has been deleted');
+    _updateTeams(snapshot);
+    if (!_teamIDMap.keys.contains(_currentTeamID)) {
+      _onCurrentTeamDeleted();
     }
 
-    _updateTeams(snapshot);
     notify();
   }
 
@@ -139,6 +136,12 @@ class RosterModel extends Notifier {
         _teamIDMap[id] = Team.fromFirestore(id: id, data: teamData);
       }
     }
+  }
+
+  void _onCurrentTeamDeleted() {
+    _updateCurrentTeamWithDetails(
+      _teamIDMap.isEmpty ? null : _teamIDMap.keys.first,
+    );
   }
 
   void _onPaddlerDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -225,7 +228,15 @@ class RosterModel extends Notifier {
 
   Future<void> createTeam(String name) => _createTeamCommand(name);
 
-  Future<void> deleteTeam(String teamID) => _deleteTeamCommand(teamID);
+  Future<void> deleteTeam(String teamID) {
+    // Update the current team prior to deleting it to distinguish between the
+    // user deleting the current team and a collaborator deleting a current
+    // team in _onTeamQueryUpdate.
+    if (teamID == _currentTeamID) {
+      _onCurrentTeamDeleted();
+    }
+    return _deleteTeamCommand(teamID);
+  }
 
   //* PADDLER SETTERS *//
 
