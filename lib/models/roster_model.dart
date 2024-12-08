@@ -225,6 +225,8 @@ class RosterModel extends Notifier {
 
   Future<void> createTeam(String name) => _createTeamCommand(name);
 
+  Future<void> deleteTeam(String teamID) => _deleteTeamCommand(teamID);
+
   //* PADDLER SETTERS *//
 
   /// If [paddler] already exists, it is updated. If it does not exist, it is
@@ -265,10 +267,14 @@ class RosterModel extends Notifier {
   Future<void> setBoat(Boat boat, String teamID) async {
     await _setBoatCommand(boat, teamID);
     //TODO: should not be here. after removed, return above and remove async
-    for(Lineup lineup in _lineupIDMap.values.where((lineup) => lineup.boatID == boat.id)) {
+    final lineupsWithBoat =
+        _lineupIDMap.values.where((lineup) => lineup.boatID == boat.id);
+    for (Lineup lineup in lineupsWithBoat) {
       var paddlerList = List<String?>.generate(
         boat.capacity,
-            (index) => index < lineup.paddlerIDs.length ? lineup.paddlerIDs.toList()[index] : null,
+        (index) => index < lineup.paddlerIDs.length
+            ? lineup.paddlerIDs.toList()[index]
+            : null,
       );
       await setLineup(lineup.copyWith(paddlerIDs: paddlerList));
     }

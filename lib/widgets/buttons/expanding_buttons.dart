@@ -6,6 +6,7 @@ class ExpandingStadiumButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final Color color;
   final Color textColor;
+  final bool enabled;
   final String label;
 
   const ExpandingStadiumButton({
@@ -13,30 +14,37 @@ class ExpandingStadiumButton extends StatelessWidget {
     required this.onTap,
     required this.color,
     this.textColor = Colors.white,
+    this.enabled = true,
     required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveButton.large(
-      onTap: onTap,
-      builder: (overlay) => SizedBox(
-        width: double.infinity,
-        child: Material(
-          elevation: 8.0,
-          color: Color.alphaBlend(overlay, color),
-          shape: const StadiumBorder(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: Insets.sm,
-              horizontal: Insets.med,
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyles.body1.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
+    return IgnorePointer(
+      ignoring: !enabled,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.5,
+        child: ResponsiveButton.large(
+          onTap: onTap,
+          builder: (overlay) => SizedBox(
+            width: double.infinity,
+            child: Material(
+              elevation: 8.0,
+              color: Color.alphaBlend(overlay, color),
+              shape: const StadiumBorder(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: Insets.sm,
+                  horizontal: Insets.med,
+                ),
+                child: Center(
+                  child: Text(
+                    label,
+                    style: TextStyles.body1.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
                 ),
               ),
             ),

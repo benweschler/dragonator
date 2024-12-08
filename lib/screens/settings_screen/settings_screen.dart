@@ -5,6 +5,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/settings_screen/boats_popup.dart';
 import 'package:dragonator/screens/settings_screen/change_theme_button.dart';
+import 'package:dragonator/screens/settings_screen/delete_team_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
@@ -235,7 +236,14 @@ class _TeamContextMenuState extends State<_TeamContextMenu>
         icon: Icons.delete_rounded,
         label: 'Delete',
         isDestructiveAction: true,
-        onTap: () {},
+        autoPop: false,
+        onTap: () async {
+          context.pop();
+          await Future.delayed(Timings.long);
+          if (!widget.rootContext.mounted) return;
+          widget.rootContext.showPopup(DeleteTeamPopup(widget.teamID));
+
+        },
       ),
     ]);
   }

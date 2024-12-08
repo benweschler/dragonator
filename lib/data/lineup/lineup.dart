@@ -29,5 +29,5 @@ class Lineup extends Equatable with _$Lineup {
   Map<String, dynamic> toFirestore() => toJson()..remove('id');
 
   @override
-  List<Object?> get props => [id, name, paddlerIDs];
+  List<Object?> get props => [id, name, boatID, paddlerIDs];
 }

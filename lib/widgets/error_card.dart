@@ -8,6 +8,7 @@ class ErrorCard extends StatelessWidget {
   const ErrorCard(this.message, {super.key});
 
   @override
+  //TODO: fix colors
   Widget build(BuildContext context) {
     final errorColor = AppColors.of(context).primary;
 
@@ -18,14 +19,14 @@ class ErrorCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: Corners.medBorderRadius,
           color: errorColor.withOpacity(0.08),
-          border: Border.all(color: errorColor.withOpacity(0.65)),
+          border: Border.all(color: errorColor),
         ),
         child: Text(
           message,
           textAlign: TextAlign.center,
           style: TextStyles.body2.copyWith(
             fontWeight: FontWeight.w500,
-            color: errorColor.withOpacity(0.65),
+            color: errorColor,
           ),
         ),
       ),

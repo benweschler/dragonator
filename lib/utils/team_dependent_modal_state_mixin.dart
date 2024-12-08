@@ -22,9 +22,11 @@ mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
 
   @override
   void dispose() {
-    _rosterModel.removeListener(_checkTeamDeleted);
+    cancelTeamDependence();
     super.dispose();
   }
+
+  void cancelTeamDependence() => _rosterModel.removeListener(_checkTeamDeleted);
 
   //TODO: eventually add onTeamDeletedListeners in RosterModel
   void _checkTeamDeleted() {

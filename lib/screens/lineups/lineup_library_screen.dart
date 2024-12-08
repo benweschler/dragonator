@@ -19,11 +19,10 @@ class LineupLibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<RosterModel, Iterable<Lineup>>(
-      selector: (context, model) => model.lineups,
-      builder: (_, lineups, __) {
+    return Consumer<RosterModel>(
+      builder: (_, rosterModel, __) {
         // Sort lineups alphabetically
-        final sortedLineups = lineups.toList()
+        final sortedLineups = rosterModel.lineups.toList()
           ..sort((a, b) => a.name.compareTo(b.name));
 
         return CustomScaffold(
