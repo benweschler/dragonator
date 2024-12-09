@@ -1,7 +1,7 @@
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/popups/team_deleted_popup.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,7 @@ mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
   void initState() {
     super.initState();
     _rosterModel = context.read<RosterModel>();
-    _rosterModel.addOnTeamDeletedListener(teamID, _checkTeamDeleted);
+    _rosterModel.addOnTeamDeletedListener(teamID, _onTeamDeleted);
   }
 
   @override
@@ -24,13 +24,13 @@ mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
   }
 
   void cancelTeamDependence() =>
-      _rosterModel.removeOnTeamDeletedListener(teamID, _checkTeamDeleted);
+      _rosterModel.removeOnTeamDeletedListener(teamID, _onTeamDeleted);
 
-  void _checkTeamDeleted(String teamName, bool isCurrentTeam) {
-    Navigator.of(context).pop();
-    // Allow the roster model to show the team deleted popup if the dependency
-    // is on the current team.
+  void _onTeamDeleted(String teamName, bool isCurrentTeam) {
+    // Allow the roster model to handle showing the team deleted popup and
+    // popping to the root route if the dependency is on the current team.
     if(isCurrentTeam) return;
+    Navigator.of(context).pop();
     context.showPopup(TeamDeletedPopup(teamName));
   }
 }

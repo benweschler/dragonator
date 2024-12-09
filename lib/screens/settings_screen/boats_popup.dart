@@ -4,7 +4,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -26,7 +26,8 @@ class BoatsPopup extends StatefulWidget {
   State<BoatsPopup> createState() => _BoatsPopupState();
 }
 
-class _BoatsPopupState extends State<BoatsPopup> with TeamDependentModalStateMixin{
+class _BoatsPopupState extends State<BoatsPopup>
+    with TeamDependentModalStateMixin {
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
@@ -323,7 +324,18 @@ class _EditBoat extends StatelessWidget {
                   SizedBox(width: Insets.med),
                   Expanded(
                     child: ExpandingStadiumButton(
-                      onTap: () => _deleteBoat(context),
+                      onTap: () {
+                        final isBoatInUse = context
+                            .read<RosterModel>()
+                            .lineups
+                            .map((lineup) => lineup.boatID)
+                            .contains(boat?.id);
+
+                        //TODO: show info saying boat is in use
+                        if (isBoatInUse) return;
+
+                        _deleteBoat(context);
+                      },
                       color: AppColors.of(context).error,
                       textColor: Colors.white,
                       label: 'Delete',
