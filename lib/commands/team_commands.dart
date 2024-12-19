@@ -13,3 +13,6 @@ Future<void> _createTeamCommand(String name) async {
 
 Future<void> _deleteTeamCommand(String teamID) =>
     teamsCollection.doc(teamID).delete();
+
+Future<bool> _checkTeamExistsCommand(String teamID) async =>
+    (await getTeamDoc(teamID).get()).exists;

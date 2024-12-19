@@ -14,7 +14,7 @@ mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
   void initState() {
     super.initState();
     _rosterModel = context.read<RosterModel>();
-    _rosterModel.addOnTeamDeletedListener(teamID, _onTeamDeleted);
+    _rosterModel.addTeamDeletedListener(teamID, _onTeamDeleted);
   }
 
   @override
@@ -24,14 +24,15 @@ mixin TeamDependentModalStateMixin<T extends StatefulWidget> on State<T> {
   }
 
   void cancelTeamDependence() =>
-      _rosterModel.removeOnTeamDeletedListener(teamID, _onTeamDeleted);
+      _rosterModel.removeTeamDeletedListener(teamID, _onTeamDeleted);
 
-  void _onTeamDeleted(String teamName, bool isCurrentTeam) {
+  void _onTeamDeleted({required String teamName, required bool isCurrentTeam}) {
     // Allow the roster model to handle showing the team deleted popup and
     // popping to the root route if the dependency is on the current team.
     if(isCurrentTeam) return;
     Navigator.of(context).pop();
     context.showPopup(TeamDeletedPopup(teamName));
+    cancelTeamDependence();
   }
 }
 

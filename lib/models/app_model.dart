@@ -14,7 +14,7 @@ class AppModel extends Notifier {
         _isAppInitialized = false;
         _user = null;
       }
-      routerRefreshNotifier.notify();
+      routerRefreshNotifier.notifyListeners();
     });
   }
 
@@ -38,7 +38,7 @@ class AppModel extends Notifier {
 
   set isAppInitialized(bool value) {
     _isAppInitialized = value;
-    routerRefreshNotifier.notify();
+    routerRefreshNotifier.notifyListeners();
   }
 
   AppUser get user {
@@ -49,5 +49,5 @@ class AppModel extends Notifier {
     return _user!;
   }
 
-  set user(AppUser? user) => notify(() => _user = user);
+  set user(AppUser? user) => notifyListeners(() => _user = user);
 }

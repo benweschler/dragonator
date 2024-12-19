@@ -29,6 +29,7 @@ typedef AppPage = CupertinoPage;
 
 //TODO: consider using go_router_builder for strongly-typed routing.
 abstract class RoutePaths {
+  static List<String> rootPaths = [roster, lineupLibrary, settings];
   static String splash = '/';
   static String roster = '/roster';
   static String lineupLibrary = '/lineup-library';
@@ -102,6 +103,7 @@ class AppRouter {
             child: MainAppScaffold(body: child),
           ),
           routes: [
+            //TODO: THIS IS VERY BAD! THINGS NEED TO BE ABLE TO TELL IF A ROUTE IS TRULY A ROOT ROUTE.
             AppRoute(
               path: '/paddler/:id',
               builder: (state) => PaddlerScreen(state.pathParameters['id']!),
@@ -276,8 +278,8 @@ String _appendQueryParams(String path, Map<String, String?> queryParams) {
 /// [refreshListenable] to a [GoRouter].
 class GoRouterRefreshStream extends Notifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
-    notify();
-    _subscription = stream.asBroadcastStream().listen((_) => notify());
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
   }
 
   late final StreamSubscription<dynamic> _subscription;

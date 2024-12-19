@@ -21,9 +21,11 @@ class Bootstrapper {
     await appModel.loadUser();
     await rosterModel.initialize(
       user: appModel.user,
-      showCurrentTeamDeletedDialog: (deletedTeamName) => rootContext.showPopup(
-        TeamDeletedPopup(deletedTeamName),
-      ),
+      showCurrentTeamDeletedDialog: (deletedTeamName) {
+        if (!rootContext.mounted) return;
+        rootContext.popToRoot();
+        rootContext.showPopup(TeamDeletedPopup(deletedTeamName));
+      },
     );
     await settingsModel.initialize();
     appModel.isAppInitialized = true;

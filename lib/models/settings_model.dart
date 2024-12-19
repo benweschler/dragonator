@@ -25,7 +25,7 @@ class SettingsModel extends Notifier {
       _isInitialized = true;
     }
     _updateFromFirestore();
-    notify();
+    notifyListeners();
   }
 
   /// Deletes the stored preferences. Should be used when a user logs out.
@@ -87,13 +87,13 @@ class SettingsModel extends Notifier {
     _sharedPreferences.setString(_themeKey, themeModeName);
     final userID = FirebaseAuth.instance.currentUser!.uid;
     _setSettingsCommand({_themeKey: themeModeName}, userID);
-    notify();
+    notifyListeners();
   }
 
   setShowComOverlay(bool showComOverlay) {
     _sharedPreferences.setBool(_showComKey, showComOverlay);
     final userID = FirebaseAuth.instance.currentUser!.uid;
     _setSettingsCommand({_showComKey: showComOverlay}, userID);
-    notify();
+    notifyListeners();
   }
 }

@@ -36,7 +36,6 @@ class RosterScreen extends StatelessWidget {
               )
             : _EmptyRoster(
                 content: teams.isNotEmpty
-                    //TODO: this will throw index out of bounds if teams is empty
                     ? 'The team ${rosterModel.currentTeam!.name} doesn\'t have paddlers assigned to it yet.'
                     //TODO: navigate to creating a team if there are no teams
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
@@ -46,7 +45,7 @@ class RosterScreen extends StatelessWidget {
           addScreenInset: false,
           floatingActionButton: CustomFAB(
             child: const Icon(Icons.add_rounded),
-            //TODO: verify change from go to psh
+            //TODO: verify change from go to push
             onTap: () => context.push(RoutePaths.editPaddler()),
           ),
           center: appBarCenter,

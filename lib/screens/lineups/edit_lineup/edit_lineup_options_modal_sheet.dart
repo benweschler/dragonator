@@ -4,7 +4,7 @@ import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/buttons/selector_button.dart';

@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 
 import 'com_overlay.dart';
 
+//TODO: can't handle odd boat capacities
 class EditLineupScreen extends StatefulWidget {
   final String lineupID;
 

@@ -18,8 +18,6 @@ part '../commands/lineup_commands.dart';
 
 part '../commands/boat_commands.dart';
 
-typedef TeamDeletedListener = void Function(String teamName, bool isCurrentTeam);
-
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
@@ -27,11 +25,12 @@ class RosterModel extends Notifier {
   StreamSubscription? _paddlersSubscription;
   StreamSubscription? _lineupsSubscription;
 
-  final Map<String, List<TeamDeletedListener>> _onTeamDeletedListeners = {};
+  final _teamDeletedListeners = _TeamDeletedListenerManager();
   late void Function(String) _showCurrentTeamDeletedDialog;
 
   Future<void> initialize({
     required AppUser user,
+    //TODO: should be renamed because also pops to root
     required void Function(String) showCurrentTeamDeletedDialog,
   }) async {
     assert(_paddlerIDMap.isEmpty);
@@ -50,7 +49,7 @@ class RosterModel extends Notifier {
 
     _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
 
-    notify();
+    notifyListeners();
   }
 
   void clear() async {
@@ -58,7 +57,7 @@ class RosterModel extends Notifier {
     _teamIDMap.clear();
     _paddlerIDMap.clear();
     _lineupIDMap.clear();
-    _onTeamDeletedListeners.clear();
+    _teamDeletedListeners.clear();
     await _teamsSubscription?.cancel();
     await _paddlersSubscription?.cancel();
     await _lineupsSubscription?.cancel();
@@ -75,19 +74,12 @@ class RosterModel extends Notifier {
 
   //* LISTENERS *//
 
-  void addOnTeamDeletedListener(String teamID, TeamDeletedListener listener) {
-    if (_onTeamDeletedListeners[teamID] == null) {
-      _onTeamDeletedListeners[teamID] = [listener];
-    } else {
-      _onTeamDeletedListeners[teamID]!.add(listener);
-    }
+  void addTeamDeletedListener(String teamID, TeamDeletedListener listener) {
+    _teamDeletedListeners.addTeamDeletedListener(teamID, listener);
   }
 
-  void removeOnTeamDeletedListener(String teamID, TeamDeletedListener listener) {
-    _onTeamDeletedListeners[teamID]?.remove(listener);
-    if (_onTeamDeletedListeners[teamID]?.isEmpty == true) {
-      _onTeamDeletedListeners.remove(teamID);
-    }
+  void removeTeamDeletedListener(String teamID, TeamDeletedListener listener) {
+    _teamDeletedListeners.removeTeamDeletedListener(teamID, listener);
   }
 
   //* LOAD DATA *//
@@ -160,7 +152,7 @@ class RosterModel extends Notifier {
       _onCurrentTeamDeleted(currentTeamName!, false);
     }
 
-    notify();
+    notifyListeners();
   }
 
   void _updateTeams(QuerySnapshot snapshot) {
@@ -168,10 +160,11 @@ class RosterModel extends Notifier {
       final id = docChange.doc.id;
 
       if (docChange.type == DocumentChangeType.removed) {
-        _onTeamDeletedListeners[id]?.forEach((listener) => listener(
-          _teamIDMap[id]!.name,
-          id == _currentTeamID,
-        ));
+        _teamDeletedListeners.notifyTeamListeners(
+          id: id,
+          teamName: _teamIDMap[id]!.name,
+          isCurrentTeam: id == _currentTeamID,
+        );
         _teamIDMap.remove(id);
       } else {
         final teamData = docChange.doc.data() as Map<String, dynamic>;
@@ -180,12 +173,14 @@ class RosterModel extends Notifier {
     }
   }
 
+  // userInitiated tracks whether the user initiated the team deletion or
+  // whether it was initiated from another source (like a collaborator).
   void _onCurrentTeamDeleted(String deletedTeamName, bool userInitiated) {
     _updateCurrentTeamWithDetails(
       _teamIDMap.isEmpty ? null : _teamIDMap.keys.first,
     );
     // Show a popup if a collaborator deletes the current team.
-    if(!userInitiated) {
+    if (!userInitiated) {
       _showCurrentTeamDeletedDialog(deletedTeamName);
     }
   }
@@ -198,6 +193,7 @@ class RosterModel extends Notifier {
     return _updateTeamDetail(snapshot, _lineupIDMap, Lineup.fromFirestore);
   }
 
+  // Callback fired when a team detail is updated in Firestore.
   void _updateTeamDetail<T extends dynamic>(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     Map<String, T> idMap,
@@ -223,7 +219,7 @@ class RosterModel extends Notifier {
       idMap.remove(id);
     }
 
-    notify();
+    notifyListeners();
   }
 
   //* TEAM GETTERS *//
@@ -233,6 +229,9 @@ class RosterModel extends Notifier {
   Team? getTeam(String? id) => _teamIDMap[id];
 
   Team? get currentTeam => _teamIDMap[_currentTeamID];
+
+  static Future<bool> checkTeamExists(String teamID) =>
+      _checkTeamExistsCommand(teamID);
 
   //* PADDLER GETTERS *//
 
@@ -257,7 +256,6 @@ class RosterModel extends Notifier {
   Future<void> setCurrentTeam(String teamID) async {
     if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
     await _updateCurrentTeamWithDetails(teamID);
-    notify();
   }
 
   Future<void> renameTeam(String teamID, String name) =>
@@ -266,13 +264,13 @@ class RosterModel extends Notifier {
   Future<void> createTeam(String name) => _createTeamCommand(name);
 
   Future<void> deleteTeam(String teamID) async {
-    if(!_teamIDMap.containsKey(teamID)) return;
+    if (!_teamIDMap.containsKey(teamID)) return;
 
-    final teamName = _teamIDMap[teamID]!.name;
-    _onTeamDeletedListeners[teamID]?.forEach((listener) => listener(
-        teamName,
-        teamID == _currentTeamID,
-    ));
+    _teamDeletedListeners.notifyTeamListeners(
+      id: teamID,
+      teamName: _teamIDMap[teamID]!.name,
+      isCurrentTeam: teamID == _currentTeamID,
+    );
 
     // Update the current team prior to deleting it to distinguish between the
     // user deleting the current team and a collaborator deleting a current
@@ -340,6 +338,70 @@ class RosterModel extends Notifier {
   Future<void> deleteBoat(String boatID, String teamID) =>
       _deleteBoatCommand(boatID, teamID);
 }
+
+class _TeamDeletedListenerManager {
+  final Map<String, List<TeamDeletedListener?>> _teamDeletedListeners = {};
+  final Map<String, int> _notificationCallStackDepths = {};
+
+  void addTeamDeletedListener(String id, TeamDeletedListener listener) {
+    if (_teamDeletedListeners[id] == null) {
+      _teamDeletedListeners[id] = [listener];
+      _notificationCallStackDepths[id] = 0;
+    } else {
+      _teamDeletedListeners[id]!.add(listener);
+    }
+  }
+
+  void removeTeamDeletedListener(String id, TeamDeletedListener listener) {
+    final listeners = _teamDeletedListeners[id];
+    if (listeners == null) return;
+
+    // Prevents concurrent modification of listeners while listeners are being
+    // called.
+    if (_notificationCallStackDepths[id] == 0) {
+      listeners.remove(listener);
+      _cleanTeamListeners(id);
+    } else {
+      for (int i = 0; i < listeners.length; i++) {
+        if (listeners[i] == listener) {
+          listeners[i] = null;
+        }
+      }
+    }
+  }
+
+  void notifyTeamListeners({
+    required String id,
+    required String teamName,
+    required bool isCurrentTeam,
+  }) {
+    if (_teamDeletedListeners[id] == null) return;
+
+    _notificationCallStackDepths[id] = _notificationCallStackDepths[id]! + 1;
+
+    for (var listener in _teamDeletedListeners[id]!) {
+      listener?.call(teamName: teamName, isCurrentTeam: isCurrentTeam);
+    }
+
+    _notificationCallStackDepths[id] = _notificationCallStackDepths[id]! - 1;
+
+    if (_notificationCallStackDepths[id] == 0) {
+      _cleanTeamListeners(id);
+    }
+  }
+
+  void clear() => _teamDeletedListeners.clear();
+
+  void _cleanTeamListeners(String id) {
+    _teamDeletedListeners[id]?.removeWhere((listener) => listener == null);
+    if (_teamDeletedListeners[id]?.isEmpty == true) {
+      _teamDeletedListeners.remove(id);
+    }
+  }
+}
+
+typedef TeamDeletedListener = void Function(
+    {required String teamName, required bool isCurrentTeam});
 
 typedef GetTeamDetailCommand = Future<Map<String, dynamic>> Function(
   String currentTeamID,

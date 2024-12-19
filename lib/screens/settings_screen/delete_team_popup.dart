@@ -2,7 +2,7 @@ import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';

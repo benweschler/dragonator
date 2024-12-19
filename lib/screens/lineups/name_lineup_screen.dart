@@ -3,6 +3,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/single_field_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class NameLineupScreen extends StatelessWidget {
   final String? lineupID;
@@ -19,17 +20,23 @@ class NameLineupScreen extends StatelessWidget {
     final defaultName = 'Lineup #$lineupNum';
 
     return SingleFieldFormScreen(
-      onSave: (lineupName) => context.read<RosterModel>().setLineup(
-            lineup?.copyWith(name: lineupName) ??
-                Lineup(
-                  id: '$lineupNum',
-                  name: lineupName,
-                  //TODO: implement choosing a boat
-                  boatID: '',
-                  //TODO: because this must be the capacity of the boat, abstract this away into a create lineup method in RosterModel.
-                  paddlerIDs: Iterable<String?>.generate(22, (_) => null),
-                ),
-          ),
+      onSave: (lineupName) {
+        //TODO: dummy
+        final boat =
+            context.read<RosterModel>().currentTeam!.boats.values.first;
+        context.read<RosterModel>().setLineup(
+              lineup?.copyWith(name: lineupName) ??
+                  Lineup(
+                    id: Uuid().v4(),
+                    name: lineupName,
+                    //TODO: implement choosing a boat
+                    boatID: boat.id,
+                    //TODO: because this must be the capacity of the boat, abstract this away into a create lineup method in RosterModel.
+                    paddlerIDs:
+                        Iterable<String?>.generate(boat.capacity, (_) => null),
+                  ),
+            );
+      },
       heading: 'Create Lineup',
       initialValue: lineup?.name ?? defaultName,
       hintText: lineup?.name ?? defaultName,

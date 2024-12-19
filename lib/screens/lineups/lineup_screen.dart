@@ -1,3 +1,5 @@
+import 'package:dragonator/data/boat/boat.dart';
+import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
@@ -5,6 +7,7 @@ import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/dependence_mixins/team_detail_dependent_state_mixin.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
@@ -16,82 +19,107 @@ import 'package:provider/provider.dart';
 
 import 'common/boat_segment_builder.dart';
 
-class LineupScreen extends StatelessWidget {
+class LineupScreen extends StatefulWidget {
   final String lineupID;
 
   const LineupScreen({super.key, required this.lineupID});
 
   @override
+  State<LineupScreen> createState() => _LineupScreenState();
+}
+
+class _LineupScreenState extends State<LineupScreen>
+    with TeamDetailDependentStateMixin {
+  @override
   Widget build(BuildContext context) {
-    final rosterModel = context.watch<RosterModel>();
-    final lineup = rosterModel.getLineup(lineupID)!;
-    final boat = rosterModel.currentTeam!.boats[lineup.boatID]!;
+    return Selector<RosterModel, (Lineup?, Boat?, List<Paddler?>?)>(
+      shouldRebuild: (previous, next) => next.$1 != null,
+      selector: (context, model) {
+        final lineup = model.getLineup(widget.lineupID);
 
-    final List<Paddler?> paddlerList =
-        lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
+        return (
+          model.getLineup(widget.lineupID),
+          model.currentTeam!.boats[lineup?.boatID],
+          lineup?.paddlerIDs.map((id) => model.getPaddler(id)).toList()
+        );
+      },
+      builder: (context, data, _) {
+        final (lineup, boat, paddlerList) = (data.$1!, data.$2!, data.$3!);
 
-    return CustomScaffold(
-      addScreenInset: false,
-      leading: const CustomBackButton(),
-      center: Text(lineup.name, style: TextStyles.title1),
-      trailing: CustomIconButton(
-        onTap: () => context.showModal(ContextMenu([
-          ContextMenuAction(
-            icon: Icons.edit_rounded,
-            onTap: () => context.push(RoutePaths.nameLineup(lineupID)),
-            label: 'Rename',
+        return CustomScaffold(
+          addScreenInset: false,
+          leading: const CustomBackButton(),
+          center: Text(lineup.name, style: TextStyles.title1),
+          trailing: CustomIconButton(
+            onTap: () => context.showModal(ContextMenu([
+              ContextMenuAction(
+                icon: Icons.edit_rounded,
+                onTap: () =>
+                    context.push(RoutePaths.nameLineup(widget.lineupID)),
+                label: 'Rename',
+              ),
+              ContextMenuAction(
+                icon: Icons.view_list_rounded,
+                onTap: () => context.go(RoutePaths.editLineup(widget.lineupID)),
+                label: 'Edit',
+              ),
+              ContextMenuAction(
+                icon: Icons.delete_rounded,
+                //TODO: implement deleting lineups.
+                onTap: () {},
+                isDestructiveAction: true,
+                label: 'Delete',
+              ),
+            ])),
+            icon: Icons.more_horiz,
           ),
-          ContextMenuAction(
-            icon: Icons.view_list_rounded,
-            onTap: () => context.go(RoutePaths.editLineup(lineupID)),
-            label: 'Edit',
-          ),
-          ContextMenuAction(
-            icon: Icons.delete_rounded,
-            //TODO: implement deleting lineups. context menu, lineup screen, and edit lineup screen should pop when that lineup is deleted.
-            onTap: () {},
-            label: 'Delete',
-          ),
-        ])),
-        icon: Icons.more_horiz,
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: Insets.med),
-          child: SizedBox(
-            height: kGridRowHeight * (paddlerList.length / 2 + 1),
-            child: Stack(
-              children: [
-                Column(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: Insets.med),
+              child: SizedBox(
+                height: kGridRowHeight * (paddlerList.length / 2 + 1),
+                child: Stack(
                   children: [
-                    for (int i = 0; i < boat.capacity / 2 + 1; i++)
-                      boatSegmentBuilder(context, i, boat.capacity),
+                    Column(
+                      children: [
+                        for (int i = 0; i < boat.capacity / 2 + 1; i++)
+                          boatSegmentBuilder(context, i, boat.capacity),
+                      ],
+                    ),
+                    CustomMultiChildLayout(
+                      delegate: _TileLayoutDelegate(paddlers: paddlerList),
+                      children: [
+                        for (int i = 0; i < paddlerList.length; i++)
+                          LayoutId(
+                            id: i,
+                            child: paddlerList[i] != null
+                                ? GestureDetector(
+                                    onTap: () =>
+                                        context.push(RoutePaths.paddler(
+                                      paddlerList[i]!.id,
+                                    )),
+                                    child: PaddlerTile(paddlerList[i]!),
+                                  )
+                                : const _EmptyPaddlerTile(),
+                          )
+                      ],
+                    ),
                   ],
                 ),
-                CustomMultiChildLayout(
-                  delegate: _TileLayoutDelegate(paddlers: paddlerList),
-                  children: [
-                    for (int i = 0; i < paddlerList.length; i++)
-                      LayoutId(
-                        id: i,
-                        child: paddlerList[i] != null
-                            ? GestureDetector(
-                                onTap: () => context.push(RoutePaths.paddler(
-                                  paddlerList[i]!.id,
-                                )),
-                                child: PaddlerTile(paddlerList[i]!),
-                              )
-                            : const _EmptyPaddlerTile(),
-                      )
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+
+  @override
+  String get detailType => 'lineup';
+
+  @override
+  Object? Function() get getDetail =>
+      () => context.read<RosterModel>().getLineup(widget.lineupID);
 }
 
 class _TileLayoutDelegate extends MultiChildLayoutDelegate {

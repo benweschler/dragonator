@@ -10,7 +10,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
-import 'package:dragonator/utils/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
@@ -74,6 +74,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: Insets.med),
             ResponsiveStrokeButton(
+              //TODO: logout logic currently in router but happens after auth logout. should be put into a top-level command.
               onTap: FirebaseAuth.instance.signOut,
               child: Text('Log Out', style: TextStyles.body1),
             ),
@@ -231,7 +232,6 @@ class _TeamContextMenuState extends State<_TeamContextMenu>
           widget.rootContext.showPopup(BoatsPopup(widget.teamID));
         },
       ),
-      //TODO: must implement screen if user has no teams and if current team is deleted.
       ContextMenuAction(
         icon: Icons.delete_rounded,
         label: 'Delete',
