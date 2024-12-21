@@ -35,7 +35,7 @@ class RosterScreen extends StatelessWidget {
               )
             : _EmptyRoster(
                 content: currentTeam != null
-                    ? '${rosterModel.currentTeam!.name} doesn\'t have paddlers assigned to it yet.'
+                    ? '${rosterModel.currentTeam!.name} doesn\'t have any paddlers yet.'
                     //TODO: navigate to creating a team if there are no teams
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );
