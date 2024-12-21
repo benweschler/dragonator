@@ -99,6 +99,7 @@ class AppColors extends ThemeExtension<AppColors> {
         splashRadius: 0,
         visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
       ),
+      splashFactory: NoSplash.splashFactory,
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 
     return themeData.copyWith(
