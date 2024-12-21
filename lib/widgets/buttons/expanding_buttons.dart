@@ -37,14 +37,13 @@ class ExpandingStadiumButton extends StatelessWidget {
                   vertical: Insets.sm,
                   horizontal: Insets.med,
                 ),
-                child: Center(
-                  child: Text(
-                    label,
-                    style: TextStyles.body1.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: textColor,
-                    ),
+                child: Text(
+                  label,
+                  style: TextStyles.body1.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

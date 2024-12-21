@@ -37,6 +37,7 @@ class NameLineupScreen extends StatelessWidget {
                   ),
             );
       },
+      actionLabel: 'Create',
       heading: 'Create Lineup',
       initialValue: lineup?.name ?? defaultName,
       hintText: lineup?.name ?? defaultName,

@@ -17,6 +17,7 @@ class NameTeamScreen extends StatelessWidget {
       onSave: (name) async => teamID != null
           ? rosterModel.renameTeam(teamID!, name)
           : rosterModel.createTeam(name),
+      actionLabel: teamID == null ? 'Create' : 'Rename',
       initialValue: teamName ?? 'Team #${rosterModel.teams.length + 1}',
       heading: teamID == null ? 'Create Team' : 'Rename Team',
     );
