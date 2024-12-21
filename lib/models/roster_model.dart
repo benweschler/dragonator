@@ -27,6 +27,8 @@ class RosterModel extends Notifier {
 
   final _teamDeletedListeners = _TeamDeletedListenerManager();
   late void Function(String) _showCurrentTeamDeletedDialog;
+  //TODO: write test to verify that the user deleting the current team never results in a popup and a collaborator deleted the current team always results in a popup.
+  bool _pendingUserInitiatedCurrentTeamDeletion = false;
 
   Future<void> initialize({
     required AppUser user,
@@ -127,17 +129,31 @@ class RosterModel extends Notifier {
     updateSubscription?.cancel();
     idMap.clear();
 
+    // Store the initial currentTeamID to make sure it doesn't change during the
+    // async fetch.
+    final currentTeamID = _currentTeamID;
     // True if all teams are deleted.
-    if (_currentTeamID == null) return;
+    if (currentTeamID == null) return;
 
+    //TODO: CAN DELETE THIS BLOCK. HANDLED BY onDetailUpdate
     final Map<String, dynamic> details =
         await getTeamDetailCommand(_currentTeamID!);
+
+    // Check if the current team has been changed during the async fetch. If it
+    // has, then the process of loading the new team's data will have been
+    // initiated by the realtime listener, so stop this process, which is now
+    // invalid.
+    //TODO: this is the only way that race conditions are being avoided in the model.
+    if (_currentTeamID != currentTeamID) return;
+
     for (var detailEntry in details.entries) {
       idMap[detailEntry.key] = fromFirestore(
         id: detailEntry.key,
         data: detailEntry.value,
       );
     }
+
+    //TODO: CAN DELETE TO HERE
 
     updateSubscription =
         getDetailDoc(_currentTeamID!).snapshots().listen(onDetailUpdate);
@@ -148,8 +164,13 @@ class RosterModel extends Notifier {
   void _onTeamsQueryUpdate(QuerySnapshot snapshot) {
     final currentTeamName = currentTeam?.name;
     _updateTeams(snapshot);
+    // When the user creates teams after having no teams, set the current team
+    // to the first stored team.
+    if (_currentTeamID == null && _teamIDMap.isNotEmpty) {
+      _updateCurrentTeamWithDetails(_teamIDMap.keys.first);
+    }
     if (_currentTeamID != null && !_teamIDMap.keys.contains(_currentTeamID)) {
-      _onCurrentTeamDeleted(currentTeamName!, false);
+      _onCurrentTeamDeleted(currentTeamName!);
     }
 
     notifyListeners();
@@ -173,16 +194,28 @@ class RosterModel extends Notifier {
     }
   }
 
-  // userInitiated tracks whether the user initiated the team deletion or
-  // whether it was initiated from another source (like a collaborator).
-  void _onCurrentTeamDeleted(String deletedTeamName, bool userInitiated) {
-    _updateCurrentTeamWithDetails(
-      _teamIDMap.isEmpty ? null : _teamIDMap.keys.first,
-    );
+  /// Update the client side after the current team is deleted — change the
+  /// current team and load its details.
+  ///
+  /// If the deletion was user initiated, this will be called directly before
+  /// updating the backend. If a realtime update shows that the current team is
+  /// deleted, then the deletion is classified as not user initiated.
+  void _onCurrentTeamDeleted(String deletedTeamName) {
+    final String? newCurrentTeamID;
+    if (_teamIDMap.isEmpty || _teamIDMap.keys.first == _currentTeamID) {
+      newCurrentTeamID = null;
+    } else {
+      newCurrentTeamID = _teamIDMap.keys.first;
+    }
+    _updateCurrentTeamWithDetails(newCurrentTeamID);
+
     // Show a popup if a collaborator deletes the current team.
-    if (!userInitiated) {
+    if (!_pendingUserInitiatedCurrentTeamDeletion) {
       _showCurrentTeamDeletedDialog(deletedTeamName);
     }
+    // After the current team deletion handling is finished there is never a
+    // pending deletion.
+    _pendingUserInitiatedCurrentTeamDeletion = false;
   }
 
   void _onPaddlerDocUpdate(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -198,7 +231,7 @@ class RosterModel extends Notifier {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     Map<String, T> idMap,
     DetailFromFirestore fromFirestore,
-  ) async {
+  ) {
     final detailData = snapshot.data() ?? {};
     final details = Set<T>.from(detailData.entries.map(
       (entry) => fromFirestore(id: entry.key, data: entry.value),
@@ -265,20 +298,9 @@ class RosterModel extends Notifier {
 
   Future<void> deleteTeam(String teamID) async {
     if (!_teamIDMap.containsKey(teamID)) return;
-
-    _teamDeletedListeners.notifyTeamListeners(
-      id: teamID,
-      teamName: _teamIDMap[teamID]!.name,
-      isCurrentTeam: teamID == _currentTeamID,
-    );
-
-    // Update the current team prior to deleting it to distinguish between the
-    // user deleting the current team and a collaborator deleting a current
-    // team in _onTeamQueryUpdate.
-    if (teamID == _currentTeamID) {
-      _onCurrentTeamDeleted(_teamIDMap[teamID]!.name, true);
+    if(teamID == _currentTeamID) {
+      _pendingUserInitiatedCurrentTeamDeletion = true;
     }
-
     return _deleteTeamCommand(teamID);
   }
 
@@ -319,17 +341,17 @@ class RosterModel extends Notifier {
 
   //* BOAT SETTERS *//
 
+  //TODO: needs to be done in transaction
   Future<void> setBoat(Boat boat, String teamID) async {
     await _setBoatCommand(boat, teamID);
     //TODO: should not be here. after removed, return above and remove async
     final lineupsWithBoat =
         _lineupIDMap.values.where((lineup) => lineup.boatID == boat.id);
     for (Lineup lineup in lineupsWithBoat) {
+      final paddlerIDs = lineup.paddlerIDs.toList();
       var paddlerList = List<String?>.generate(
         boat.capacity,
-        (index) => index < lineup.paddlerIDs.length
-            ? lineup.paddlerIDs.toList()[index]
-            : null,
+        (index) => index < lineup.paddlerIDs.length ? paddlerIDs[index] : null,
       );
       await setLineup(lineup.copyWith(paddlerIDs: paddlerList));
     }

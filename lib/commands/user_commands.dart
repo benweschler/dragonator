@@ -15,6 +15,7 @@ Future<void> createUserCommand({
     password: password,
   );
 
+  //TODO: this part should be in blocking auth cloud functions
   final user = AppUser(
     id: userCredential.user!.uid,
     firstName: firstName,

@@ -24,19 +24,18 @@ class RosterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<RosterModel>(
       builder: (context, rosterModel, _) {
-        final teams = rosterModel.teams.toList();
+        final currentTeam = rosterModel.currentTeam;
         final hasPaddlers = rosterModel.paddlers.isNotEmpty;
-        final appBarCenter = teams.isNotEmpty ? ChangeTeamHeading() : null;
 
         //TODO: implement screen if user has no teams.
-        final content = teams.isNotEmpty && hasPaddlers
+        final content = currentTeam != null && hasPaddlers
             ? _RosterContent(
                 paddlerIDs: rosterModel.paddlerIDs,
                 rosterModel: rosterModel,
               )
             : _EmptyRoster(
-                content: teams.isNotEmpty
-                    ? 'The team ${rosterModel.currentTeam!.name} doesn\'t have paddlers assigned to it yet.'
+                content: currentTeam != null
+                    ? '${rosterModel.currentTeam!.name} doesn\'t have paddlers assigned to it yet.'
                     //TODO: navigate to creating a team if there are no teams
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );
@@ -48,7 +47,7 @@ class RosterScreen extends StatelessWidget {
             //TODO: verify change from go to push
             onTap: () => context.push(RoutePaths.editPaddler()),
           ),
-          center: appBarCenter,
+          center: ChangeTeamHeading(),
           child: content,
         );
       },

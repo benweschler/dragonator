@@ -21,9 +21,37 @@ class LineupLibraryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<RosterModel>(
       builder: (_, rosterModel, __) {
-        // Sort lineups alphabetically
-        final sortedLineups = rosterModel.lineups.toList()
-          ..sort((a, b) => a.name.compareTo(b.name));
+        final Widget content;
+        if (rosterModel.lineups.isEmpty) {
+          content = Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  rosterModel.currentTeam != null
+                      ? '${rosterModel.currentTeam!.name} doesn\'t have any lineups yet.'
+                      //TODO: navigate to creating a team if there are no teams
+                      : 'You haven\'t created any teams yet. Head to settings to create your first team.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Sort lineups alphabetically
+          final sortedLineups = rosterModel.lineups.toList()
+            ..sort((a, b) => a.name.compareTo(b.name));
+
+          content = ListView(
+            children: [
+              const Text('Lineups', style: TextStyles.h1),
+              const SizedBox(height: Insets.sm),
+              ...sortedLineups
+                  .map<Widget>((lineup) => _LineupPreviewTile(lineup))
+                  .separate(const Divider(height: 0.5, thickness: 0.5)),
+            ],
+          );
+        }
 
         return CustomScaffold(
           center: ChangeTeamHeading(),
@@ -33,15 +61,7 @@ class LineupLibraryScreen extends StatelessWidget {
               child: const Icon(Icons.add_rounded),
             );
           }),
-          child: ListView(
-            children: [
-              const Text('Lineups', style: TextStyles.h1),
-              const SizedBox(height: Insets.sm),
-              ...sortedLineups
-                  .map<Widget>((lineup) => _LineupPreviewTile(lineup))
-                  .separate(const Divider(height: 0.5, thickness: 0.5)),
-            ],
-          ),
+          child: content,
         );
       },
     );

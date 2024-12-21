@@ -134,7 +134,9 @@ class _TeamCard extends StatelessWidget {
       builder: (_, rosterModel, __) {
         final List<Widget> content;
         if (rosterModel.teams.isEmpty) {
-          content = const [Text('You don\'t have any teams yet')];
+          content = const [
+            Center(child: Text('You haven\'t created any teams yet')),
+          ];
         } else {
           content = <Widget>[
             for (Team team in rosterModel.teams) _TeamTile(team)
@@ -242,7 +244,6 @@ class _TeamContextMenuState extends State<_TeamContextMenu>
           await Future.delayed(Timings.long);
           if (!widget.rootContext.mounted) return;
           widget.rootContext.showPopup(DeleteTeamPopup(widget.teamID));
-
         },
       ),
     ]);

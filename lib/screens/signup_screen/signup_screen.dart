@@ -1,5 +1,5 @@
 import 'package:dragonator/commands/user_commands.dart';
-import 'package:dragonator/models/app_model.dart';import 'package:dragonator/screens/signup_screen/field_names.dart';
+import 'package:dragonator/screens/signup_screen/field_names.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
@@ -11,7 +11,6 @@ import 'package:dragonator/widgets/error_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
@@ -20,7 +19,7 @@ class SignUpScreen extends StatelessWidget {
 
   SignUpScreen({super.key});
 
-  Future<void> _signUp(AppModel appModel) async {
+  Future<void> _signUp() async {
     final formData = _formKey.currentState!.value;
 
     await createUserCommand(
@@ -207,7 +206,7 @@ class SignUpScreen extends StatelessWidget {
                       if (!_formKey.currentState!.saveAndValidate()) {
                         return;
                       }
-                      return _signUp(context.read<AppModel>());
+                      return _signUp();
                     },
                     //TODO: add error handling
                     catchError: (error) => _errorNotifier.value = error.message,
