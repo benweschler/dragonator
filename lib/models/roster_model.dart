@@ -129,32 +129,12 @@ class RosterModel extends Notifier {
     updateSubscription?.cancel();
     idMap.clear();
 
-    // Store the initial currentTeamID to make sure it doesn't change during the
-    // async fetch.
-    final currentTeamID = _currentTeamID;
     // True if all teams are deleted.
-    if (currentTeamID == null) return;
+    if (_currentTeamID == null) return;
 
-    //TODO: CAN DELETE THIS BLOCK. HANDLED BY onDetailUpdate
-    final Map<String, dynamic> details =
-        await getTeamDetailCommand(_currentTeamID!);
-
-    // Check if the current team has been changed during the async fetch. If it
-    // has, then the process of loading the new team's data will have been
-    // initiated by the realtime listener, so stop this process, which is now
-    // invalid.
-    //TODO: this is the only way that race conditions are being avoided in the model.
-    if (_currentTeamID != currentTeamID) return;
-
-    for (var detailEntry in details.entries) {
-      idMap[detailEntry.key] = fromFirestore(
-        id: detailEntry.key,
-        data: detailEntry.value,
-      );
-    }
-
-    //TODO: CAN DELETE TO HERE
-
+    // A snapshot is immediately provided by Firestore from local storage, so we
+    // can treat the initial load is treated as an update and the detail is
+    // loaded by onDetailUpdate.
     updateSubscription =
         getDetailDoc(_currentTeamID!).snapshots().listen(onDetailUpdate);
   }
