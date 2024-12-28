@@ -115,6 +115,7 @@ class AppRouter {
               routes: [
                 AppRoute(
                   path: 'edit-paddler',
+                  parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (state) => FadeTransitionPage(
                     child: EditPaddlerScreen(
                       paddlerID: state.uri.queryParameters['paddlerID'],
@@ -130,6 +131,7 @@ class AppRouter {
               routes: [
                 AppRoute(
                   path: 'name-lineup',
+                  parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (state) => FadeTransitionPage(
                     child: NameLineupScreen(
                       lineupID: state.uri.queryParameters['lineupID'],
@@ -177,6 +179,7 @@ class AppRouter {
               routes: [
                 AppRoute(
                   path: 'name-team',
+                  parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (state) => FadeTransitionPage(
                     child: NameTeamScreen(
                       teamID: state.uri.queryParameters['id'],
