@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String? errorMessage;
-  bool areCredentialsEntered = false;
+  bool credentialsEntered = false;
 
   @override
   void dispose() {
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> logIn() async {
     // Do not allow a login attempt if credentials have not been
     // entered.
-    if (!areCredentialsEntered) return;
+    if (!credentialsEntered) return;
 
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
@@ -52,8 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void updateAreCredentialsEntered() {
-    setState(() => areCredentialsEntered = _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty);
+    final credentialsEntered =
+        _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+    if (this.credentialsEntered == credentialsEntered) return;
+    setState(() => this.credentialsEntered = credentialsEntered);
   }
 
   @override
@@ -119,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   AsyncActionButton<FirebaseAuthException>(
                     key: _loginButtonKey,
                     label: 'Log In',
-                    isEnabled: areCredentialsEntered,
+                    isEnabled: credentialsEntered,
                     action: logIn,
                     catchError: catchLoginError,
                   ),
