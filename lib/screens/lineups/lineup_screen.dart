@@ -54,19 +54,25 @@ class _LineupScreenState extends State<LineupScreen>
             onTap: () => context.showModal(ContextMenu([
               ContextMenuAction(
                 icon: Icons.edit_rounded,
-                onTap: () =>
-                    context.push(RoutePaths.nameLineup(widget.lineupID)),
+                onTap: () => context.push(
+                  RoutePaths.nameLineup(widget.lineupID),
+                ),
                 label: 'Rename',
               ),
               ContextMenuAction(
                 icon: Icons.view_list_rounded,
-                onTap: () => context.go(RoutePaths.editLineup(widget.lineupID)),
+                onTap: () => context.go(
+                  RoutePaths.editLineup(widget.lineupID),
+                ),
                 label: 'Edit',
               ),
               ContextMenuAction(
                 icon: Icons.delete_rounded,
-                //TODO: implement deleting lineups.
-                onTap: () {},
+                onTap: () {
+                  cancelDetailDependence();
+                  context.read<RosterModel>().deleteLineup(widget.lineupID);
+                  context.pop();
+                },
                 isDestructiveAction: true,
                 label: 'Delete',
               ),

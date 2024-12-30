@@ -4,6 +4,7 @@ import 'package:dragonator/widgets/popups/team_detail_deleted_popup.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+//TODO: use in paddler screen
 mixin TeamDetailDependentStateMixin<T extends StatefulWidget> on State<T> {
   late final RosterModel _rosterModel;
   late final String _initialTeamID;
