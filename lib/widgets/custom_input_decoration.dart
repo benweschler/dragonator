@@ -16,7 +16,7 @@ class CustomInputDecoration extends InputDecoration {
           errorMaxLines: 2,
           //TODO: not used when no error text?
           errorStyle: TextStyles.caption.copyWith(
-            color: colors.primary,
+            color: colors.error,
             fontWeight: FontWeight.w500,
             height: showEmptyErrorText ? null : 0,
           ),

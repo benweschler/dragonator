@@ -10,7 +10,7 @@ class ErrorCard extends StatelessWidget {
   @override
   //TODO: fix colors
   Widget build(BuildContext context) {
-    final errorColor = AppColors.of(context).primary;
+    final colors = AppColors.of(context);
 
     return SizedBox(
       width: double.infinity,
@@ -18,15 +18,15 @@ class ErrorCard extends StatelessWidget {
         padding: const EdgeInsets.all(Insets.sm),
         decoration: BoxDecoration(
           borderRadius: Corners.medBorderRadius,
-          color: errorColor.withOpacity(0.08),
-          border: Border.all(color: errorColor),
+          color: colors.largeErrorSurface,
+          border: Border.all(color: colors.error),
         ),
         child: Text(
           message,
           textAlign: TextAlign.center,
           style: TextStyles.body2.copyWith(
             fontWeight: FontWeight.w500,
-            color: errorColor,
+            color: colors.error,
           ),
         ),
       ),

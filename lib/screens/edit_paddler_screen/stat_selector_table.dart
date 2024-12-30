@@ -45,7 +45,7 @@ class StatSelectorTable extends StatelessWidget {
           width: double.infinity,
           child: CupertinoSlidingSegmentedControl(
             backgroundColor: state.hasError
-                ? AppColors.of(context).errorSurface
+                ? AppColors.of(context).smallErrorSurface
                 : AppColors.of(context).smallSurface,
             groupValue: state.value,
             children: Map.fromIterable(
@@ -70,7 +70,7 @@ class StatSelectorTable extends StatelessWidget {
           width: double.infinity,
           child: CupertinoSlidingSegmentedControl(
             backgroundColor: state.hasError
-                ? AppColors.of(context).errorSurface
+                ? AppColors.of(context).smallErrorSurface
                 : AppColors.of(context).smallSurface,
             groupValue: state.value,
             children: Map.fromIterable(
