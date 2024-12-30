@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// navigation. Animates between page sizes.
 class ModalNavigator extends StatelessWidget {
   final String initialRoute;
+  //TODO: just take widget builder and wrap with popup transition page?
   final Route Function(String? path) routeBuilder;
 
   const ModalNavigator({

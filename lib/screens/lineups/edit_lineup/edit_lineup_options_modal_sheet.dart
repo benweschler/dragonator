@@ -4,12 +4,12 @@ import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
-import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/widgets/boat_selection_tile.dart';
 import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
-import 'package:dragonator/widgets/buttons/selector_button.dart';
 import 'package:dragonator/widgets/modal_navigator.dart';
 import 'package:dragonator/widgets/modal_sheets/modal_sheet.dart';
+import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/platform_aware/platform_aware_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -251,7 +251,7 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
               child: Column(
                 children: <Widget>[
                   for (Boat boat in boats.values)
-                    _BoatSelectionTile(
+                    BoatSelectionTile(
                       boat: boat,
                       selected: _selectedBoatID == boat.id,
                       onTap: () => setState(() => _selectedBoatID = boat.id),
@@ -268,7 +268,8 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
               // boat will be selected if this is the case.
               if (boat == null) return;
 
-              print('Initial boat capacity check: ${boats[_initialBoatID]?.capacity}');
+              print(
+                  'Initial boat capacity check: ${boats[_initialBoatID]?.capacity}');
               print('Selected boat capacity: ${boat.capacity}');
 
               final selectedBoatIDNotifier =
@@ -294,79 +295,6 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
           ExpandingTextButton(
             onTap: Navigator.of(context).pop,
             text: 'Cancel',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BoatSelectionTile extends StatelessWidget {
-  final Boat boat;
-  final bool selected;
-  final GestureTapCallback onTap;
-
-  const _BoatSelectionTile({
-    required this.boat,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.all(Insets.sm),
-            decoration: BoxDecoration(
-              borderRadius: Corners.medBorderRadius,
-              color: selected
-                  ? AppColors.of(context).primarySurface
-                  : Colors.black.withOpacity(0.025),
-              //: AppColors.of(context).largeSurface,
-              //: null,
-              border: Border.all(
-                color: selected
-                    ? AppColors.of(context).primary
-                    : AppColors.of(context).outline,
-              ),
-            ),
-            child: IntrinsicHeight(
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          boat.name,
-                          style: TextStyles.body1.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: selected
-                                ? AppColors.of(context).primary
-                                : AppColors.of(context).neutralContent,
-                          ),
-                        ),
-                        Text(
-                          '${boat.capacity} paddler${boat.capacity > 1 ? 's' : ''}',
-                          style: TextStyles.body2.copyWith(
-                            color: selected
-                                ? AppColors.of(context).primary
-                                : AppColors.of(context).neutralContent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SelectorButton(selected: selected, onTap: null),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),

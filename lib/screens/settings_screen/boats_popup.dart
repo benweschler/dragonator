@@ -9,6 +9,7 @@ import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/modal_navigator.dart';
+import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -239,14 +240,14 @@ class _EditBoat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
+    return ColoredBox(
       // Add a background color to obscure the previous route during a push
       // animation.
       color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: FormBuilder(
         key: _formKey,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               boat != null ? 'Edit ${boat!.name}' : 'Add boat',
