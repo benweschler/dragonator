@@ -228,7 +228,13 @@ class _ChangeBoatView extends StatefulWidget {
 
 class _ChangeBoatViewState extends State<_ChangeBoatView> {
   late String _selectedBoatID = context.read<ValueNotifier<String>>().value;
-  late final String _initialBoatID = _selectedBoatID;
+  late final String _initialBoatID;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialBoatID = _selectedBoatID;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,68 +242,57 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
       (model) => model.currentTeam!.boats,
     );
 
-    print('Initial boat capacity: ${boats[_initialBoatID]?.capacity}');
-
-    return Container(
-      alignment: Alignment.center,
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Change Boat', style: TextStyles.title1),
-          const SizedBox(height: Insets.lg),
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  for (Boat boat in boats.values)
-                    BoatSelectionTile(
-                      boat: boat,
-                      selected: _selectedBoatID == boat.id,
-                      onTap: () => setState(() => _selectedBoatID = boat.id),
-                    )
-                ].separate(SizedBox(height: Insets.lg)).toList(),
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Change Boat', style: TextStyles.title1),
+        const SizedBox(height: Insets.lg),
+        Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                for (Boat boat in boats.values)
+                  BoatSelectionTile(
+                    boat: boat,
+                    selected: _selectedBoatID == boat.id,
+                    onTap: () => setState(() => _selectedBoatID = boat.id),
+                  )
+              ].separate(SizedBox(height: Insets.lg)).toList(),
             ),
           ),
-          SizedBox(height: Insets.xl),
-          ExpandingStadiumButton(
-            onTap: () async {
-              final boat = boats[_selectedBoatID];
-              // True if the boat was deleted from the lineup before saving. No
-              // boat will be selected if this is the case.
-              if (boat == null) return;
+        ),
+        SizedBox(height: Insets.xl),
+        ExpandingStadiumButton(
+          onTap: () async {
+            final boat = boats[_selectedBoatID];
+            // True if the boat was deleted from the lineup before saving. No
+            // boat will be selected if this is the case.
+            if (boat == null) return;
 
-              print(
-                  'Initial boat capacity check: ${boats[_initialBoatID]?.capacity}');
-              print('Selected boat capacity: ${boat.capacity}');
+            final selectedBoatIDNotifier =
+                context.read<ValueNotifier<String>>();
 
-              final selectedBoatIDNotifier =
-                  context.read<ValueNotifier<String>>();
+            if (boats[_initialBoatID] != null &&
+                boat.capacity < boats[_initialBoatID]!.capacity) {
+              final confirmChange = await Navigator.of(context)
+                  .pushNamed<bool>('/confirm-boat-change?name=${boat.name}');
 
-              // Don't bother confirming if the initial boat is deleted.
-              if (boats[_initialBoatID] != null &&
-                  boat.capacity < boats[_initialBoatID]!.capacity) {
-                final confirmChange = await Navigator.of(context)
-                    .pushNamed<bool>('/confirm-boat-change?name=${boat.name}');
+              if (confirmChange != true) return;
+            }
 
-                if (confirmChange != true) return;
-              }
-
-              selectedBoatIDNotifier.value = boat.id;
-              widget.onChangeBoat(boat);
-              if (context.mounted) Navigator.of(context).pop();
-            },
-            color: AppColors.of(context).primary,
-            label: 'Save',
-          ),
-          SizedBox(height: Insets.sm),
-          ExpandingTextButton(
-            onTap: Navigator.of(context).pop,
-            text: 'Cancel',
-          ),
-        ],
-      ),
+            selectedBoatIDNotifier.value = boat.id;
+            widget.onChangeBoat(boat);
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          color: AppColors.of(context).primary,
+          label: 'Save',
+        ),
+        SizedBox(height: Insets.sm),
+        ExpandingTextButton(
+          onTap: Navigator.of(context).pop,
+          text: 'Cancel',
+        ),
+      ],
     );
   }
 }
