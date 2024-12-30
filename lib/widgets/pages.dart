@@ -10,8 +10,17 @@ class PopupTransitionPage<T> extends CustomTransitionPage<T> {
   PopupTransitionPage({required super.child})
       : super(
           transitionDuration: Duration(milliseconds: 250),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(opacity: animation, child: child),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: ColoredBox(
+                // Add a background color to obscure the previous route during a push
+                // animation.
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                child: child,
+              ),
+            );
+          },
         );
 }
 

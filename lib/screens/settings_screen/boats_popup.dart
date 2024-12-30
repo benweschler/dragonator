@@ -240,121 +240,116 @@ class _EditBoatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      // Add a background color to obscure the previous route during a push
-      // animation.
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: FormBuilder(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              boat != null ? 'Edit ${boat!.name}' : 'Add boat',
-              textAlign: TextAlign.center,
-              style: TextStyles.title1,
+    return FormBuilder(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            boat != null ? 'Edit ${boat!.name}' : 'Add boat',
+            textAlign: TextAlign.center,
+            style: TextStyles.title1,
+          ),
+          const SizedBox(height: Insets.med),
+          FormBuilderTextField(
+            name: 'name',
+            initialValue: boat?.name,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: Validators.required(errorText: 'Enter a name.'),
+            decoration: CustomInputDecoration(
+              AppColors.of(context),
+              hintText: 'Name',
             ),
-            const SizedBox(height: Insets.med),
-            FormBuilderTextField(
-              name: 'name',
-              initialValue: boat?.name,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: Validators.required(errorText: 'Enter a name.'),
-              decoration: CustomInputDecoration(
-                AppColors.of(context),
-                hintText: 'Name',
-              ),
+          ),
+          const SizedBox(height: Insets.med),
+          //TODO: can't handle odd capacities.
+          FormBuilderTextField(
+            name: 'capacity',
+            initialValue: boat?.capacity.toString(),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            //TODO: must be greater than 2 * length of boat end segment
+            validator: Validators.isInt(
+              errorText:
+                  'Enter the number of paddlers in the boat, including the drummer and steers person.',
             ),
-            const SizedBox(height: Insets.med),
-            //TODO: can't handle odd capacities.
-            FormBuilderTextField(
-              name: 'capacity',
-              initialValue: boat?.capacity.toString(),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              //TODO: must be greater than 3: one paddler, one drummer, one steers person
-              validator: Validators.isInt(
-                errorText:
-                    'Enter the number of paddlers in the boat, including the drummer and steers person.',
-              ),
-              decoration: CustomInputDecoration(
-                AppColors.of(context),
-                hintText: 'Capacity',
-                suffix: const Text('paddlers', style: TextStyles.body2),
-              ),
+            decoration: CustomInputDecoration(
+              AppColors.of(context),
+              hintText: 'Capacity',
+              suffix: const Text('paddlers', style: TextStyles.body2),
             ),
-            const SizedBox(height: Insets.med),
-            FormBuilderTextField(
-              name: 'weight',
-              initialValue: boat?.formattedWeight,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'\d+(\.\d*)?'),
-                ),
-              ],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: Validators.isDouble(
-                errorText: 'Enter the boat\'s weight.',
+          ),
+          const SizedBox(height: Insets.med),
+          FormBuilderTextField(
+            name: 'weight',
+            initialValue: boat?.formattedWeight,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp(r'\d+(\.\d*)?'),
               ),
-              decoration: CustomInputDecoration(
-                AppColors.of(context),
-                hintText: 'Weight',
-                suffix: const Text('lbs', style: TextStyles.body2),
-              ),
+            ],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: Validators.isDouble(
+              errorText: 'Enter the boat\'s weight.',
             ),
-            const SizedBox(height: Insets.xl),
-            Row(
-              children: [
-                if (boat != null) ...[
-                  Expanded(
-                    child: ExpandingStadiumButton(
-                      onTap: () {
-                        final isBoatInUse = context
-                            .read<RosterModel>()
-                            .lineups
-                            .map((lineup) => lineup.boatID)
-                            .contains(boat?.id);
-
-                        //TODO: show info saying boat is in use
-                        if (isBoatInUse) return;
-
-                        _deleteBoat(context);
-                      },
-                      color: AppColors.of(context).error,
-                      textColor: Colors.white,
-                      label: 'Delete',
-                    ),
-                  ),
-                  SizedBox(width: Insets.med),
-                ],
+            decoration: CustomInputDecoration(
+              AppColors.of(context),
+              hintText: 'Weight',
+              suffix: const Text('lbs', style: TextStyles.body2),
+            ),
+          ),
+          const SizedBox(height: Insets.xl),
+          Row(
+            children: [
+              if (boat != null) ...[
                 Expanded(
-                  child: Hero(
-                    tag: 'action button',
-                    flightShuttleBuilder: _heroFlightShuttleBuilder,
-                    child: ExpandingStadiumButton(
-                      onTap: () => _saveBoat(context),
-                      color: AppColors.of(context).buttonContainer,
-                      textColor: AppColors.of(context).onButtonContainer,
-                      label: 'Save',
-                    ),
+                  child: ExpandingStadiumButton(
+                    onTap: () {
+                      final boatInUse = context
+                          .read<RosterModel>()
+                          .lineups
+                          .map((lineup) => lineup.boatID)
+                          .contains(boat?.id);
+
+                      //TODO: show info saying boat is in use
+                      if (boatInUse) return;
+
+                      _deleteBoat(context);
+                    },
+                    color: AppColors.of(context).error,
+                    textColor: Colors.white,
+                    label: 'Delete',
                   ),
                 ),
+                SizedBox(width: Insets.med),
               ],
-            ),
-            const SizedBox(height: Insets.sm),
-            Hero(
-              tag: 'pop button',
-              flightShuttleBuilder: _heroFlightShuttleBuilder,
-              child: ExpandingTextButton(
-                onTap: () => Navigator.pop(context),
-                //onTap: () => NestedNavigator.popHome(context),
-                text: 'Cancel',
+              Expanded(
+                child: Hero(
+                  tag: 'action button',
+                  flightShuttleBuilder: _heroFlightShuttleBuilder,
+                  child: ExpandingStadiumButton(
+                    onTap: () => _saveBoat(context),
+                    color: AppColors.of(context).buttonContainer,
+                    textColor: AppColors.of(context).onButtonContainer,
+                    label: 'Save',
+                  ),
+                ),
               ),
+            ],
+          ),
+          const SizedBox(height: Insets.sm),
+          Hero(
+            tag: 'pop button',
+            flightShuttleBuilder: _heroFlightShuttleBuilder,
+            child: ExpandingTextButton(
+              onTap: () => Navigator.pop(context),
+              //onTap: () => NestedNavigator.popHome(context),
+              text: 'Cancel',
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
