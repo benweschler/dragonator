@@ -21,9 +21,14 @@ class NameLineupScreen extends StatelessWidget {
     context.read<RosterModel>().setLineup(lineup.copyWith(name: lineupName));
   }
 
-  void _selectLineupBoat(String lineupName, BuildContext context) {
+  void _selectLineupBoat(String lineupName, BuildContext context) async {
     final rosterModel = context.read<RosterModel>();
-    context.showPopup(SelectLineupBoatPopup(
+    final navigatorContext = Navigator.of(context).context;
+
+    await Future.delayed(Timings.long);
+
+    if (!navigatorContext.mounted) return;
+    navigatorContext.showPopup(SelectLineupBoatPopup(
       onSelectBoat: (boat) => rosterModel.setLineup(Lineup(
         id: Uuid().v4(),
         name: lineupName,
