@@ -115,6 +115,7 @@ class _PaddlerContextMenu extends StatelessWidget {
       ContextMenuAction(
         icon: Icons.delete,
         onTap: removePaddler,
+        isDestructiveAction: true,
         label: 'Remove',
       ),
     ]);
