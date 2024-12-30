@@ -254,6 +254,7 @@ class _EditBoatView extends StatelessWidget {
           FormBuilderTextField(
             name: 'name',
             initialValue: boat?.name,
+            textCapitalization: TextCapitalization.words,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: Validators.required(errorText: 'Enter a name.'),
             decoration: CustomInputDecoration(
