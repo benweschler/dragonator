@@ -44,7 +44,7 @@ class _BoatsPopupState extends State<BoatsPopup>
             return PopupTransitionPage(
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
-                child: _EditBoat(boat, widget.teamID),
+                child: _EditBoatView(boat, widget.teamID),
               ),
             ).createRoute(context);
           }
@@ -52,7 +52,7 @@ class _BoatsPopupState extends State<BoatsPopup>
           return MaterialPageRoute(
             builder: (context) => Padding(
               padding: EdgeInsets.all(Insets.lg),
-              child: _BoatList(widget.teamID),
+              child: _BoatListView(widget.teamID),
             ),
           );
         },
@@ -64,10 +64,10 @@ class _BoatsPopupState extends State<BoatsPopup>
   String get teamID => widget.teamID;
 }
 
-class _BoatList extends StatelessWidget {
+class _BoatListView extends StatelessWidget {
   final String teamID;
 
-  const _BoatList(this.teamID);
+  const _BoatListView(this.teamID);
 
   @override
   Widget build(BuildContext context) {
@@ -199,13 +199,13 @@ class _BoatTile extends StatelessWidget {
   }
 }
 
-class _EditBoat extends StatelessWidget {
+class _EditBoatView extends StatelessWidget {
   /// If null, creates a new boat.
   final Boat? boat;
   final String teamID;
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
-  _EditBoat(this.boat, this.teamID);
+  _EditBoatView(this.boat, this.teamID);
 
   Future<void> _saveBoat(BuildContext context) async {
     if (!_formKey.currentState!.saveAndValidate()) {
@@ -307,22 +307,7 @@ class _EditBoat extends StatelessWidget {
             const SizedBox(height: Insets.xl),
             Row(
               children: [
-                Expanded(
-                  child: Hero(
-                    //TODO: might want to remove hero with two buttons
-                    //tag: _cachedBoat == null ? 'action button' : '',
-                    tag: 'action button',
-                    flightShuttleBuilder: _heroFlightShuttleBuilder,
-                    child: ExpandingStadiumButton(
-                      onTap: () => _saveBoat(context),
-                      color: AppColors.of(context).buttonContainer,
-                      textColor: AppColors.of(context).onButtonContainer,
-                      label: 'Save',
-                    ),
-                  ),
-                ),
                 if (boat != null) ...[
-                  SizedBox(width: Insets.med),
                   Expanded(
                     child: ExpandingStadiumButton(
                       onTap: () {
@@ -342,7 +327,20 @@ class _EditBoat extends StatelessWidget {
                       label: 'Delete',
                     ),
                   ),
-                ]
+                  SizedBox(width: Insets.med),
+                ],
+                Expanded(
+                  child: Hero(
+                    tag: 'action button',
+                    flightShuttleBuilder: _heroFlightShuttleBuilder,
+                    child: ExpandingStadiumButton(
+                      onTap: () => _saveBoat(context),
+                      color: AppColors.of(context).buttonContainer,
+                      textColor: AppColors.of(context).onButtonContainer,
+                      label: 'Save',
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: Insets.sm),
