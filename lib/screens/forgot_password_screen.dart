@@ -128,7 +128,7 @@ class _PasswordResetConfirmationPopup extends StatelessWidget {
               ),
               TextSpan(
                   text: email,
-                  style: TextStyle().copyWith(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(
                 text:
                     ' we\'ve sent an email with instructions to reset your password.  If you don’t see the email, check your spam or junk folder.',

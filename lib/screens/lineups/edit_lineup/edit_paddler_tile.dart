@@ -26,16 +26,17 @@ class EditPaddlerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paddler = context
-        .select<RosterModel, Paddler>((model) => model.getPaddler(paddlerID)!);
-
     return DeferredPointerHandler(
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           ReorderableGridDragListener(
             index: index,
-            child: PaddlerTile(paddler),
+            child: Selector<RosterModel, Paddler?>(
+              selector: (context, model) => model.getPaddler(paddlerID),
+              shouldRebuild: (_, newPaddler) => newPaddler != null,
+              builder: (context, paddler, _) => PaddlerTile(paddler!)
+            ),
           ),
           Positioned(
             // The radius of the paddler options button is 13.

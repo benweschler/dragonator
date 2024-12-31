@@ -20,6 +20,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'com_overlay.dart';
+import 'paddler_deleted_popup.dart';
 
 //TODO: can't handle odd boat capacities
 class EditLineupScreen extends StatefulWidget {
@@ -32,6 +33,7 @@ class EditLineupScreen extends StatefulWidget {
 }
 
 class _EditLineupScreenState extends State<EditLineupScreen> {
+  late final RosterModel _rosterModel;
   late final Lineup _lineup;
   late List<Paddler?> _paddlerList;
   late Boat _boat;
@@ -40,11 +42,38 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   void initState() {
     super.initState();
 
-    final rosterModel = context.read<RosterModel>();
-    _lineup = rosterModel.getLineup(widget.lineupID)!;
+    _rosterModel = context.read<RosterModel>();
+    _lineup = _rosterModel.getLineup(widget.lineupID)!;
     _paddlerList =
-        _lineup.paddlerIDs.map((id) => rosterModel.getPaddler(id)).toList();
-    _boat = rosterModel.currentTeam!.boats[_lineup.boatID]!;
+        _lineup.paddlerIDs.map((id) => _rosterModel.getPaddler(id)).toList();
+    _boat = _rosterModel.currentTeam!.boats[_lineup.boatID]!;
+    _rosterModel.addListener(_checkPaddlerDeleted);
+  }
+
+  @override
+  void dispose() {
+    _rosterModel.removeListener(_checkPaddlerDeleted);
+    super.dispose();
+  }
+
+  // Remove paddlers from the editing list
+  void _checkPaddlerDeleted() {
+    print('listen');
+    final deletedPaddlerNames = <String>[];
+    final rosterModel = context.read<RosterModel>();
+    for(int i = 0; i < _paddlerList.length; i++) {
+      final paddler = _paddlerList[i];
+      if(paddler == null) continue;
+      if(rosterModel.getPaddler(paddler.id) == null) {
+        deletedPaddlerNames.add('${paddler.firstName} ${paddler.lastName}');
+        _paddlerList[i] = null;
+      }
+    }
+
+    setState(() {});
+    if(deletedPaddlerNames.isNotEmpty) {
+      context.showPopup(PaddlerDeletedPopup(deletedPaddlerNames));
+    }
   }
 
   Future<void> _saveLineup() {
