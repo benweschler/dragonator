@@ -8,7 +8,6 @@ class ErrorCard extends StatelessWidget {
   const ErrorCard(this.message, {super.key});
 
   @override
-  //TODO: fix colors
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
 

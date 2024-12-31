@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   AsyncActionButton<FirebaseAuthException>(
                     key: _loginButtonKey,
                     label: 'Log In',
-                    isEnabled: credentialsEntered,
+                    enabled: credentialsEntered,
                     action: logIn,
                     catchError: catchLoginError,
                   ),

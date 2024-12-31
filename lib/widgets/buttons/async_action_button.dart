@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 /// display a loading indicator.
 //TODO: not used
 class AsyncActionButton<T extends Object> extends StatefulWidget {
-  final bool isEnabled;
+  final bool enabled;
   final String label;
   final Future? Function() action;
   final void Function(T error)? catchError;
 
   const AsyncActionButton({
     super.key,
-    this.isEnabled = true,
+    this.enabled = true,
     required this.label,
     required this.action,
     required this.catchError,
@@ -53,14 +53,14 @@ class AsyncActionButtonState<T extends Object>
     final buttonColor = AppColors.of(context).primary;
 
     return IgnorePointer(
-      ignoring: !widget.isEnabled || _isLoading,
+      ignoring: !widget.enabled || _isLoading,
       child: ResponsiveButton.large(
         onTap: executeAction,
         builder: (overlay) => Container(
           padding: const EdgeInsets.all(Insets.med),
           decoration: BoxDecoration(
             borderRadius: Corners.medBorderRadius,
-            color: widget.isEnabled
+            color: widget.enabled
                 ? Color.alphaBlend(overlay, buttonColor)
                 : buttonColor.withOpacity(0.5),
           ),

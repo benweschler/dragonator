@@ -1,9 +1,11 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/async_action_button.dart';
 import 'package:dragonator/widgets/buttons/custom_back_button.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/error_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,9 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final _submitButtonKey = GlobalKey<AsyncActionButtonState>();
+  final ValueNotifier<String?> _errorNotifier = ValueNotifier(null);
 
   @override
   void dispose() {
@@ -36,33 +40,64 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             const Text('Forgot Password', style: TextStyles.h2),
             const SizedBox(height: Insets.xl),
-            TextField(
-              controller: _emailController,
-              autocorrect: false,
-              enableSuggestions: false,
-              onSubmitted: (_) =>
-                  _submitButtonKey.currentState!.executeAction(),
-              keyboardType: TextInputType.emailAddress,
-              autofillHints: const [AutofillHints.email],
-              decoration: CustomInputDecoration(
-                AppColors.of(context),
-                hintText: 'Email',
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _emailController,
+                autocorrect: false,
+                enableSuggestions: false,
+                onFieldSubmitted: (_) =>
+                    _submitButtonKey.currentState!.executeAction(),
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                autovalidateMode: AutovalidateMode.onUnfocus,
+                validator: Validators.email(errorText: 'Enter a valid email.'),
+                decoration: CustomInputDecoration(
+                  AppColors.of(context),
+                  hintText: 'Email',
+                ),
+              ),
+            ),
+            ValueListenableBuilder<String?>(
+              valueListenable: _errorNotifier,
+              builder: (_, error, __) => Column(
+                children: error == null ? [] : [
+                  const SizedBox(height: Insets.lg),
+                  ErrorCard(error),
+                ],
               ),
             ),
             const SizedBox(height: Insets.xl * 1.2),
-            AsyncActionButton<FirebaseAuthException>(
-              key: _submitButtonKey,
-              label: 'Submit',
-              //TODO: add alert dialog to notify email has been sent
-              action: () => FirebaseAuth.instance.sendPasswordResetEmail(
-                email: _emailController.text,
+            ListenableBuilder(
+              listenable: _emailController,
+              builder: (context, _) => AsyncActionButton<FirebaseAuthException>(
+                key: _submitButtonKey,
+                label: 'Submit',
+                enabled: _emailController.text.isNotEmpty,
+                //TODO: add alert dialog to notify email has been sent
+                action: () async {
+                  if (!_formKey.currentState!.validate()) return;
+
+                  return FirebaseAuth.instance.sendPasswordResetEmail(
+                    email: _emailController.text,
+                  );
+                },
+                //TODO: add error handling
+                catchError: (error) => _errorNotifier.value = error.message,
               ),
-              //TODO: add error handling
-              catchError: (e) => print(e),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+enum _ErrorCodes {
+  invalidEmail('invalid-email'),
+  userNotFound('user-not-found');
+
+  final String code;
+
+  const _ErrorCodes(this.code);
 }

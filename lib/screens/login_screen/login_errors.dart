@@ -1,3 +1,4 @@
+//TODO: change to shared enum for all firebase errors
 abstract class LoginErrors {
   static const String networkError =
       "Hmm, we can't seem to connect to the internet. Please check your network connection and try again.";
