@@ -2,6 +2,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+//TODO: explore adding default padding with option to remove
 class PopupDialog extends StatelessWidget {
   final Widget child;
 

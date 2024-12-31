@@ -79,9 +79,7 @@ class AppColors extends ThemeExtension<AppColors> {
           largeSurface: Colors.white.withOpacity(0.04),
           primarySurface: _primaryRed.withOpacity(0.1),
           error: Color(0xFFF54D47),
-          //TODO: shouldn't be primary red
           smallErrorSurface: Color(0xFFF54D47).withOpacity(0.35),
-          //TODO: check
           largeErrorSurface: Color(0xFFF54D47).withOpacity(0.125),
           neutralContent: Colors.white.withOpacity(0.5),
           buttonContainer: Colors.white,
