@@ -4,7 +4,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/selector_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
-import 'package:dragonator/widgets/paddler_preview_tile.dart';
+import 'package:dragonator/widgets/preview_tiles/paddler_preview_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
