@@ -39,6 +39,7 @@ class ContextMenuAction extends StatelessWidget {
     required this.icon,
     required this.label,
     this.isDestructiveAction = false,
+    // TODO: probably don't need auto pop because usages just pop first instead of last. just move up context.pop since onTap isn't async
     this.autoPop = true,
     required this.onTap,
   });

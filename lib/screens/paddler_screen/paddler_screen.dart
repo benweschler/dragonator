@@ -38,7 +38,8 @@ class PaddlerScreen extends StatelessWidget {
             style: TextStyles.title1,
           ),
           trailing: CustomIconButton(
-            onTap: () => context.push(RoutePaths.editPaddler(paddlerID: paddlerID)),
+            onTap: () =>
+                context.push(RoutePaths.editPaddler(paddlerID: paddlerID)),
             icon: Icons.edit_rounded,
           ),
           child: SingleChildScrollView(
@@ -76,6 +77,16 @@ class PaddlerScreen extends StatelessWidget {
                 //TODO: implement actions
                 ActionButtonCard([
                   CardActionButton(
+                    /*TODO current
+                    onTap: () => context.showModal(Selector<RosterModel, Iterable<Team>>(
+                      selector: (context, model) => model.teams.map((team) => team.name),
+                      builder: (context, teams, _) => SelectionMenu(
+                        items: teams.map((team) => team.name).toList(),
+                        initiallySelectedIndex: null,
+                        onItemTap: (index) => ,
+                      ),
+                    )),
+                     */
                     onTap: () {},
                     label: 'Add to team',
                     icon: Icons.add_rounded,

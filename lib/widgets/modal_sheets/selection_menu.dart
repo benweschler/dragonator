@@ -1,30 +1,70 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/widgets/buttons/modal_sheet_expanded_button.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import 'modal_sheet.dart';
 
-class SelectionMenu extends StatefulWidget {
-  final List<String> items;
-  final int initiallySelectedIndex;
-  final ValueChanged<int> onItemTap;
+class SelectionMenu<T> extends StatefulWidget {
+  final Iterable<T> options;
+  final Set<T> initiallySelectedOptions;
+  final String Function(T)? labelBuilder;
+  final ValueChanged<Set<T>> onSelect;
+  final _SelectionBehavior _behavior;
 
-  const SelectionMenu({
+  SelectionMenu({
     super.key,
-    required this.items,
-    required this.initiallySelectedIndex,
-    required this.onItemTap,
-  });
+    required this.options,
+    required T? initiallySelectedOption,
+    this.labelBuilder,
+    required ValueChanged<T> onSelect,
+  })  : initiallySelectedOptions =
+            initiallySelectedOption == null ? {} : {initiallySelectedOption},
+        onSelect = ((options) => onSelect(options.single)),
+        _behavior = _AutoSelectionBehavior<T>();
+
+  SelectionMenu.single({
+    super.key,
+    required this.options,
+    required T? initiallySelectedOption,
+    bool allowNoSelection = false,
+    this.labelBuilder,
+    required ValueChanged<T?> onSelect,
+  })  : initiallySelectedOptions =
+            initiallySelectedOption == null ? {} : {initiallySelectedOption},
+        onSelect = ((options) => onSelect(options.singleOrNull)),
+        _behavior = _SingleSelectionBehavior<T>(
+          allowNoSelection: allowNoSelection,
+        );
+
+  SelectionMenu.multi({
+    super.key,
+    required this.options,
+    Set<T>? initiallySelectedOptions,
+    Iterable<T>? lockedSelections,
+    this.labelBuilder,
+    required this.onSelect,
+  })  : initiallySelectedOptions = initiallySelectedOptions ?? {},
+        _behavior = _MultiSelectionBehavior<T>(
+          lockedSelections: lockedSelections ?? Iterable.empty(),
+        );
+
+  String _defaultLabelBuilder(T option) => option.toString();
 
   @override
-  State<SelectionMenu> createState() => _SelectionMenuState();
+  State<SelectionMenu> createState() => _SelectionMenuState<T>();
 }
 
-class _SelectionMenuState extends State<SelectionMenu> {
-  late int _selectedItemIndex = widget.initiallySelectedIndex;
+class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
+  @override
+  void initState() {
+    super.initState();
+    widget._behavior.initialize(widget, setState);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,30 +72,134 @@ class _SelectionMenuState extends State<SelectionMenu> {
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: List<Widget>.generate(
-            widget.items.length,
-            (index) => SelectionMenuTile(
-              label: widget.items[index],
-              isSelected: index == _selectedItemIndex,
-              onTap: () {
-                if (_selectedItemIndex != index) {
-                  widget.onItemTap(index);
-                  setState(() => _selectedItemIndex = index);
+          children: [
+            ...widget.options
+                .map<Widget>(
+                  (option) => SelectionMenuTile(
+                    label: widget.labelBuilder?.call(option) ??
+                        widget._defaultLabelBuilder(option),
+                    isSelected: widget._behavior.isTileSelected(option),
+                    onTap: () {
+                      widget._behavior.onTap(option);
+                      if (widget._behavior is _AutoSelectionBehavior) {
+                        context.pop();
+                      }
+                    },
+                  ),
+                )
+                .separate(const Divider(height: 0.5, thickness: 0.5)),
+            if (widget._behavior.action != null)
+              ModalSheetButtonTile(
+                color: AppColors.of(context).primary,
+                onTap: () {
+                  widget._behavior.action!();
                   HapticFeedback.lightImpact();
-                  context.pop();
-                }
-              },
-            ),
-          )
-              .separate(const Divider(height: 0.5, thickness: 0.5))
-              .toList(),
+                },
+                label: 'Apply',
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-//TODO: use ResponsiveStrokeButton
+class _AutoSelectionBehavior<T> extends _SelectionBehavior<T>
+    with _SingleSelectionBehaviorMixin {
+  @override
+  final singleSelection = true;
+
+  @override
+  void onTap(T option) {
+    if (_selectedOption != option) {
+      widget.onSelect({option});
+      setState(() => _selectedOption = option);
+      HapticFeedback.lightImpact();
+    }
+  }
+}
+
+class _SingleSelectionBehavior<T> extends _SelectionBehavior<T>
+    with _SingleSelectionBehaviorMixin {
+  final bool allowNoSelection;
+
+  _SingleSelectionBehavior({required this.allowNoSelection});
+
+  @override
+  final singleSelection = true;
+
+  @override
+  void onTap(T option) {
+    setState(() {
+      if (_selectedOption != option) {
+        _selectedOption = option;
+      } else if (allowNoSelection) {
+        _selectedOption = null;
+      }
+    });
+  }
+
+  @override
+  VoidCallback? get action =>
+      () => widget.onSelect({if (_selectedOption != null) _selectedOption!});
+}
+
+class _MultiSelectionBehavior<T> extends _SelectionBehavior<T> {
+  final Iterable<T> lockedSelections;
+
+  _MultiSelectionBehavior({required this.lockedSelections});
+
+  late final Set<T> _selectedOptions = widget.initiallySelectedOptions;
+
+  @override
+  final singleSelection = false;
+
+  @override
+  void onTap(T option) {
+    setState(() {
+      if (!_selectedOptions.add(option) && !lockedSelections.contains(option)) {
+        _selectedOptions.remove(option);
+      }
+    });
+  }
+
+  @override
+  VoidCallback? get action => () => widget.onSelect(_selectedOptions);
+
+  @override
+  bool isTileSelected(T option) => _selectedOptions.contains(option);
+}
+
+mixin _SingleSelectionBehaviorMixin<T> on _SelectionBehavior<T> {
+  late T? _selectedOption = widget.initiallySelectedOptions.isEmpty
+      ? null
+      : widget.initiallySelectedOptions.first;
+
+  @override
+  bool isTileSelected(T option) => _selectedOption == option;
+}
+
+abstract class _SelectionBehavior<T> {
+  late final SelectionMenu<T> widget;
+  late final void Function(VoidCallback) setState;
+
+  void initialize(
+    SelectionMenu<T> widget,
+    void Function(VoidCallback) setState,
+  ) {
+    this.widget = widget;
+    this.setState = setState;
+  }
+
+  bool get singleSelection;
+
+  VoidCallback? action;
+
+  void onTap(T option);
+
+  bool isTileSelected(T option);
+}
+
 class SelectionMenuTile extends StatelessWidget {
   final String label;
   final bool isSelected;
@@ -70,9 +214,8 @@ class SelectionMenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ResponsiveStrokeButton(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.all(Insets.lg),
         child: Row(

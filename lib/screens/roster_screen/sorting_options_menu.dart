@@ -76,7 +76,7 @@ class _SortDirectionSelector extends StatelessWidget {
         children: [
           ResponsiveButton(
             onTap: () => onDirectionChanged(true),
-            builder: (_) => Container(
+            builder: (overlay) => Container(
               padding: const EdgeInsets.all(Insets.xs),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -84,7 +84,10 @@ class _SortDirectionSelector extends StatelessWidget {
               ),
               child: Icon(
                 Icons.arrow_upward_rounded,
-                color: sortIncreasing ? Colors.white : null,
+                color: Color.alphaBlend(
+                  overlay,
+                  sortIncreasing ? Colors.white : IconTheme.of(context).color!,
+                ),
               ),
             ),
           ),

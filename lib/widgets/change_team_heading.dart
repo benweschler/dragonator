@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
@@ -56,12 +57,13 @@ class _TeamSelectionMenu extends StatelessWidget {
       builder: (context, rosterModel, child) {
         final teams = rosterModel.teams.toList();
 
-        return SelectionMenu(
-          items: teams.map((team) => team.name).toList(),
-          initiallySelectedIndex: teams
-              .indexWhere((team) => team.id == rosterModel.currentTeam!.id),
-          onItemTap: (newTeamIndex) =>
-              rosterModel.setCurrentTeam(teams[newTeamIndex].id),
+        return SelectionMenu<Team>(
+          options: teams,
+          initiallySelectedOption: teams
+              .firstWhere((team) => team.id == rosterModel.currentTeam!.id),
+          labelBuilder: (team) => team.name,
+          onSelect: (selectedTeam) =>
+              rosterModel.setCurrentTeam(selectedTeam.id),
         );
       },
     );

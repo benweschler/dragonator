@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 /// place of a standard modal sheet tile.
 ///
 /// This tile should be the bottom-most tile in a modal sheet.
+//TODO: should probably be named action something? is the tile analogy correct?
 class ModalSheetButtonTile extends StatelessWidget {
   final Color color;
   final GestureTapCallback onTap;
@@ -31,6 +32,7 @@ class ModalSheetButtonTile extends StatelessWidget {
       child: ResponsiveButton.large(
         onTap: () {
           onTap();
+          //TODO: auto popping means no confirmation when removing from team
           context.pop();
         },
         builder: (overlay) => Container(
