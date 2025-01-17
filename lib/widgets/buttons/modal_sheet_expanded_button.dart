@@ -11,12 +11,17 @@ import 'package:go_router/go_router.dart';
 class ModalSheetButtonTile extends StatelessWidget {
   final Color color;
   final GestureTapCallback onTap;
+  final bool autoPop;
+  //TODO: bad, probably. generalize?
+  final bool enabled;
   final String label;
 
   const ModalSheetButtonTile({
     super.key,
     required this.color,
     required this.onTap,
+    this.autoPop = true,
+    this.enabled = true,
     required this.label,
   });
 
@@ -29,24 +34,29 @@ class ModalSheetButtonTile extends StatelessWidget {
         right: Insets.offset,
         bottom: Insets.offset,
       ),
-      child: ResponsiveButton.large(
-        onTap: () {
-          onTap();
-          //TODO: auto popping means no confirmation when removing from team
-          context.pop();
-        },
-        builder: (overlay) => Container(
-          padding: const EdgeInsets.all(Insets.med),
-          decoration: BoxDecoration(
-            borderRadius: Corners.medBorderRadius,
-            color: Color.alphaBlend(overlay, color),
-          ),
-          child: Center(
-            child: Text(
-              label,
-              // A ModalSheet provides a DefaultTextStyle to correctly style all
-              // text in the sheet, so additional styling is not required.
-              style: const TextStyle(color: Colors.white),
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: Opacity(
+          opacity: enabled ? 1 : 0.5,
+          child: ResponsiveButton.large(
+            onTap: () {
+              onTap();
+              if(autoPop) context.pop();
+            },
+            builder: (overlay) => Container(
+              padding: const EdgeInsets.all(Insets.med),
+              decoration: BoxDecoration(
+                borderRadius: Corners.medBorderRadius,
+                color: Color.alphaBlend(overlay, color),
+              ),
+              child: Center(
+                child: Text(
+                  label,
+                  // A ModalSheet provides a DefaultTextStyle to correctly style all
+                  // text in the sheet, so additional styling is not required.
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
         ),

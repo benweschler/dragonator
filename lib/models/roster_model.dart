@@ -9,6 +9,7 @@ import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 part '../commands/team_commands.dart';
 
@@ -18,6 +19,7 @@ part '../commands/lineup_commands.dart';
 
 part '../commands/boat_commands.dart';
 
+//TODO: awaiting firebase write hangs in offline mode.
 class RosterModel extends Notifier {
   // The StreamSubscriptions corresponding to the realtime update subscriptions
   // from Firestore.
@@ -27,6 +29,7 @@ class RosterModel extends Notifier {
 
   final _teamDeletedListeners = _TeamDeletedListenerManager();
   late void Function(String) _showCurrentTeamDeletedDialog;
+
   //TODO: write test to verify that the user deleting the current team never results in a popup and a collaborator deleted the current team always results in a popup.
   bool _pendingUserInitiatedCurrentTeamDeletion = false;
 
@@ -47,7 +50,7 @@ class RosterModel extends Notifier {
     // Updates the teamIDMap
     _updateTeams(snapshot);
 
-    await _updateCurrentTeamWithDetails(_teamIDMap.keys.elementAtOrNull(0));
+    _updateCurrentTeamWithDetails(_teamIDMap.keys.elementAtOrNull(0));
 
     _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
 
@@ -90,53 +93,46 @@ class RosterModel extends Notifier {
   /// paddlers, lineups, and boats.
   ///
   /// Does nothing if current team is null (i.e. no teams exist).
-  Future<void> _updateCurrentTeamWithDetails(String? newTeamID) async {
+  void _updateCurrentTeamWithDetails(String? newTeamID) {
     _currentTeamID = newTeamID;
-    await _loadTeamPaddlers();
-    await _loadTeamLineups();
+    _loadTeamPaddlers();
+    _loadTeamLineups();
   }
 
-  Future<void> _loadTeamPaddlers() {
-    return _loadTeamDetail(
-      _paddlersSubscription,
-      _getTeamPaddlersCommand,
+  void _loadTeamPaddlers() {
+    _paddlersSubscription?.cancel();
+    _paddlersSubscription = _loadTeamDetail(
       getPaddlersDoc,
       _paddlerIDMap,
-      Paddler.fromFirestore,
       _onPaddlerDocUpdate,
     );
   }
 
-  Future<void> _loadTeamLineups() {
-    return _loadTeamDetail(
-      _lineupsSubscription,
-      _getTeamLineupsCommand,
+  void _loadTeamLineups() async {
+    _lineupsSubscription?.cancel();
+    _lineupsSubscription = _loadTeamDetail(
       getLineupsDoc,
       _lineupIDMap,
-      Lineup.fromFirestore,
       _onLineupDocUpdate,
     );
   }
 
-  Future<void> _loadTeamDetail<T extends dynamic>(
-    StreamSubscription? updateSubscription,
-    GetTeamDetailCommand getTeamDetailCommand,
+  // Returns the StreamSubscription to the detail's Firestore document.
+  StreamSubscription? _loadTeamDetail<T extends dynamic>(
     GetDetailDoc getDetailDoc,
     Map<String, T> idMap,
-    DetailFromFirestore<T> fromFirestore,
     OnDetailUpdate onDetailUpdate,
-  ) async {
-    updateSubscription?.cancel();
+  ) {
     idMap.clear();
 
     // True if all teams are deleted.
-    if (_currentTeamID == null) return;
+    if (_currentTeamID == null) return null;
+
 
     // A snapshot is immediately provided by Firestore from local storage, so we
     // can treat the initial load is treated as an update and the detail is
     // loaded by onDetailUpdate.
-    updateSubscription =
-        getDetailDoc(_currentTeamID!).snapshots().listen(onDetailUpdate);
+    return getDetailDoc(_currentTeamID!).snapshots().listen(onDetailUpdate);
   }
 
   //* UPDATE DATA *//
@@ -266,9 +262,9 @@ class RosterModel extends Notifier {
 
   //* TEAM SETTERS *//
 
-  Future<void> setCurrentTeam(String teamID) async {
+  void setCurrentTeam(String teamID) {
     if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;
-    await _updateCurrentTeamWithDetails(teamID);
+    _updateCurrentTeamWithDetails(teamID);
   }
 
   Future<void> renameTeam(String teamID, String name) =>
@@ -278,7 +274,7 @@ class RosterModel extends Notifier {
 
   Future<void> deleteTeam(String teamID) async {
     if (!_teamIDMap.containsKey(teamID)) return;
-    if(teamID == _currentTeamID) {
+    if (teamID == _currentTeamID) {
       _pendingUserInitiatedCurrentTeamDeletion = true;
     }
     return _deleteTeamCommand(teamID);
@@ -291,6 +287,11 @@ class RosterModel extends Notifier {
   Future<void> setPaddler(Paddler paddler) =>
       _setPaddlerCommand(paddler, _currentTeamID!);
 
+  //TODO: abstract to data creation that automatically does UUID
+  Future<void> copyPaddlerToTeam(Paddler paddler, String teamID) =>
+      _setPaddlerCommand(paddler.copyWith(id: Uuid().v4()), teamID);
+
+  //TODO: needs to remove paddler from lineup
   Future<void> deletePaddler(String paddlerID) =>
       _deletePaddlerCommand(paddlerID, _currentTeamID!);
 

@@ -22,6 +22,7 @@ class AddPaddlerTile extends StatelessWidget {
       onTap: () => context.push(
         RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
         extra: {
+          //TODO: don't pass add paddler. pop with Paddler? and add here
           'addPaddler': addPaddler,
           'editedLineupPaddlers': editedNullablePaddlers
               .where((entry) => entry != null)

@@ -58,7 +58,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
   // Remove paddlers from the editing list
   void _checkPaddlerDeleted() {
-    print('listen');
     final deletedPaddlerNames = <String>[];
     final rosterModel = context.read<RosterModel>();
     for(int i = 0; i < _paddlerList.length; i++) {
@@ -108,6 +107,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
       editedNullablePaddlers: _paddlerList,
       addPaddler: (paddler) {
         if (paddler == null) return;
+        //TODO: reorderable grid doesn't internally update items here.
         setState(() => _paddlerList[index] = paddler);
       },
     );

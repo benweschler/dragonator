@@ -216,10 +216,9 @@ class _TeamContextMenuState extends State<_TeamContextMenu>
       ContextMenuAction(
         icon: Icons.groups_rounded,
         label: 'Roster',
-        onTap: () async {
-          context.read<RosterModel>().setCurrentTeam(widget.teamID).then((_) {
-            if (context.mounted) context.go(RoutePaths.roster);
-          });
+        onTap: () {
+          context.read<RosterModel>().setCurrentTeam(widget.teamID);
+          context.go(RoutePaths.roster);
         },
       ),
       ContextMenuAction(

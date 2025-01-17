@@ -67,6 +67,12 @@ class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
   }
 
   @override
+  void didUpdateWidget(covariant SelectionMenu<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget._behavior.initialize(widget, setState);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ModalSheet(
       child: SingleChildScrollView(
@@ -90,7 +96,10 @@ class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
                 .separate(const Divider(height: 0.5, thickness: 0.5)),
             if (widget._behavior.action != null)
               ModalSheetButtonTile(
+                enabled: widget._behavior.selection.isNotEmpty,
                 color: AppColors.of(context).primary,
+                //TODO: bad!
+                autoPop: false,
                 onTap: () {
                   widget._behavior.action!();
                   HapticFeedback.lightImpact();
@@ -107,9 +116,6 @@ class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
 class _AutoSelectionBehavior<T> extends _SelectionBehavior<T>
     with _SingleSelectionBehaviorMixin {
   @override
-  final singleSelection = true;
-
-  @override
   void onTap(T option) {
     if (_selectedOption != option) {
       widget.onSelect({option});
@@ -124,9 +130,6 @@ class _SingleSelectionBehavior<T> extends _SelectionBehavior<T>
   final bool allowNoSelection;
 
   _SingleSelectionBehavior({required this.allowNoSelection});
-
-  @override
-  final singleSelection = true;
 
   @override
   void onTap(T option) {
@@ -152,7 +155,7 @@ class _MultiSelectionBehavior<T> extends _SelectionBehavior<T> {
   late final Set<T> _selectedOptions = widget.initiallySelectedOptions;
 
   @override
-  final singleSelection = false;
+  Set<T> get selection => _selectedOptions;
 
   @override
   void onTap(T option) {
@@ -171,9 +174,20 @@ class _MultiSelectionBehavior<T> extends _SelectionBehavior<T> {
 }
 
 mixin _SingleSelectionBehaviorMixin<T> on _SelectionBehavior<T> {
-  late T? _selectedOption = widget.initiallySelectedOptions.isEmpty
-      ? null
-      : widget.initiallySelectedOptions.first;
+  late T? _selectedOption;
+
+  @override
+  Set<T> get selection => {if (_selectedOption != null) _selectedOption!};
+
+  @override
+  void initialize(
+      SelectionMenu<T> widget, void Function(VoidCallback) setState) {
+    _selectedOption = widget.initiallySelectedOptions.isEmpty
+        ? null
+        : widget.initiallySelectedOptions.first;
+
+    super.initialize(widget, setState);
+  }
 
   @override
   bool isTileSelected(T option) => _selectedOption == option;
@@ -191,7 +205,7 @@ abstract class _SelectionBehavior<T> {
     this.setState = setState;
   }
 
-  bool get singleSelection;
+  Set<T> get selection;
 
   VoidCallback? action;
 

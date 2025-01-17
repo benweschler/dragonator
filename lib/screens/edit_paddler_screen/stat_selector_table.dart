@@ -43,7 +43,7 @@ class StatSelectorTable extends StatelessWidget {
       builder: (state) {
         return SizedBox(
           width: double.infinity,
-          child: CupertinoSlidingSegmentedControl(
+          child: CupertinoSlidingSegmentedControl<Gender>(
             backgroundColor: state.hasError
                 ? AppColors.of(context).smallErrorSurface
                 : AppColors.of(context).smallSurface,
@@ -68,7 +68,7 @@ class StatSelectorTable extends StatelessWidget {
       builder: (state) {
         return SizedBox(
           width: double.infinity,
-          child: CupertinoSlidingSegmentedControl(
+          child: CupertinoSlidingSegmentedControl<SidePreference>(
             backgroundColor: state.hasError
                 ? AppColors.of(context).smallErrorSurface
                 : AppColors.of(context).smallSurface,
