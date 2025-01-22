@@ -96,21 +96,18 @@ class AppColors extends ThemeExtension<AppColors> {
   }
 
   ThemeData toThemeData() {
-    final themeData = ThemeData(
+    return ThemeData(
       useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
       splashFactory: NoSplash.splashFactory,
-    ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
-
-    return themeData.copyWith(
-      colorScheme: themeData.colorScheme.copyWith(
+      colorScheme: ThemeData().colorScheme.copyWith(
         primary: primary,
         surface: background,
         onSurface: onBackground,
         outline: outline,
         outlineVariant: outlineVariant,
       ),
-    );
+    ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
   }
 
   static AppColors of(BuildContext context) =>
