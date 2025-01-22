@@ -1,7 +1,7 @@
 import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/widgets/buttons/selector_button.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 class BoatSelectionTile extends StatelessWidget {
@@ -18,61 +18,77 @@ class BoatSelectionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.all(Insets.sm),
-            decoration: BoxDecoration(
-              borderRadius: Corners.medBorderRadius,
-              color: selected
-                  ? AppColors.of(context).primarySurface
-                  : Colors.black.withValues(alpha: 0.025),
-              //: AppColors.of(context).largeSurface,
-              //: null,
-              border: Border.all(
-                color: selected
-                    ? AppColors.of(context).primary
-                    : AppColors.of(context).outline,
+    return IgnorePointer(
+      ignoring: selected,
+      child: ResponsiveButton.large(
+        onTap: onTap,
+        builder: (overlay) => Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: Insets.sm,
+                horizontal: Insets.lg,
               ),
-            ),
-            child: IntrinsicHeight(
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          boat.name,
-                          style: TextStyles.body1.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: selected
-                                ? AppColors.of(context).primary
-                                : AppColors.of(context).neutralContent,
-                          ),
+              decoration: BoxDecoration(
+                borderRadius: Corners.medBorderRadius,
+                color: selected ? AppColors.of(context).primarySurface : null,
+                //: AppColors.of(context).largeSurface,
+                //: null,
+                border: Border.all(
+                  color: selected
+                      ? AppColors.of(context).primary
+                      : Color.alphaBlend(
+                          overlay,
+                          AppColors.of(context).outline,
                         ),
-                        Text(
-                          '${boat.capacity} paddler${boat.capacity > 1 ? 's' : ''} • ${boat.formattedWeight} lbs',
-                          style: TextStyles.body2.copyWith(
-                            color: selected
-                                ? AppColors.of(context).primary
-                                : AppColors.of(context).neutralContent,
+                ),
+              ),
+              child: IntrinsicHeight(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            boat.name,
+                            style: TextStyles.body1.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: selected
+                                  ? AppColors.of(context).primary
+                                  : Color.alphaBlend(
+                                overlay,
+                                AppColors.of(context).outline,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Text(
+                            '${boat.capacity} paddler${boat.capacity > 1 ? 's' : ''} • ${boat.formattedWeight} lbs',
+                            style: TextStyles.body2.copyWith(
+                              color: selected
+                                  ? AppColors.of(context).primary
+                                  : Color.alphaBlend(
+                                overlay,
+                                AppColors.of(context).outline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SelectorButton(selected: selected, onTap: null),
-                  ),
-                ],
+                    if (selected)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Icon(
+                          Icons.check_rounded,
+                          color: AppColors.of(context).primary,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

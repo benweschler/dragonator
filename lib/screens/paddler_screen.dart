@@ -19,8 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'preference_row.dart';
-
 class PaddlerScreen extends StatelessWidget {
   final String paddlerID;
 
@@ -57,23 +55,24 @@ class PaddlerScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: PreferenceRow(
+                      child: _PositionPreferenceIndicator(
                         label: 'Drummer',
                         hasPreference: paddler.drummerPreference,
                       ),
                     ),
+                    const SizedBox(width: Insets.med),
                     Expanded(
-                      child: PreferenceRow(
-                        label: 'Steers Person',
-                        hasPreference: paddler.steersPersonPreference,
+                      child: _PositionPreferenceIndicator(
+                        label: 'Stroke',
+                        hasPreference: paddler.strokePreference,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: Insets.med),
-                PreferenceRow(
-                  label: 'Stroke',
-                  hasPreference: paddler.strokePreference,
+                _PositionPreferenceIndicator(
+                  label: 'Steers Person',
+                  hasPreference: paddler.steersPersonPreference,
                 ),
                 const SizedBox(height: Insets.xl),
                 Text('Active Lineups', style: TextStyles.h2),
@@ -105,6 +104,61 @@ class PaddlerScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _PositionPreferenceIndicator extends StatelessWidget {
+  final String label;
+  final bool hasPreference;
+
+  const _PositionPreferenceIndicator({
+    required this.label,
+    required this.hasPreference,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: Insets.med,
+        vertical: Insets.sm,
+      ),
+      decoration: BoxDecoration(
+        color: hasPreference ? AppColors.of(context).primarySurface : null,
+        borderRadius: Corners.medBorderRadius,
+        border: Border.all(
+          color: hasPreference
+              ? AppColors.of(context).primary
+              : AppColors.of(context).outline,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (hasPreference)
+            Icon(
+              Icons.check_rounded,
+              color: AppColors.of(context).primary,
+            )
+          else
+            Icon(
+              Icons.close,
+              color: AppColors.of(context).neutralContent,
+            ),
+          SizedBox(
+            width: Insets.sm,
+          ),
+          Text(
+            label,
+            style: TextStyles.body1.copyWith(
+              color: hasPreference
+                  ? AppColors.of(context).primary
+                  : AppColors.of(context).neutralContent,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -197,7 +251,7 @@ class _CopyPaddlerToTeamMenu extends StatelessWidget {
             for (var team in teams) {
               await rosterModel.copyPaddlerToTeam(paddler, team.id);
             }
-            if(context.mounted) context.pop();
+            if (context.mounted) context.pop();
           },
         );
       },
