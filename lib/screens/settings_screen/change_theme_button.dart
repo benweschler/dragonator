@@ -138,9 +138,9 @@ class _ThemeWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors appColors = AppColors.of(context);
     final textColor = appColors.neutralContent;
-    final neutralContent = appColors.neutralContent.withOpacity(0.2);
+    final neutralContent = appColors.neutralContent.withValues(alpha: 0.2);
     final largeSurface = appColors.smallSurface;
-    final smallSurface = appColors.smallSurface.withOpacity(0.15);
+    final smallSurface = appColors.smallSurface.withValues(alpha: 0.15);
 
     return Container(
       padding: const EdgeInsets.all(Insets.sm),
@@ -152,7 +152,7 @@ class _ThemeWindow extends StatelessWidget {
         children: [
           _WindowElement(
             color: (appColors.isDark ? Colors.white : Colors.black)
-                .withOpacity(0.65),
+                .withValues(alpha: 0.65),
           ),
           const Spacer(flex: 2),
           Expanded(

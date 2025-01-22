@@ -90,7 +90,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
           onPressed: onPressed,
           child: widget.builder(
             Color.lerp(
-              overlayColor.withOpacity(0),
+              overlayColor.withValues(alpha: 0),
               overlayColor,
               _controller.value,
             )!,

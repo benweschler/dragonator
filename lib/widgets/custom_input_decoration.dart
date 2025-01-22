@@ -27,7 +27,7 @@ class CustomInputDecoration extends InputDecoration {
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
-              color: colors.neutralContent.withOpacity(0.2),
+              color: colors.neutralContent.withValues(alpha: 0.2),
             ),
             borderRadius: Corners.medBorderRadius,
           ),

@@ -23,25 +23,3 @@ class PopupTransitionPage<T> extends CustomTransitionPage<T> {
           },
         );
 }
-
-//TODO: unused
-/// A wrapper around [DialogRoute] to allow for use in a [GoRouter].
-class _DialogPage extends Page {
-  final Widget child;
-  final bool useSafeArea;
-
-  const _DialogPage({
-    this.useSafeArea = false,
-    required this.child,
-  });
-
-  @override
-  Route createRoute(BuildContext context) {
-    return DialogRoute(
-      context: context,
-      settings: this,
-      useSafeArea: useSafeArea,
-      builder: (_) => child,
-    );
-  }
-}

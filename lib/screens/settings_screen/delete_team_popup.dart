@@ -64,7 +64,7 @@ class _DeleteTeamPopupState extends State<DeleteTeamPopup>
                     padding: const EdgeInsets.all(Insets.sm),
                     decoration: BoxDecoration(
                       borderRadius: Corners.medBorderRadius,
-                      color: AppColors.of(context).error.withOpacity(0.08),
+                      color: AppColors.of(context).error.withValues(alpha: 0.08),
                       border: Border.all(color: AppColors.of(context).error),
                     ),
                     child: Row(

@@ -29,7 +29,7 @@ class BoatSelectionTile extends StatelessWidget {
               borderRadius: Corners.medBorderRadius,
               color: selected
                   ? AppColors.of(context).primarySurface
-                  : Colors.black.withOpacity(0.025),
+                  : Colors.black.withValues(alpha: 0.025),
               //: AppColors.of(context).largeSurface,
               //: null,
               border: Border.all(

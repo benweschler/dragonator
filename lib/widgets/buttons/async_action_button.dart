@@ -62,7 +62,7 @@ class AsyncActionButtonState<T extends Object>
             borderRadius: Corners.medBorderRadius,
             color: widget.enabled
                 ? Color.alphaBlend(overlay, buttonColor)
-                : buttonColor.withOpacity(0.5),
+                : buttonColor.withValues(alpha: 0.5),
           ),
           child: _AsyncActionButtonContent(
             labelText: widget.label,

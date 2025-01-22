@@ -195,7 +195,7 @@ class _CopyPaddlerToTeamMenu extends StatelessWidget {
             if (!confirmation) return;
 
             for (var team in teams) {
-              /*TODO: await*/ rosterModel.copyPaddlerToTeam(paddler, team.id);
+              await rosterModel.copyPaddlerToTeam(paddler, team.id);
             }
             if(context.mounted) context.pop();
           },

@@ -18,7 +18,7 @@ class PlatformAwareSwitch extends PlatformAwareWidget<CupertinoSwitch, Switch> {
   buildCupertinoWidget(BuildContext context) {
     return CupertinoSwitch(
       value: value,
-      activeColor: AppColors.of(context).primary,
+      activeTrackColor: AppColors.of(context).primary,
       onChanged: onChanged,
     );
   }
