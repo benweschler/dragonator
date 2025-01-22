@@ -111,9 +111,6 @@ class EditPaddlerScreen extends StatelessWidget {
               const SizedBox(height: Insets.xl),
               StatSelectorTable(paddler),
               const SizedBox(height: Insets.xl),
-              // No need to add padding between preference buttons since each
-              // button's checkbox has default padding, which is controlled by
-              // the CheckboxTheme.
               Row(
                 children: [
                   PreferenceSelector(
@@ -126,12 +123,12 @@ class EditPaddlerScreen extends StatelessWidget {
                     label: 'Steers Person',
                     initialValue: paddler?.steersPersonPreference ?? false,
                   ),
+                  PreferenceSelector(
+                    name: EditPaddlerFieldNames.strokePreference,
+                    label: 'Stroke',
+                    initialValue: paddler?.strokePreference ?? false,
+                  ),
                 ].map((e) => Expanded(child: e)).toList(),
-              ),
-              PreferenceSelector(
-                name: EditPaddlerFieldNames.strokePreference,
-                label: 'Stroke',
-                initialValue: paddler?.strokePreference ?? false,
               ),
             ],
           ),

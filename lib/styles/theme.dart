@@ -99,10 +99,6 @@ class AppColors extends ThemeExtension<AppColors> {
     final themeData = ThemeData(
       useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
-      checkboxTheme: const CheckboxThemeData(
-        splashRadius: 0,
-        visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
-      ),
       splashFactory: NoSplash.splashFactory,
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
 

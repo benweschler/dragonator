@@ -1,4 +1,4 @@
-import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/widgets/position_preference_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -22,15 +22,9 @@ class PreferenceSelector extends StatelessWidget {
       builder: (state) => GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => state.didChange(!state.value!),
-        child: Row(
-          children: [
-            Checkbox(
-              value: state.value,
-              onChanged: (newValue) => state.didChange(newValue),
-            ),
-            const SizedBox(width: Insets.med),
-            Text(label, style: TextStyles.body1),
-          ],
+        child: PositionPreferenceIndicator(
+          label: label,
+          hasPreference: state.value!,
         ),
       ),
     );

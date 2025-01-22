@@ -14,6 +14,7 @@ import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/labeled_table.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
+import 'package:dragonator/widgets/position_preference_indicator.dart';
 import 'package:dragonator/widgets/preview_tiles/lineup_preview_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,26 +52,24 @@ class PaddlerScreen extends StatelessWidget {
               children: [
                 SizedBox(height: Insets.xl),
                 _PaddlerStatTable(paddler),
-                const SizedBox(height: Insets.xl * 1.5),
+                const SizedBox(height: Insets.xl),
                 Row(
                   children: [
-                    _PositionPreferenceIndicator(
+                    PositionPreferenceIndicator(
                       label: 'Drummer',
                       hasPreference: paddler.drummerPreference,
                     ),
-                    _PositionPreferenceIndicator(
+                    PositionPreferenceIndicator(
                       label: 'Stroke',
                       hasPreference: paddler.strokePreference,
                     ),
-                    _PositionPreferenceIndicator(
+                    PositionPreferenceIndicator(
                       label: 'Steers Person',
                       hasPreference: paddler.steersPersonPreference,
                     ),
                   ].map((e) => Expanded(child: Center(child: e))).toList(),
                 ),
                 const SizedBox(height: Insets.xl),
-                Text('Active Lineups', style: TextStyles.h2),
-                SizedBox(height: Insets.sm),
                 _ActiveLineups(paddlerID),
                 SizedBox(height: Insets.xl),
                 //TODO: implement actions
@@ -98,46 +97,6 @@ class PaddlerScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _PositionPreferenceIndicator extends StatelessWidget {
-  final String label;
-  final bool hasPreference;
-
-  const _PositionPreferenceIndicator({
-    required this.label,
-    required this.hasPreference,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(Insets.sm),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: hasPreference ? AppColors.of(context).primarySurface : null,
-            border: Border.all(
-              width: 1.5,
-              color: hasPreference
-                  ? AppColors.of(context).primary
-                  : AppColors.of(context).outline,
-            ),
-          ),
-          child: Icon(
-            hasPreference ? Icons.check_rounded : Icons.close_rounded,
-            size: TextStyles.h2.fontSize,
-            color: hasPreference
-                ? AppColors.of(context).primary
-                : AppColors.of(context).neutralContent,
-          ),
-        ),
-        SizedBox(height: Insets.med),
-        Text(label, style: TextStyles.body1),
-      ],
     );
   }
 }

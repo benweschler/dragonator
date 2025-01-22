@@ -95,7 +95,7 @@ class StatSelectorTable extends StatelessWidget {
       ),
       child: FormBuilderDropdown<AgeGroup>(
         name: EditPaddlerFieldNames.ageGroup,
-        isExpanded: false,
+        isExpanded: true,
         elevation: 2,
         borderRadius: Corners.smBorderRadius,
         initialValue: paddler?.ageGroup,

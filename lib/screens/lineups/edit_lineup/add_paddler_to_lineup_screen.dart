@@ -19,6 +19,7 @@ class AddPaddlerToLineupScreen extends StatefulWidget {
 
   const AddPaddlerToLineupScreen({
     super.key,
+    //TODO: just pass the paddlers we want?
     required this.editedLineupPaddlers,
     required this.addPaddler,
   });
