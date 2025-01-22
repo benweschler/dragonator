@@ -51,28 +51,22 @@ class PaddlerScreen extends StatelessWidget {
               children: [
                 SizedBox(height: Insets.xl),
                 _PaddlerStatTable(paddler),
-                const SizedBox(height: Insets.xl),
+                const SizedBox(height: Insets.xl * 1.5),
                 Row(
                   children: [
-                    Expanded(
-                      child: _PositionPreferenceIndicator(
-                        label: 'Drummer',
-                        hasPreference: paddler.drummerPreference,
-                      ),
+                    _PositionPreferenceIndicator(
+                      label: 'Drummer',
+                      hasPreference: paddler.drummerPreference,
                     ),
-                    const SizedBox(width: Insets.med),
-                    Expanded(
-                      child: _PositionPreferenceIndicator(
-                        label: 'Stroke',
-                        hasPreference: paddler.strokePreference,
-                      ),
+                    _PositionPreferenceIndicator(
+                      label: 'Stroke',
+                      hasPreference: paddler.strokePreference,
                     ),
-                  ],
-                ),
-                const SizedBox(height: Insets.med),
-                _PositionPreferenceIndicator(
-                  label: 'Steers Person',
-                  hasPreference: paddler.steersPersonPreference,
+                    _PositionPreferenceIndicator(
+                      label: 'Steers Person',
+                      hasPreference: paddler.steersPersonPreference,
+                    ),
+                  ].map((e) => Expanded(child: Center(child: e))).toList(),
                 ),
                 const SizedBox(height: Insets.xl),
                 Text('Active Lineups', style: TextStyles.h2),
@@ -119,46 +113,31 @@ class _PositionPreferenceIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: Insets.med,
-        vertical: Insets.sm,
-      ),
-      decoration: BoxDecoration(
-        color: hasPreference ? AppColors.of(context).primarySurface : null,
-        borderRadius: Corners.medBorderRadius,
-        border: Border.all(
-          color: hasPreference
-              ? AppColors.of(context).primary
-              : AppColors.of(context).outline,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (hasPreference)
-            Icon(
-              Icons.check_rounded,
-              color: AppColors.of(context).primary,
-            )
-          else
-            Icon(
-              Icons.close,
-              color: AppColors.of(context).neutralContent,
-            ),
-          SizedBox(
-            width: Insets.sm,
-          ),
-          Text(
-            label,
-            style: TextStyles.body1.copyWith(
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(Insets.sm),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: hasPreference ? AppColors.of(context).primarySurface : null,
+            border: Border.all(
+              width: 1.5,
               color: hasPreference
                   ? AppColors.of(context).primary
-                  : AppColors.of(context).neutralContent,
+                  : AppColors.of(context).outline,
             ),
           ),
-        ],
-      ),
+          child: Icon(
+            hasPreference ? Icons.check_rounded : Icons.close_rounded,
+            size: TextStyles.h2.fontSize,
+            color: hasPreference
+                ? AppColors.of(context).primary
+                : AppColors.of(context).neutralContent,
+          ),
+        ),
+        SizedBox(height: Insets.med),
+        Text(label, style: TextStyles.body1),
+      ],
     );
   }
 }
@@ -178,18 +157,29 @@ class _PaddlerStatTable extends StatelessWidget {
             Text.rich(TextSpan(children: [
               TextSpan(
                 text: '${paddler.weight}',
-                style: TextStyles.title1,
+                style: TextStyles.title1.copyWith(
+                  fontWeight: FontWeight.normal,
+                ),
               ),
               const TextSpan(text: ' lbs', style: TextStyles.body2),
             ])),
-            Text('${paddler.gender}', style: TextStyles.title1),
+            Text(
+              '${paddler.gender}',
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
           ],
         ),
         LabeledTableRow(
           labels: ['Side', 'Age Group'],
           stats: [
-            Text('${paddler.sidePreference}', style: TextStyles.title1),
-            Text(paddler.ageGroup.toString(), style: TextStyles.title1),
+            Text(
+              '${paddler.sidePreference}',
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
+            Text(
+              paddler.ageGroup.toString(),
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
           ],
         ),
       ],

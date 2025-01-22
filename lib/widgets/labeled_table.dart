@@ -28,7 +28,7 @@ class LabeledTable extends StatelessWidget {
 
   Widget _buildLabel(String label, context) => _wrapElement(Text(
         label,
-        style: TextStyles.caption
+        style: TextStyles.body2
             .copyWith(color: AppColors.of(context).neutralContent),
       ));
 
