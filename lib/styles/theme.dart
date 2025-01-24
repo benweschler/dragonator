@@ -98,9 +98,9 @@ class AppColors extends ThemeExtension<AppColors> {
   ThemeData toThemeData() {
     return ThemeData(
       useMaterial3: true,
-      brightness: isDark ? Brightness.dark : Brightness.light,
       splashFactory: NoSplash.splashFactory,
       colorScheme: ThemeData().colorScheme.copyWith(
+        brightness: isDark ? Brightness.dark : Brightness.light,
         primary: primary,
         surface: background,
         onSurface: onBackground,
