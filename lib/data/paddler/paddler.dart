@@ -17,6 +17,7 @@ class Paddler extends Equatable with _$Paddler {
     required Gender gender,
     required SidePreference sidePreference,
     required AgeGroup ageGroup,
+    //TODO: make this a set of preference enums. None is just empty.
     required bool drummerPreference,
     required bool steersPersonPreference,
     required bool strokePreference,
@@ -50,6 +51,7 @@ class Paddler extends Equatable with _$Paddler {
       ];
 }
 
+//TODO: Add sides: strong pref and none
 enum SidePreference {
   left,
   right;

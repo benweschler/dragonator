@@ -12,7 +12,6 @@ import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/settings_screen/name_team_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
-import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_library_screen.dart';
@@ -37,8 +36,6 @@ abstract class RoutePaths {
   static String logIn = '/log-in';
   static String forgotPassword = '$logIn/forgot-password';
   static String signUp = '/sign-up';
-
-  static String paddler(String id) => '/paddler/$id';
 
   static String editPaddler({String? paddlerID}) =>
       _appendQueryParams('$roster/edit-paddler', {'paddlerID': paddlerID});
@@ -103,11 +100,6 @@ class AppRouter {
             child: MainAppScaffold(body: child),
           ),
           routes: [
-            //TODO: THIS IS VERY BAD! THINGS NEED TO BE ABLE TO TELL IF A ROUTE IS TRULY A ROOT ROUTE.
-            AppRoute(
-              path: '/paddler/:id',
-              builder: (state) => PaddlerScreen(state.pathParameters['id']!),
-            ),
             AppRoute(
               path: RoutePaths.roster,
               builder: (_) => const RosterScreen(),

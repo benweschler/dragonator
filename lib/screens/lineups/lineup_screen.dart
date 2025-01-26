@@ -6,6 +6,7 @@ import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
+import 'package:dragonator/screens/paddler_screen/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/dependence_mixins/team_detail_dependent_state_mixin.dart';
@@ -114,10 +115,9 @@ class _LineupScreenState extends State<LineupScreen>
                                 id: i,
                                 child: paddlerList[i] != null
                                     ? GestureDetector(
-                                        onTap: () =>
-                                            context.push(RoutePaths.paddler(
-                                          paddlerList[i]!.id,
-                                        )),
+                                        onTap: () => context.showPopup(
+                                          PaddlerPopup(paddlerList[i]!.id),
+                                        ),
                                         child: PaddlerTile(paddlerList[i]!),
                                       )
                                     : const _EmptyPaddlerTile(),
@@ -129,17 +129,19 @@ class _LineupScreenState extends State<LineupScreen>
                   ),
                 ),
                 Positioned.fill(
-                  child: Selector<SettingsModel, bool>(
-                    selector: (_, model) => model.showComOverlay,
-                    builder: (_, visible, child) => Visibility(
-                      visible: visible,
-                      child: child!,
-                    ),
-                    child: COMOverlay(
-                      duration: const Duration(milliseconds: 250),
-                      com: calculateCOM(boat: boat, paddlerList: paddlerList),
-                      leftAlignment: 0.25,
-                      rightAlignment: 0.75,
+                  child: IgnorePointer(
+                    child: Selector<SettingsModel, bool>(
+                      selector: (_, model) => model.showComOverlay,
+                      builder: (_, visible, child) => Visibility(
+                        visible: visible,
+                        child: child!,
+                      ),
+                      child: COMOverlay(
+                        duration: const Duration(milliseconds: 250),
+                        com: calculateCOM(boat: boat, paddlerList: paddlerList),
+                        leftAlignment: 0.25,
+                        rightAlignment: 0.75,
+                      ),
                     ),
                   ),
                 ),
