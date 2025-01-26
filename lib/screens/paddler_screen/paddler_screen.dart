@@ -73,7 +73,11 @@ class PaddlerScreen extends StatelessWidget {
                 ActionButtonCard([
                   CardActionButton(
                     onTap: () => context.showModal(
-                      CopyPaddlerToTeamMenu(paddler!),
+                      //TODO: in popup mode
+                      CopyPaddlerToTeamMenu(
+                        paddler: paddler!,
+                        popupContext: context,
+                      ),
                     ),
                     label: 'Add to team',
                     icon: Icons.add_rounded,

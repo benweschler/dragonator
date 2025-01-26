@@ -3,18 +3,21 @@ import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CopyPaddlerToTeamMenu extends StatelessWidget {
   final Paddler paddler;
+  final BuildContext popupContext;
 
-  const CopyPaddlerToTeamMenu(this.paddler, {super.key});
+  const CopyPaddlerToTeamMenu({
+    super.key,
+    required this.paddler,
+    required this.popupContext,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +30,18 @@ class CopyPaddlerToTeamMenu extends StatelessWidget {
           options: teams.toSet()..remove(rosterModel.currentTeam),
           labelBuilder: (team) => team.name,
           onSelect: (Set<Team> teams) async {
+            await Future.delayed(Timings.long);
+
+            if(!popupContext.mounted) return;
             final confirmation =
+                /* TODO:
                 await context.showPopup<bool>(_CopyPaddlerConfirmationPopup(
                   multipleTeams: teams.length > 1,
-                )) ??
+                ))
+                */
+                await Navigator.of(popupContext).pushNamed<bool>(
+                      '/copy-to-team?multiple-teams=${teams.length > 1}',
+                    ) ??
                     false;
 
             if (!confirmation) return;
@@ -38,7 +49,7 @@ class CopyPaddlerToTeamMenu extends StatelessWidget {
             for (var team in teams) {
               await rosterModel.copyPaddlerToTeam(paddler, team.id);
             }
-            if (context.mounted) context.pop();
+            //TODO: page mode: if (context.mounted) context.pop();
           },
         );
       },
@@ -46,6 +57,7 @@ class CopyPaddlerToTeamMenu extends StatelessWidget {
   }
 }
 
+//TODO: unused
 class _CopyPaddlerConfirmationPopup extends StatelessWidget {
   final bool multipleTeams;
 

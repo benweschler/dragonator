@@ -28,20 +28,20 @@ class ContextMenu extends StatelessWidget {
 }
 
 class ContextMenuAction extends StatelessWidget {
-  final IconData icon;
-  final String label;
+  final GestureTapCallback onTap;
   final bool isDestructiveAction;
   final bool autoPop;
-  final GestureTapCallback onTap;
+  final IconData icon;
+  final String label;
 
   const ContextMenuAction({
     super.key,
-    required this.icon,
-    required this.label,
+    required this.onTap,
     this.isDestructiveAction = false,
     // TODO: probably don't need auto pop because usages just pop first instead of last. just move up context.pop since onTap isn't async
     this.autoPop = true,
-    required this.onTap,
+    required this.icon,
+    required this.label,
   });
 
   @override
@@ -50,9 +50,9 @@ class ContextMenuAction extends StatelessWidget {
 
     return ResponsiveStrokeButton(
       onTap: () {
-        onTap();
         // Modal sheets are shown on the root navigator.
         if(autoPop) context.pop();
+        onTap();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
