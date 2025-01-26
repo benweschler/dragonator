@@ -238,6 +238,27 @@ class _EditBoatView extends StatelessWidget {
     if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
+  String? _capacityValidator(String? value) {
+    final isIntValidation =  Validators.isInt(
+      errorText:
+      'Enter the number of paddlers in the boat, including the drummer and steers person.',
+    ).call(value);
+
+    if(isIntValidation != null) {
+      return isIntValidation;
+    }
+
+    final capacity = int.parse(value!);
+    if(capacity.isOdd) {
+      return 'Capacity must be even.';
+    }
+    if (capacity < 10) {
+      return 'Capacity must be at least 10.';
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -271,10 +292,7 @@ class _EditBoatView extends StatelessWidget {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             //TODO: must be greater than 2 * length of boat end segment
-            validator: Validators.isInt(
-              errorText:
-                  'Enter the number of paddlers in the boat, including the drummer and steers person.',
-            ),
+            validator: _capacityValidator,
             decoration: CustomInputDecoration(
               AppColors.of(context),
               hintText: 'Capacity',
