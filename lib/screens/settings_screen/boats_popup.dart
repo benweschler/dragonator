@@ -32,27 +32,30 @@ class _BoatsPopupState extends State<BoatsPopup>
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
-      child: Padding(
-        padding: EdgeInsets.all(Insets.lg),
-        child: ModalNavigator(
-          routeBuilder: (path) {
-            if (path!.startsWith('/set')) {
-              final boatID = Uri.parse(path).queryParameters['id'];
-              final boat = context
-                  .read<RosterModel>()
-                  .getTeam(widget.teamID)!
-                  .boats[boatID];
+      child: ModalNavigator(
+        routeBuilder: (path) {
+          if (path!.startsWith('/set')) {
+            final boatID = Uri.parse(path).queryParameters['id'];
+            final boat = context
+                .read<RosterModel>()
+                .getTeam(widget.teamID)!
+                .boats[boatID];
 
-              return PopupTransitionPage(
+            return PopupTransitionPage(
+              child: Padding(
+                padding: EdgeInsets.all(Insets.lg),
                 child: _EditBoatView(boat, widget.teamID),
-              ).createRoute(context);
-            }
+              ),
+            ).createRoute(context);
+          }
 
-            return MaterialPageRoute(
-              builder: (context) => _BoatListView(widget.teamID),
-            );
-          },
-        ),
+          return MaterialPageRoute(
+            builder: (context) => Padding(
+              padding: EdgeInsets.all(Insets.lg),
+              child: _BoatListView(widget.teamID),
+            ),
+          );
+        },
       ),
     );
   }

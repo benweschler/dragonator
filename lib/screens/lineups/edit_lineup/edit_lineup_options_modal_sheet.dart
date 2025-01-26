@@ -32,29 +32,35 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
     return ModalSheet(
       child: ChangeNotifierProvider(
         create: (_) => ValueNotifier<String>(lineupBoatID),
-        child: Padding(
-          padding: const EdgeInsets.all(Insets.lg),
-          child: ModalNavigator(
-            routeBuilder: (String? path) {
-              if (path!.startsWith('/change-boat')) {
-                return PopupTransitionPage(
+        child: ModalNavigator(
+          routeBuilder: (String? path) {
+            if (path!.startsWith('/change-boat')) {
+              return PopupTransitionPage(
+                child: Padding(
+                  padding: const EdgeInsets.all(Insets.lg),
                   child: _ChangeBoatView(onChangeBoat: onChangeBoat),
-                ).createRoute(context);
-              } else if (path.startsWith('/confirm-boat-change')) {
-                final boatName = Uri.parse(path).queryParameters['name']!;
+                ),
+              ).createRoute(context);
+            } else if (path.startsWith('/confirm-boat-change')) {
+              final boatName = Uri.parse(path).queryParameters['name']!;
 
-                return PopupTransitionPage<bool>(
+              return PopupTransitionPage<bool>(
+                child: Padding(
+                  padding: const EdgeInsets.all(Insets.lg),
                   child: _ConfirmDestructiveBoatChangeView(
                     newLineupBoatName: boatName,
                   ),
-                ).createRoute(context);
-              }
+                ),
+              ).createRoute(context);
+            }
 
-              return MaterialPageRoute(
-                builder: (context) => _LineupOptionsView(com: com),
-              );
-            },
-          ),
+            return MaterialPageRoute(
+              builder: (context) => Padding(
+                padding: const EdgeInsets.all(Insets.lg),
+                child: _LineupOptionsView(com: com),
+              ),
+            );
+          },
         ),
       ),
     );
