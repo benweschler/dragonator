@@ -66,8 +66,11 @@ class _SingleFieldFormState extends State<SingleFieldForm> {
               onSubmitted: _onSave,
               decoration: InputDecoration(
                 hintText: widget.initialValue,
-                focusedBorder:
-                    UnderlineInputBorder(borderSide: BorderSide()),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColors.of(context).onBackground,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 2 * Insets.xl),
