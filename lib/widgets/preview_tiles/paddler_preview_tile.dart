@@ -1,5 +1,5 @@
 import 'package:dragonator/data/paddler/paddler.dart';
-import 'package:dragonator/screens/paddler_screen/paddler_popup.dart';
+import 'package:dragonator/screens/paddler_popup/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';

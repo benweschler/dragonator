@@ -2,7 +2,6 @@ import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
@@ -10,7 +9,6 @@ import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/labeled_table.dart';
 import 'package:dragonator/widgets/modal_navigator.dart';
-import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
 import 'package:dragonator/widgets/position_preference_indicator.dart';
@@ -19,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'copy_to_team.dart';
+import 'paddler_context_menu.dart';
 
 class PaddlerPopup extends StatelessWidget {
   final String paddlerID;
@@ -106,7 +104,7 @@ class _PaddlerInfoView extends StatelessWidget {
                     ),
                   ),
                   CustomIconButton(
-                    onTap: () => context.showModal(_PaddlerContextMenu(
+                    onTap: () => context.showModal(PaddlerContextMenu(
                       paddler: paddler!,
                       popupContext: context,
                     )),
@@ -271,58 +269,5 @@ class _ActiveLineupsView extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _PaddlerContextMenu extends StatelessWidget {
-  final Paddler paddler;
-  final BuildContext popupContext;
-
-  const _PaddlerContextMenu({
-    required this.paddler,
-    required this.popupContext,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ContextMenu([
-      ContextMenuAction(
-        onTap: () async {
-          await Future.delayed(Timings.long);
-
-          if (!popupContext.mounted) return;
-          popupContext.push(RoutePaths.editPaddler(paddlerID: paddler.id));
-        },
-        icon: Icons.edit_rounded,
-        label: 'Edit',
-      ),
-      ContextMenuAction(
-        onTap: () async {
-          await Future.delayed(Timings.long);
-
-          if (!popupContext.mounted) return;
-          popupContext.showModal(CopyPaddlerToTeamMenu(
-            paddler: paddler,
-            popupContext: popupContext,
-          ));
-        },
-        icon: Icons.add_rounded,
-        label: 'Add to team',
-      ),
-      ContextMenuAction(
-        onTap: () => Navigator.of(popupContext).pushNamed('/lineups'),
-        icon: Icons.library_books,
-        label: 'View lineups',
-      ),
-      ContextMenuAction(
-        onTap: () async {
-          await context.read<RosterModel>().deletePaddler(paddler.id);
-          if (context.mounted) context.pop();
-        },
-        isDestructiveAction: true,
-        icon: Icons.delete_rounded,
-        label: 'Delete',
-      ),
-    ]);
   }
 }

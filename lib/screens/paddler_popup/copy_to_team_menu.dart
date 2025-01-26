@@ -31,11 +31,6 @@ class CopyPaddlerToTeamMenu extends StatelessWidget {
 
             if(!popupContext.mounted) return;
             final confirmation =
-                /* TODO:
-                await context.showPopup<bool>(_CopyPaddlerConfirmationPopup(
-                  multipleTeams: teams.length > 1,
-                ))
-                */
                 await Navigator.of(popupContext).pushNamed<bool>(
                       '/copy-to-team?multiple-teams=${teams.length > 1}',
                     ) ??
@@ -46,7 +41,6 @@ class CopyPaddlerToTeamMenu extends StatelessWidget {
             for (var team in teams) {
               await rosterModel.copyPaddlerToTeam(paddler, team.id);
             }
-            //TODO: page mode: if (context.mounted) context.pop();
           },
         );
       },
