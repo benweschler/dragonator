@@ -2,6 +2,7 @@ import 'package:dragonator/data/boat/boat.dart';
 import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
+import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
@@ -18,6 +19,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'common/boat_segment_builder.dart';
+import 'common/com.dart';
 
 class LineupScreen extends StatefulWidget {
   final String lineupID;
@@ -51,68 +53,97 @@ class _LineupScreenState extends State<LineupScreen>
           leading: const CustomBackButton(),
           center: Text(lineup.name, style: TextStyles.title1),
           trailing: CustomIconButton(
-            onTap: () => context.showModal(ContextMenu([
-              ContextMenuAction(
-                icon: Icons.edit_rounded,
-                onTap: () => context.push(
-                  RoutePaths.nameLineup(widget.lineupID),
+            onTap: () => context.showModal(Selector<SettingsModel, bool>(
+              selector: (_, model) => model.showComOverlay,
+              builder: (context, showingCOM, _) => ContextMenu([
+                ContextMenuAction(
+                  icon: Icons.edit_rounded,
+                  onTap: () => context.push(
+                    RoutePaths.nameLineup(widget.lineupID),
+                  ),
+                  label: 'Rename',
                 ),
-                label: 'Rename',
-              ),
-              ContextMenuAction(
-                icon: Icons.view_list_rounded,
-                onTap: () => context.go(
-                  RoutePaths.editLineup(widget.lineupID),
+                ContextMenuAction(
+                  icon: Icons.view_list_rounded,
+                  onTap: () => context.go(
+                    RoutePaths.editLineup(widget.lineupID),
+                  ),
+                  label: 'Edit',
                 ),
-                label: 'Edit',
-              ),
-              ContextMenuAction(
-                icon: Icons.delete_rounded,
-                onTap: () {
-                  cancelDetailDependence();
-                  context.read<RosterModel>().deleteLineup(widget.lineupID);
-                  context.pop();
-                },
-                isDestructiveAction: true,
-                label: 'Delete',
-              ),
-            ])),
+                ContextMenuAction(
+                  onTap: () => context
+                      .read<SettingsModel>()
+                      .setShowComOverlay(!showingCOM),
+                  icon: showingCOM ? Icons.hide_source : Icons.circle_outlined,
+                  label: '${showingCOM ? 'Hide' : 'Show'} Center of Mass',
+                ),
+                ContextMenuAction(
+                  icon: Icons.delete_rounded,
+                  onTap: () {
+                    cancelDetailDependence();
+                    context.read<RosterModel>().deleteLineup(widget.lineupID);
+                    context.pop();
+                  },
+                  isDestructiveAction: true,
+                  label: 'Delete',
+                ),
+              ]),
+            )),
             icon: Icons.more_horiz,
           ),
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: Insets.med),
-              child: SizedBox(
-                height: kGridRowHeight * (paddlerList.length / 2 + 1),
-                child: Stack(
-                  children: [
-                    Column(
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Insets.med),
+                  child: SizedBox(
+                    height: kGridRowHeight * (paddlerList.length / 2 + 1),
+                    child: Stack(
                       children: [
-                        for (int i = 0; i < boat.capacity / 2 + 1; i++)
-                          boatSegmentBuilder(context, i, boat.capacity),
+                        Column(
+                          children: [
+                            for (int i = 0; i < boat.capacity / 2 + 1; i++)
+                              boatSegmentBuilder(context, i, boat.capacity),
+                          ],
+                        ),
+                        CustomMultiChildLayout(
+                          delegate: _TileLayoutDelegate(paddlers: paddlerList),
+                          children: [
+                            for (int i = 0; i < paddlerList.length; i++)
+                              LayoutId(
+                                id: i,
+                                child: paddlerList[i] != null
+                                    ? GestureDetector(
+                                        onTap: () =>
+                                            context.push(RoutePaths.paddler(
+                                          paddlerList[i]!.id,
+                                        )),
+                                        child: PaddlerTile(paddlerList[i]!),
+                                      )
+                                    : const _EmptyPaddlerTile(),
+                              )
+                          ],
+                        ),
                       ],
                     ),
-                    CustomMultiChildLayout(
-                      delegate: _TileLayoutDelegate(paddlers: paddlerList),
-                      children: [
-                        for (int i = 0; i < paddlerList.length; i++)
-                          LayoutId(
-                            id: i,
-                            child: paddlerList[i] != null
-                                ? GestureDetector(
-                                    onTap: () =>
-                                        context.push(RoutePaths.paddler(
-                                      paddlerList[i]!.id,
-                                    )),
-                                    child: PaddlerTile(paddlerList[i]!),
-                                  )
-                                : const _EmptyPaddlerTile(),
-                          )
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Positioned.fill(
+                  child: Selector<SettingsModel, bool>(
+                    selector: (_, model) => model.showComOverlay,
+                    builder: (_, visible, child) => Visibility(
+                      visible: visible,
+                      child: child!,
+                    ),
+                    child: COMOverlay(
+                      duration: const Duration(milliseconds: 250),
+                      com: calculateCOM(boat: boat, paddlerList: paddlerList),
+                      leftAlignment: 0.25,
+                      rightAlignment: 0.75,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );

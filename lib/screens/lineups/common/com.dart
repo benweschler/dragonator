@@ -1,6 +1,8 @@
+import 'package:dragonator/data/boat/boat.dart';
+import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class COMOverlay extends ImplicitlyAnimatedWidget {
   final Offset com;
@@ -113,11 +115,11 @@ class _COMPainter extends CustomPainter {
 
     final textPadding = 5.0;
     getTextPainter(String text) => TextPainter(
-          text: TextSpan(
-              text: text, style: TextStyles.body2.copyWith(color: color)),
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
-        );
+      text: TextSpan(
+          text: text, style: TextStyles.body2.copyWith(color: color)),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
 
     // COM x-position
     var tp = getTextPainter('${(com.dx * 100).round()}%');
@@ -134,4 +136,46 @@ class _COMPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_COMPainter oldDelegate) => oldDelegate.com != com;
+}
+
+Offset calculateCOM({
+  required Boat boat,
+  required List<Paddler?> paddlerList,
+}) {
+  // The relative positions of the paddlers from the left edge of the boat.
+  const relativeLeftXPos = 0;
+  const relativeRightXPos = 1;
+  final int numRows = (boat.capacity / 2).ceil() + 1;
+  // The paddler is in the middle of its row, so count all rows up to this row
+  // plus the first half of this row.
+  double relativeYPos(int row) => (0.5 + row) / numRows;
+
+  //The boat's COM is assumed to be at its center.
+  // Masses weighted by their x-distance from the origin.
+  double xWeighted = 0.5 * boat.weight;
+  // Masses weighted by their y-distance from the origin.
+  double yWeighted = 0.5 * boat.weight;
+  // The total mass on the boat; boat weight + paddler weight.
+  double total = boat.weight;
+
+  for (int i = 0; i < boat.capacity; i++) {
+    final paddler = paddlerList[i];
+    if (paddler == null) continue;
+
+    // The drummer and steers person sit along the midline of the boat.
+    if (i == 0 || i == boat.capacity - 1) {
+      xWeighted += paddler.weight * 0.5;
+    }
+    // Even indices are on the right, and odd indices are on the left.
+    else if (i % 2 == 0) {
+      xWeighted += paddler.weight * relativeRightXPos;
+    } else {
+      xWeighted += paddler.weight * relativeLeftXPos;
+    }
+
+    yWeighted += paddler.weight * relativeYPos((i / 2).ceil());
+    total += paddler.weight;
+  }
+
+  return Offset(xWeighted / total, yWeighted / total);
 }

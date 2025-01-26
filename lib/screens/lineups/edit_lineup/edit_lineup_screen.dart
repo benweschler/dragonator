@@ -3,6 +3,7 @@ import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/boat_segment_builder.dart';
+import 'package:dragonator/screens/lineups/common/com.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal_sheet.dart';
@@ -19,7 +20,6 @@ import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'com_overlay.dart';
 import 'paddler_deleted_popup.dart';
 
 //TODO: can't handle odd boat capacities
@@ -113,45 +113,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     );
   }
 
-  Offset _calculateCOM() {
-    // The relative positions of the paddlers from the left edge of the boat.
-    const relativeLeftXPos = 0;
-    const relativeRightXPos = 1;
-    final int numRows = (_boat.capacity / 2).ceil() + 1;
-    // The paddler is in the middle of its row, so count all rows up to this row
-    // plus the first half of this row.
-    double relativeYPos(int row) => (0.5 + row) / numRows;
-
-    //The boat's COM is assumed to be at its center.
-    // Masses weighted by their x-distance from the origin.
-    double xWeighted = 0.5 * _boat.weight;
-    // Masses weighted by their y-distance from the origin.
-    double yWeighted = 0.5 * _boat.weight;
-    // The total mass on the boat; boat weight + paddler weight.
-    double total = _boat.weight;
-
-    for (int i = 0; i < _boat.capacity; i++) {
-      final paddler = _paddlerList[i];
-      if (paddler == null) continue;
-
-      // The drummer and steers person sit along the midline of the boat.
-      if (i == 0 || i == _boat.capacity - 1) {
-        xWeighted += paddler.weight * 0.5;
-      }
-      // Even indices are on the right, and odd indices are on the left.
-      else if (i % 2 == 0) {
-        xWeighted += paddler.weight * relativeRightXPos;
-      } else {
-        xWeighted += paddler.weight * relativeLeftXPos;
-      }
-
-      yWeighted += paddler.weight * relativeYPos((i / 2).ceil());
-      total += paddler.weight;
-    }
-
-    return Offset(xWeighted / total, yWeighted / total);
-  }
-
   @override
   Widget build(BuildContext context) {
     const headerPadding = Insets.med;
@@ -182,7 +143,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         ),
         onTap: () => context.showModal(EditLineupOptionsModalSheet(
           lineupBoatID: _boat.id,
-          com: _calculateCOM(),
+          com: calculateCOM(boat: _boat, paddlerList: _paddlerList),
           onChangeBoat: _changeLineupBoat,
         )),
       ),
@@ -209,7 +170,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
           ),
           child: COMOverlay(
             duration: const Duration(milliseconds: 250),
-            com: _calculateCOM(),
+            com: calculateCOM(boat: _boat, paddlerList: _paddlerList),
             topInset: headerPadding,
             bottomInset: footerPadding,
             leftAlignment: 0.25,
