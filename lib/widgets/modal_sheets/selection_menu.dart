@@ -74,6 +74,10 @@ class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final actionEnabled = widget._behavior is _SingleSelectionBehavior
+        ? (widget._behavior as _SingleSelectionBehavior).allowNoSelection
+        : widget._behavior.selection.isNotEmpty;
+
     return ModalSheet(
       child: SingleChildScrollView(
         child: Column(
@@ -96,12 +100,13 @@ class _SelectionMenuState<T> extends State<SelectionMenu<T>> {
                 .separate(const Divider(height: 0.5, thickness: 0.5)),
             if (widget._behavior.action != null)
               ModalSheetButtonTile(
-                enabled: widget._behavior.selection.isNotEmpty,
+                enabled: actionEnabled,
                 color: AppColors.of(context).primary,
                 //TODO: bad!
                 autoPop: false,
                 onTap: () {
                   widget._behavior.action!();
+                  context.pop();
                   HapticFeedback.lightImpact();
                 },
                 label: 'Apply',
