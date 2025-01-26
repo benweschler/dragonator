@@ -42,9 +42,9 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
 
     final Widget content;
     if (unassignedPaddlers.isEmpty) {
-      content = Padding(
-        padding: EdgeInsets.symmetric(horizontal: Insets.lg),
-        child: Center(
+      content = Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
           child: Text(
             rosterPaddlers.isEmpty
                 ? 'This team has no paddlers.'
@@ -70,6 +70,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
               Expanded(
                 child: PaddlerPreviewTile(unassignedPaddlers[index]),
               ),
+              SizedBox(width: Insets.offset),
             ],
           ),
         ),
@@ -77,6 +78,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
     }
 
     return CustomScaffold(
+      addScreenInset: false,
       leading: CustomIconButton(
         icon: Icons.close_rounded,
         onTap: () => context.pop(),

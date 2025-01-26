@@ -1,5 +1,6 @@
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 class SelectorButton extends StatelessWidget {
@@ -14,28 +15,29 @@ class SelectorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ResponsiveButton(
       onTap: onTap,
-      behavior: HitTestBehavior.translucent,
-      child: Container(
+      builder: (overlay) => Container(
         width: 28,
         height: 28,
-        margin: EdgeInsets.only(right: Insets.med),
+        margin: EdgeInsets.all(Insets.med),
         decoration: BoxDecoration(
-          color: selected ? AppColors.of(context).primary : null,
+          color: selected
+              ? Color.alphaBlend(overlay, AppColors.of(context).primary)
+              : null,
           shape: BoxShape.circle,
           //TODO: black should be onBackground
           border: Border.all(
             color: selected
                 ? Colors.transparent
-                : AppColors.of(context).outline,
+                : Color.alphaBlend(overlay, AppColors.of(context).outline),
           ),
         ),
         child: selected
             //TODO: should be onPrimary
-            ? const Icon(
+            ? Icon(
                 Icons.check_rounded,
-                color: Colors.white,
+                color: Color.alphaBlend(overlay, Colors.white),
                 size: Insets.lg,
               )
             : null,
