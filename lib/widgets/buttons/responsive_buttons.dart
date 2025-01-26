@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 /// with the color of your widget using
 /// [Color.alphaBlend(overlayColor, yourColor)].
 class ResponsiveButton extends StatefulWidget {
+  final HitTestBehavior behavior;
   final GestureTapCallback? onTap;
   final Widget Function(Color overlayColor) builder;
   final double _scaleLowerBound;
@@ -16,6 +17,7 @@ class ResponsiveButton extends StatefulWidget {
   /// A button that adds a light overlay when tapped.
   const ResponsiveButton({
     super.key,
+    this.behavior = HitTestBehavior.translucent,
     required this.onTap,
     required this.builder,
   })  : _scaleLowerBound = 0.85;
@@ -25,6 +27,7 @@ class ResponsiveButton extends StatefulWidget {
   /// Uses a smaller shrinking animation, appropriate for large buttons.
   const ResponsiveButton.large({
     super.key,
+    this.behavior = HitTestBehavior.translucent,
     required this.onTap,
     required this.builder,
   })  : _scaleLowerBound = 0.95;
@@ -86,6 +89,7 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
       builder: (_, __) => ScaleTransition(
         scale: _scaleAnimation,
         child: _BaseResponsiveButton(
+          behavior: widget.behavior,
           onTap: widget.onTap,
           onPressed: onPressed,
           child: widget.builder(
@@ -104,11 +108,13 @@ class _ResponsiveButtonState extends State<ResponsiveButton>
 /// A responsive button intended to be wrapped around a body made up of strokes,
 /// namely an icon or text, rather than a solid body.
 class ResponsiveStrokeButton extends StatefulWidget {
+  final HitTestBehavior behavior;
   final GestureTapCallback onTap;
   final Widget child;
 
   const ResponsiveStrokeButton({
     super.key,
+    this.behavior = HitTestBehavior.translucent,
     required this.onTap,
     required this.child,
   });
@@ -139,6 +145,7 @@ class _ResponsiveStrokeButtonState extends State<ResponsiveStrokeButton>
       builder: (_, __) => FadeTransition(
         opacity: _opacityAnimation,
         child: _BaseResponsiveButton(
+          behavior: widget.behavior,
           onPressed: (isPressed) =>
               isPressed ? _controller.value = 1 : _controller.reverse(),
           onTap: widget.onTap,
@@ -150,11 +157,13 @@ class _ResponsiveStrokeButtonState extends State<ResponsiveStrokeButton>
 }
 
 class _BaseResponsiveButton extends StatelessWidget {
+  final HitTestBehavior behavior;
   final GestureTapCallback? onTap;
   final ValueChanged<bool> onPressed;
   final Widget child;
 
   const _BaseResponsiveButton({
+    required this.behavior,
     required this.onTap,
     required this.onPressed,
     required this.child,
@@ -163,7 +172,7 @@ class _BaseResponsiveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
+      behavior: behavior,
       onTapDown: (_) => onPressed(true),
       onTapCancel: () => onPressed(false),
       onTapUp: (_) => onPressed(false),

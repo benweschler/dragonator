@@ -13,6 +13,7 @@ import 'package:dragonator/widgets/modal_navigator.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
+import 'package:dragonator/widgets/position_preference_indicator.dart';
 import 'package:dragonator/widgets/preview_tiles/lineup_preview_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -125,17 +126,17 @@ class _PaddlerInfoView extends StatelessWidget {
               SizedBox(height: Insets.lg),
               _PaddlerStatTable(paddler),
               const SizedBox(height: Insets.xl),
-              _TestPreferenceIndicator(
+              PositionPreferenceIndicator(
                 label: 'Drummer',
                 hasPreference: paddler.drummerPreference,
               ),
               SizedBox(height: Insets.med),
-              _TestPreferenceIndicator(
+              PositionPreferenceIndicator(
                 label: 'Steers Person',
                 hasPreference: paddler.steersPersonPreference,
               ),
               SizedBox(height: Insets.med),
-              _TestPreferenceIndicator(
+              PositionPreferenceIndicator(
                 label: 'Stroke',
                 hasPreference: paddler.strokePreference,
               ),
@@ -189,59 +190,6 @@ class _PaddlerStatTable extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class _TestPreferenceIndicator extends StatelessWidget {
-  final String label;
-  final bool hasPreference;
-
-  const _TestPreferenceIndicator({
-    required this.label,
-    required this.hasPreference,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: Insets.sm,
-        horizontal: Insets.lg,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: Corners.medBorderRadius,
-        color: hasPreference ? AppColors.of(context).primarySurface : null,
-        border: Border.all(
-          color: hasPreference
-              ? AppColors.of(context).primary
-              : AppColors.of(context).outline,
-        ),
-      ),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(
-              hasPreference ? Icons.check_rounded : Icons.close_rounded,
-              color: hasPreference
-                  ? AppColors.of(context).primary
-                  : AppColors.of(context).neutralContent,
-            ),
-          ),
-          Center(
-            child: Text(
-              label,
-              style: TextStyles.body1.copyWith(
-                color: hasPreference
-                    ? AppColors.of(context).primary
-                    : AppColors.of(context).neutralContent,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

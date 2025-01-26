@@ -1,3 +1,4 @@
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/position_preference_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -19,11 +20,12 @@ class PreferenceSelector extends StatelessWidget {
     return FormBuilderField<bool>(
       name: name,
       initialValue: initialValue,
-      builder: (state) => GestureDetector(
+      builder: (state) => ResponsiveButton.large(
         behavior: HitTestBehavior.opaque,
         onTap: () => state.didChange(!state.value!),
-        child: PositionPreferenceIndicator(
+        builder: (overlay) => PositionPreferenceIndicator(
           label: label,
+          overlay: overlay,
           hasPreference: state.value!,
         ),
       ),

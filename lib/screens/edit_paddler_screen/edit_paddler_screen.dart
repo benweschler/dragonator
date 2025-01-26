@@ -111,24 +111,22 @@ class EditPaddlerScreen extends StatelessWidget {
               const SizedBox(height: Insets.xl),
               StatSelectorTable(paddler),
               const SizedBox(height: Insets.xl),
-              Row(
-                children: [
-                  PreferenceSelector(
-                    name: EditPaddlerFieldNames.drummerPreference,
-                    label: 'Drummer',
-                    initialValue: paddler?.drummerPreference ?? false,
-                  ),
-                  PreferenceSelector(
-                    name: EditPaddlerFieldNames.steersPersonPreference,
-                    label: 'Steers Person',
-                    initialValue: paddler?.steersPersonPreference ?? false,
-                  ),
-                  PreferenceSelector(
-                    name: EditPaddlerFieldNames.strokePreference,
-                    label: 'Stroke',
-                    initialValue: paddler?.strokePreference ?? false,
-                  ),
-                ].map((e) => Expanded(child: e)).toList(),
+              PreferenceSelector(
+                name: EditPaddlerFieldNames.drummerPreference,
+                label: 'Drummer',
+                initialValue: paddler?.drummerPreference ?? false,
+              ),
+              SizedBox(height: Insets.med),
+              PreferenceSelector(
+                name: EditPaddlerFieldNames.steersPersonPreference,
+                label: 'Steers Person',
+                initialValue: paddler?.steersPersonPreference ?? false,
+              ),
+              SizedBox(height: Insets.med),
+              PreferenceSelector(
+                name: EditPaddlerFieldNames.strokePreference,
+                label: 'Stroke',
+                initialValue: paddler?.strokePreference ?? false,
               ),
             ],
           ),
