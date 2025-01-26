@@ -98,15 +98,17 @@ class AppColors extends ThemeExtension<AppColors> {
   ThemeData toThemeData() {
     return ThemeData(
       useMaterial3: true,
+      // Globally disable splash.
       splashFactory: NoSplash.splashFactory,
-      colorScheme: ThemeData().colorScheme.copyWith(
+      colorScheme: ThemeData(
         brightness: isDark ? Brightness.dark : Brightness.light,
-        primary: primary,
-        surface: background,
-        onSurface: onBackground,
-        outline: outline,
-        outlineVariant: outlineVariant,
-      ),
+      ).colorScheme.copyWith(
+            primary: primary,
+            surface: background,
+            onSurface: onBackground,
+            outline: outline,
+            outlineVariant: outlineVariant,
+          ),
     ).copyWith(extensions: <ThemeExtension<dynamic>>[this]);
   }
 
@@ -166,8 +168,10 @@ class AppColors extends ThemeExtension<AppColors> {
       largeSurface: Color.lerp(largeSurface, other.largeSurface, t)!,
       primarySurface: Color.lerp(primarySurface, other.primarySurface, t)!,
       error: Color.lerp(error, other.error, t)!,
-      smallErrorSurface: Color.lerp(smallErrorSurface, other.smallErrorSurface, t)!,
-      largeErrorSurface: Color.lerp(largeErrorSurface, other.largeErrorSurface, t)!,
+      smallErrorSurface:
+          Color.lerp(smallErrorSurface, other.smallErrorSurface, t)!,
+      largeErrorSurface:
+          Color.lerp(largeErrorSurface, other.largeErrorSurface, t)!,
       neutralContent: Color.lerp(neutralContent, other.neutralContent, t)!,
       buttonContainer: Color.lerp(buttonContainer, other.buttonContainer, t)!,
       onButtonContainer:
