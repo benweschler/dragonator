@@ -12,7 +12,7 @@ import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
 import 'package:dragonator/screens/settings_screen/name_team_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
-import 'package:dragonator/screens/paddler_screen.dart';
+import 'package:dragonator/screens/paddler_screen/paddler_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
 import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_library_screen.dart';
