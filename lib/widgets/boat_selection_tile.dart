@@ -32,8 +32,6 @@ class BoatSelectionTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: Corners.medBorderRadius,
                 color: selected ? AppColors.of(context).primarySurface : null,
-                //: AppColors.of(context).largeSurface,
-                //: null,
                 border: Border.all(
                   color: selected
                       ? AppColors.of(context).primary

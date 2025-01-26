@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 //TODO: use in paddler screen
+/// Differentiated from a Dependent Modal State Mixin in that this will pop to
+/// root instead of popping once.
 mixin TeamDetailDependentStateMixin<T extends StatefulWidget> on State<T> {
   late final RosterModel _rosterModel;
   late final String _initialTeamID;

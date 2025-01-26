@@ -1,11 +1,12 @@
 import 'package:dragonator/data/paddler/paddler.dart';
-import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/paddler_screen/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class PaddlerPreviewTile extends StatelessWidget {
+  //TODO: not listening to paddler changes
   final Paddler paddler;
 
   const PaddlerPreviewTile(this.paddler, {super.key});
@@ -13,7 +14,9 @@ class PaddlerPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(RoutePaths.paddler(paddler.id)),
+      //TODO: choose popup or screen
+      //onTap: () => context.push(RoutePaths.paddler(paddler.id)),
+      onTap: () => context.showPopup(PaddlerPopup(paddler.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(

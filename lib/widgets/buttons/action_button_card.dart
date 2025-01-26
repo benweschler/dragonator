@@ -57,7 +57,7 @@ class CardActionButton extends StatelessWidget {
               icon,
               color: AppColors.of(context).primary,
             ),
-            const SizedBox(width: Insets.sm),
+            const SizedBox(width: Insets.med),
             Text(label),
           ],
         ),
