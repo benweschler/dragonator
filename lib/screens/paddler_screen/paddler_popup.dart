@@ -1,3 +1,4 @@
+import 'package:dragonator/data/lineup/lineup.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
@@ -12,6 +13,7 @@ import 'package:dragonator/widgets/modal_navigator.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';
+import 'package:dragonator/widgets/preview_tiles/lineup_preview_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,13 @@ class PaddlerPopup extends StatelessWidget {
                 child: _CopyPaddlerConfirmationView(
                   multipleTeams: multipleTeams,
                 ),
+              ),
+            ).createRoute(context);
+          } else if (path.startsWith('/lineups')) {
+            return PopupTransitionPage(
+              child: Padding(
+                padding: EdgeInsets.all(Insets.lg),
+                child: _ActiveLineupsView(paddlerID),
               ),
             ).createRoute(context);
           }
@@ -139,31 +148,45 @@ class _PaddlerInfoView extends StatelessWidget {
   }
 }
 
-class _CopyPaddlerConfirmationView extends StatelessWidget {
-  final bool multipleTeams;
+class _PaddlerStatTable extends StatelessWidget {
+  final Paddler paddler;
 
-  const _CopyPaddlerConfirmationView({required this.multipleTeams});
+  const _PaddlerStatTable(this.paddler);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Confirm Adding Paddler', style: TextStyles.title1),
-        SizedBox(height: Insets.lg),
-        Text(
-          'If this paddler already exists in ${multipleTeams ? 'these teams' : 'this team'}, this will create a duplicate.\n\nAre you sure you want to continue?',
+    return LabeledTable(
+      rows: [
+        LabeledTableRow(
+          labels: ['Weight', 'Gender'],
+          stats: [
+            Text.rich(TextSpan(children: [
+              TextSpan(
+                text: '${paddler.weight}',
+                style: TextStyles.title1.copyWith(
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const TextSpan(text: ' lbs', style: TextStyles.body2),
+            ])),
+            Text(
+              '${paddler.gender}',
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
+          ],
         ),
-        SizedBox(height: Insets.xl),
-        ExpandingStadiumButton(
-          onTap: () => Navigator.pop(context, true),
-          color: AppColors.of(context).primary,
-          label: 'Confirm',
-        ),
-        SizedBox(height: Insets.sm),
-        ExpandingTextButton(
-          onTap: () => Navigator.pop(context, false),
-          text: 'Cancel',
+        LabeledTableRow(
+          labels: ['Side', 'Age Group'],
+          stats: [
+            Text(
+              '${paddler.sidePreference}',
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
+            Text(
+              paddler.ageGroup.toString(),
+              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
+            ),
+          ],
         ),
       ],
     );
@@ -223,45 +246,80 @@ class _TestPreferenceIndicator extends StatelessWidget {
   }
 }
 
-class _PaddlerStatTable extends StatelessWidget {
-  final Paddler paddler;
+class _CopyPaddlerConfirmationView extends StatelessWidget {
+  final bool multipleTeams;
 
-  const _PaddlerStatTable(this.paddler);
+  const _CopyPaddlerConfirmationView({required this.multipleTeams});
 
   @override
   Widget build(BuildContext context) {
-    return LabeledTable(
-      rows: [
-        LabeledTableRow(
-          labels: ['Weight', 'Gender'],
-          stats: [
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                text: '${paddler.weight}',
-                style: TextStyles.title1.copyWith(
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              const TextSpan(text: ' lbs', style: TextStyles.body2),
-            ])),
-            Text(
-              '${paddler.gender}',
-              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
-            ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Confirm Adding Paddler', style: TextStyles.title1),
+        SizedBox(height: Insets.lg),
+        Text(
+          'If this paddler already exists in ${multipleTeams ? 'these teams' : 'this team'}, this will create a duplicate.\n\nAre you sure you want to continue?',
         ),
-        LabeledTableRow(
-          labels: ['Side', 'Age Group'],
-          stats: [
-            Text(
-              '${paddler.sidePreference}',
-              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
-            ),
-            Text(
-              paddler.ageGroup.toString(),
-              style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
-            ),
-          ],
+        SizedBox(height: Insets.xl),
+        ExpandingStadiumButton(
+          onTap: () => Navigator.pop(context, true),
+          color: AppColors.of(context).primary,
+          label: 'Confirm',
+        ),
+        SizedBox(height: Insets.sm),
+        ExpandingTextButton(
+          onTap: () => Navigator.pop(context, false),
+          text: 'Cancel',
+        ),
+      ],
+    );
+  }
+}
+
+class _ActiveLineupsView extends StatelessWidget {
+  final String paddlerID;
+
+  const _ActiveLineupsView(this.paddlerID);
+
+  @override
+  Widget build(BuildContext context) {
+    final activeLineups = context.select<RosterModel, Iterable<Lineup>>(
+      (model) => model.lineups
+          .where((lineup) => lineup.paddlerIDs.contains(paddlerID)),
+    );
+
+    final iterator = activeLineups.iterator..moveNext();
+
+    final paddler = context
+        .select<RosterModel, Paddler>((model) => model.getPaddler(paddlerID)!);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '${paddler.firstName} ${paddler.lastName}',
+          style: TextStyles.h2,
+        ),
+        Text(
+          'Active Lineups',
+          style: TextStyles.body1.copyWith(
+            color: AppColors.of(context).neutralContent,
+          ),
+        ),
+        SizedBox(height: Insets.med),
+        ...List.generate(
+          activeLineups.length,
+          (index) {
+            final tile = LineupPreviewTile(iterator.current);
+            iterator.moveNext();
+            return tile;
+          },
+        ),
+        SizedBox(height: Insets.xl),
+        ExpandingTextButton(
+          onTap: Navigator.of(context).pop,
+          text: 'Back',
         ),
       ],
     );
@@ -304,7 +362,7 @@ class _PaddlerContextMenu extends StatelessWidget {
         label: 'Add to team',
       ),
       ContextMenuAction(
-        onTap: () {},
+        onTap: () => Navigator.of(popupContext).pushNamed('/lineups'),
         icon: Icons.library_books,
         label: 'View lineups',
       ),

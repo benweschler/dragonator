@@ -31,6 +31,8 @@ class PopupDialog extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: Corners.medBorderRadius,
               elevation: 15,
+              //TODO: this should be uneeded
+              clipBehavior: Clip.antiAlias,
               // Do not add padding to avoid clipping shadows.
               child: child,
             ).animate().slideY(
