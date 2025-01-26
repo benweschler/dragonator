@@ -3,10 +3,10 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/edit_paddler_screen/preference_selector.dart';
 import 'package:dragonator/screens/edit_paddler_screen/stat_selector_table.dart';
 import 'package:dragonator/utils/validators.dart';
+import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
-import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -37,12 +37,13 @@ class EditPaddlerScreen extends StatelessWidget {
         sidePreference: formData[EditPaddlerFieldNames.sidePreference],
         ageGroup: formData[EditPaddlerFieldNames.ageGroup],
         drummerPreference: formData[EditPaddlerFieldNames.drummerPreference],
-        steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
+        steersPersonPreference:
+            formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
     } else {
       updatedPaddler = Paddler(
-        id:  Uuid().v4(),
+        id: Uuid().v4(),
         firstName: formData[EditPaddlerFieldNames.firstName],
         lastName: formData[EditPaddlerFieldNames.lastName],
         weight: int.parse(formData[EditPaddlerFieldNames.weight]),
@@ -50,7 +51,8 @@ class EditPaddlerScreen extends StatelessWidget {
         sidePreference: formData[EditPaddlerFieldNames.sidePreference],
         ageGroup: formData[EditPaddlerFieldNames.ageGroup],
         drummerPreference: formData[EditPaddlerFieldNames.drummerPreference],
-        steersPersonPreference: formData[EditPaddlerFieldNames.steersPersonPreference],
+        steersPersonPreference:
+            formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
       );
     }
@@ -64,25 +66,16 @@ class EditPaddlerScreen extends StatelessWidget {
     final paddler = rosterModel.getPaddler(paddlerID);
 
     return CustomScaffold(
-      leading: CustomIconButton(onTap: context.pop, icon: Icons.close_rounded),
       center: Text(
         paddlerID == null ? 'Create Paddler' : 'Edit Paddler',
         style: TextStyles.title1,
-      ),
-      trailing: CustomIconButton(
-        onTap: () {
-          if (!_formKey.currentState!.saveAndValidate()) return;
-          _savePaddler(rosterModel, paddler);
-          context.pop();
-        },
-        icon: Icons.check_rounded,
       ),
       child: SingleChildScrollView(
         child: FormBuilder(
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: Insets.med),
+              const SizedBox(height: Insets.sm),
               LabeledTextField(
                 label: 'First Name',
                 child: FormBuilderTextField(
@@ -127,6 +120,21 @@ class EditPaddlerScreen extends StatelessWidget {
                 name: EditPaddlerFieldNames.strokePreference,
                 label: 'Stroke',
                 initialValue: paddler?.strokePreference ?? false,
+              ),
+              SizedBox(height: Insets.xl * 2),
+              ExpandingStadiumButton(
+                onTap: () {
+                  if (!_formKey.currentState!.saveAndValidate()) return;
+                  _savePaddler(rosterModel, paddler);
+                  context.pop();
+                },
+                color: AppColors.of(context).primary,
+                label: 'Save',
+              ),
+              SizedBox(height: Insets.sm),
+              ExpandingTextButton(
+                onTap: context.pop,
+                text: 'Cancel',
               ),
             ],
           ),

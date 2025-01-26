@@ -29,7 +29,6 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget body = SafeArea(
-      bottom: false,
       minimum: addScreenInset
           ? const EdgeInsets.symmetric(horizontal: Insets.offset)
           : EdgeInsets.zero,
@@ -49,6 +48,9 @@ class CustomScaffold extends StatelessWidget {
       );
     }
 
+    final isFullscreenRoute =
+        Navigator.of(context) == Navigator.of(context, rootNavigator: true);
+
     return Scaffold(
       appBar: CustomAppBar(
         leading: leading,
@@ -62,8 +64,11 @@ class CustomScaffold extends StatelessWidget {
       // Scaffolds that don't fill the entire screen incorrectly add bottom
       // padding to avoid the software keyboard, so this is done as a workaround
       // to ensure that the scaffold fills the screen.
-      // TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
-      bottomNavigationBar: const _DummyNavigationBar(),
+      // Don't add app bar padding if the current route is on the root navigator
+      // since the navigation bar is only shown on shell routes.
+      //TODO: Fix this by making a Scaffold add the correct amount of padding to avoid the software keyboard.
+      bottomNavigationBar:
+          isFullscreenRoute ? null : const _DummyNavigationBar(),
     );
   }
 }
