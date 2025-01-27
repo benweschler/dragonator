@@ -322,7 +322,20 @@ class _EditBoatView extends StatelessWidget {
           const SizedBox(height: Insets.xl),
           Row(
             children: [
+              Expanded(
+                child: Hero(
+                  tag: 'action button',
+                  flightShuttleBuilder: _heroFlightShuttleBuilder,
+                  child: ExpandingStadiumButton(
+                    onTap: () => _saveBoat(context),
+                    color: AppColors.of(context).buttonContainer,
+                    textColor: AppColors.of(context).onButtonContainer,
+                    label: 'Save',
+                  ),
+                ),
+              ),
               if (boat != null) ...[
+                SizedBox(width: Insets.med),
                 Expanded(
                   child: ExpandingStadiumButton(
                     onTap: () {
@@ -342,20 +355,7 @@ class _EditBoatView extends StatelessWidget {
                     label: 'Delete',
                   ),
                 ),
-                SizedBox(width: Insets.med),
               ],
-              Expanded(
-                child: Hero(
-                  tag: 'action button',
-                  flightShuttleBuilder: _heroFlightShuttleBuilder,
-                  child: ExpandingStadiumButton(
-                    onTap: () => _saveBoat(context),
-                    color: AppColors.of(context).buttonContainer,
-                    textColor: AppColors.of(context).onButtonContainer,
-                    label: 'Save',
-                  ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: Insets.sm),

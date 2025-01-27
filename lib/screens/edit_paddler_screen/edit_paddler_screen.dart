@@ -126,20 +126,31 @@ class EditPaddlerScreen extends StatelessWidget {
                 initialValue: paddler?.strokePreference ?? false,
               ),
               SizedBox(height: Insets.xl * 1.5),
-              ExpandingStadiumButton(
-                onTap: () {
-                  if (!_formKey.currentState!.saveAndValidate()) return;
-                  _savePaddler(rosterModel, paddler);
-                  context.pop();
-                },
-                color: AppColors.of(context).primary,
-                label: 'Save',
+              Row(
+                children: [
+                  Expanded(
+                    child: ExpandingStadiumButton(
+                      onTap: () {
+                        if (!_formKey.currentState!.saveAndValidate()) return;
+                        _savePaddler(rosterModel, paddler);
+                        context.pop();
+                      },
+                      color: AppColors.of(context).primary,
+                      label: 'Save',
+                    ),
+                  ),
+                  SizedBox(width: Insets.med),
+                  Expanded(
+                    child: ExpandingStadiumButton(
+                      onTap: context.pop,
+                      color: AppColors.of(context).buttonContainer,
+                      textColor: AppColors.of(context).onButtonContainer,
+                      label: 'Cancel',
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: Insets.sm),
-              ExpandingTextButton(
-                onTap: context.pop,
-                text: 'Cancel',
-              ),
             ],
           ),
         ),
