@@ -14,7 +14,7 @@ _$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
       weight: (json['weight'] as num).toInt(),
       gender: $enumDecode(_$GenderEnumMap, json['gender']),
       sidePreference:
-          $enumDecode(_$SidePreferenceEnumMap, json['sidePreference']),
+          $enumDecodeNullable(_$SidePreferenceEnumMap, json['sidePreference']),
       ageGroup: $enumDecode(_$AgeGroupEnumMap, json['ageGroup']),
       drummerPreference: json['drummerPreference'] as bool,
       steersPersonPreference: json['steersPersonPreference'] as bool,
@@ -28,7 +28,7 @@ Map<String, dynamic> _$$PaddlerImplToJson(_$PaddlerImpl instance) =>
       'lastName': instance.lastName,
       'weight': instance.weight,
       'gender': _$GenderEnumMap[instance.gender]!,
-      'sidePreference': _$SidePreferenceEnumMap[instance.sidePreference]!,
+      'sidePreference': _$SidePreferenceEnumMap[instance.sidePreference],
       'ageGroup': _$AgeGroupEnumMap[instance.ageGroup]!,
       'drummerPreference': instance.drummerPreference,
       'steersPersonPreference': instance.steersPersonPreference,
@@ -43,7 +43,10 @@ const _$GenderEnumMap = {
 
 const _$SidePreferenceEnumMap = {
   SidePreference.left: 'left',
+  SidePreference.strongLeft: 'strongLeft',
   SidePreference.right: 'right',
+  SidePreference.strongRight: 'strongRight',
+  SidePreference.none: 'none',
 };
 
 const _$AgeGroupEnumMap = {

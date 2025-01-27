@@ -3,7 +3,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
-import 'package:dragonator/widgets/labeled_table.dart';
+import 'package:dragonator/widgets/labeled/labeled_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +29,7 @@ class StatSelectorTable extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: Validators.isInt(),
+      validator: Validators.isInt(errorText: 'Enter a weight.'),
       decoration: CustomInputDecoration(
         AppColors.of(context),
         suffix: const Text('lbs', style: TextStyles.body2),
@@ -39,57 +39,74 @@ class StatSelectorTable extends StatelessWidget {
     final genderSelector = FormBuilderField<Gender>(
       name: EditPaddlerFieldNames.gender,
       initialValue: paddler?.gender,
-      validator: Validators.required(),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: Validators.required(errorText: 'Enter a gender.'),
       builder: (state) {
-        return SizedBox(
-          width: double.infinity,
-          child: CupertinoSlidingSegmentedControl<Gender>(
-            backgroundColor: state.hasError
-                ? AppColors.of(context).smallErrorSurface
-                : AppColors.of(context).smallSurface,
-            groupValue: state.value,
-            children: Map.fromIterable(
-              Gender.values,
-              value: (gender) => Padding(
-                padding: const EdgeInsets.all(_kSegmentedControlPadding),
-                child: Text(gender.toString()),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: CupertinoSlidingSegmentedControl<Gender>(
+                backgroundColor: state.hasError
+                    ? AppColors.of(context).smallErrorSurface
+                    : AppColors.of(context).smallSurface,
+                groupValue: state.value,
+                children: Map.fromIterable(
+                  Gender.values,
+                  value: (gender) => Padding(
+                    padding: const EdgeInsets.all(_kSegmentedControlPadding),
+                    child: Text(gender.toString()),
+                  ),
+                ),
+                onValueChanged: (gender) => state.didChange(gender),
               ),
             ),
-            onValueChanged: (gender) => state.didChange(gender),
-          ),
+            if (state.errorText != null)
+              ...[
+                SizedBox(height: Insets.xs),
+                Row(
+                  children: [
+                    SizedBox(width: Insets.sm),
+                    Text(
+                      state.errorText!,
+                      style: CustomInputDecoration(AppColors.of(context)).errorStyle,
+                      maxLines: CustomInputDecoration(AppColors.of(context)).errorMaxLines,
+                    ),
+                  ],
+                ),
+              ],
+          ],
         );
       },
     );
 
-    final sidePreferenceSelector = FormBuilderField<SidePreference>(
-      name: EditPaddlerFieldNames.sidePreference,
-      initialValue: paddler?.sidePreference,
-      validator: Validators.required(),
-      builder: (state) {
-        return SizedBox(
-          width: double.infinity,
-          child: CupertinoSlidingSegmentedControl<SidePreference>(
-            backgroundColor: state.hasError
-                ? AppColors.of(context).smallErrorSurface
-                : AppColors.of(context).smallSurface,
-            groupValue: state.value,
-            children: Map.fromIterable(
-              SidePreference.values,
-              value: (sidePreference) => Padding(
-                padding: const EdgeInsets.all(_kSegmentedControlPadding),
-                child: Text(sidePreference.toString()),
-              ),
+    final sidePreferenceDropDown = Theme(
+      data: Theme.of(context).copyWith(
+        highlightColor: Colors.transparent,
+        canvasColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      ),
+      child: FormBuilderDropdown<SidePreference>(
+        name: EditPaddlerFieldNames.sidePreference,
+        isExpanded: true,
+        elevation: 2,
+        borderRadius: Corners.smBorderRadius,
+        initialValue: paddler?.sidePreference,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: Validators.required(errorText: 'Enter a side preference.'),
+        items: [
+          for (var sidePreference in SidePreference.values)
+            DropdownMenuItem(
+              value: sidePreference,
+              child: Text(sidePreference.toString()),
             ),
-            onValueChanged: (gender) => state.didChange(gender),
-          ),
-        );
-      },
+        ],
+        decoration: CustomInputDecoration(AppColors.of(context)),
+      ),
     );
 
     final ageGroupDropDown = Theme(
       data: Theme.of(context).copyWith(
-        splashColor: Colors.transparent,
-        splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
         canvasColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       ),
@@ -100,7 +117,7 @@ class StatSelectorTable extends StatelessWidget {
         borderRadius: Corners.smBorderRadius,
         initialValue: paddler?.ageGroup,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: Validators.required(),
+        validator: Validators.required(errorText: 'Enter an age group.'),
         items: [
           for (var ageGroup in AgeGroup.values)
             DropdownMenuItem(
@@ -120,8 +137,8 @@ class StatSelectorTable extends StatelessWidget {
           stats: [weightField, genderSelector],
         ),
         LabeledTableRow(
-          labels: ['Side', 'Age Group'],
-          stats: [sidePreferenceSelector, ageGroupDropDown],
+          labels: ['Side Preference', 'Age Group'],
+          stats: [sidePreferenceDropDown, ageGroupDropDown],
         ),
       ],
     );

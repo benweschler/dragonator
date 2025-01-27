@@ -25,7 +25,7 @@ mixin _$Paddler {
   String get lastName => throw _privateConstructorUsedError;
   int get weight => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
-  SidePreference get sidePreference => throw _privateConstructorUsedError;
+  SidePreference? get sidePreference => throw _privateConstructorUsedError;
   AgeGroup get ageGroup => throw _privateConstructorUsedError;
   bool get drummerPreference => throw _privateConstructorUsedError;
   bool get steersPersonPreference => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $PaddlerCopyWith<$Res> {
       String lastName,
       int weight,
       Gender gender,
-      SidePreference sidePreference,
+      SidePreference? sidePreference,
       AgeGroup ageGroup,
       bool drummerPreference,
       bool steersPersonPreference,
@@ -78,7 +78,7 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
     Object? lastName = null,
     Object? weight = null,
     Object? gender = null,
-    Object? sidePreference = null,
+    Object? sidePreference = freezed,
     Object? ageGroup = null,
     Object? drummerPreference = null,
     Object? steersPersonPreference = null,
@@ -105,10 +105,10 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      sidePreference: null == sidePreference
+      sidePreference: freezed == sidePreference
           ? _value.sidePreference
           : sidePreference // ignore: cast_nullable_to_non_nullable
-              as SidePreference,
+              as SidePreference?,
       ageGroup: null == ageGroup
           ? _value.ageGroup
           : ageGroup // ignore: cast_nullable_to_non_nullable
@@ -142,7 +142,7 @@ abstract class _$$PaddlerImplCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
       String lastName,
       int weight,
       Gender gender,
-      SidePreference sidePreference,
+      SidePreference? sidePreference,
       AgeGroup ageGroup,
       bool drummerPreference,
       bool steersPersonPreference,
@@ -167,7 +167,7 @@ class __$$PaddlerImplCopyWithImpl<$Res>
     Object? lastName = null,
     Object? weight = null,
     Object? gender = null,
-    Object? sidePreference = null,
+    Object? sidePreference = freezed,
     Object? ageGroup = null,
     Object? drummerPreference = null,
     Object? steersPersonPreference = null,
@@ -194,10 +194,10 @@ class __$$PaddlerImplCopyWithImpl<$Res>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      sidePreference: null == sidePreference
+      sidePreference: freezed == sidePreference
           ? _value.sidePreference
           : sidePreference // ignore: cast_nullable_to_non_nullable
-              as SidePreference,
+              as SidePreference?,
       ageGroup: null == ageGroup
           ? _value.ageGroup
           : ageGroup // ignore: cast_nullable_to_non_nullable
@@ -248,7 +248,7 @@ class _$PaddlerImpl extends _Paddler {
   @override
   final Gender gender;
   @override
-  final SidePreference sidePreference;
+  final SidePreference? sidePreference;
   @override
   final AgeGroup ageGroup;
   @override
@@ -281,7 +281,7 @@ abstract class _Paddler extends Paddler {
       required final String lastName,
       required final int weight,
       required final Gender gender,
-      required final SidePreference sidePreference,
+      required final SidePreference? sidePreference,
       required final AgeGroup ageGroup,
       required final bool drummerPreference,
       required final bool steersPersonPreference,
@@ -301,7 +301,7 @@ abstract class _Paddler extends Paddler {
   @override
   Gender get gender;
   @override
-  SidePreference get sidePreference;
+  SidePreference? get sidePreference;
   @override
   AgeGroup get ageGroup;
   @override

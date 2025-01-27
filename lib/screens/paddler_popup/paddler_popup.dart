@@ -7,7 +7,7 @@ import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
-import 'package:dragonator/widgets/labeled_table.dart';
+import 'package:dragonator/widgets/labeled/labeled_table.dart';
 import 'package:dragonator/widgets/modal_navigator.dart';
 import 'package:dragonator/widgets/pages.dart';
 import 'package:dragonator/widgets/popups/popup_dialog.dart';

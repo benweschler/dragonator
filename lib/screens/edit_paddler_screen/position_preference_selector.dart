@@ -3,12 +3,12 @@ import 'package:dragonator/widgets/position_preference_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class PreferenceSelector extends StatelessWidget {
+class PositionPreferenceSelector extends StatelessWidget {
   final String name;
   final String label;
   final bool initialValue;
 
-  const PreferenceSelector({
+  const PositionPreferenceSelector({
     super.key,
     required this.name,
     required this.label,

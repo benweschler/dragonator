@@ -1,6 +1,6 @@
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/screens/edit_paddler_screen/preference_selector.dart';
+import 'package:dragonator/screens/edit_paddler_screen/position_preference_selector.dart';
 import 'package:dragonator/screens/edit_paddler_screen/stat_selector_table.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'field_names.dart';
-import 'labeled_text_field.dart';
+import '../../widgets/labeled/labeled_text_field.dart';
 
 class EditPaddlerScreen extends StatelessWidget {
   final String? paddlerID;
@@ -84,7 +84,9 @@ class EditPaddlerScreen extends StatelessWidget {
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.name,
-                  validator: Validators.required(),
+                  validator: Validators.required(
+                    errorText: 'Enter a first name.',
+                  ),
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
               ),
@@ -96,7 +98,9 @@ class EditPaddlerScreen extends StatelessWidget {
                   initialValue: paddler?.lastName,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: Validators.required(),
+                  validator: Validators.required(
+                    errorText: 'Enter a last name.'
+                  ),
                   keyboardType: TextInputType.name,
                   decoration: CustomInputDecoration(AppColors.of(context)),
                 ),
@@ -104,24 +108,24 @@ class EditPaddlerScreen extends StatelessWidget {
               const SizedBox(height: Insets.xl),
               StatSelectorTable(paddler),
               const SizedBox(height: Insets.xl),
-              PreferenceSelector(
+              PositionPreferenceSelector(
                 name: EditPaddlerFieldNames.drummerPreference,
                 label: 'Drummer',
                 initialValue: paddler?.drummerPreference ?? false,
               ),
               SizedBox(height: Insets.med),
-              PreferenceSelector(
+              PositionPreferenceSelector(
                 name: EditPaddlerFieldNames.steersPersonPreference,
                 label: 'Steers Person',
                 initialValue: paddler?.steersPersonPreference ?? false,
               ),
               SizedBox(height: Insets.med),
-              PreferenceSelector(
+              PositionPreferenceSelector(
                 name: EditPaddlerFieldNames.strokePreference,
                 label: 'Stroke',
                 initialValue: paddler?.strokePreference ?? false,
               ),
-              SizedBox(height: Insets.xl * 2),
+              SizedBox(height: Insets.xl * 1.5),
               ExpandingStadiumButton(
                 onTap: () {
                   if (!_formKey.currentState!.saveAndValidate()) return;

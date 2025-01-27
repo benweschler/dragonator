@@ -5,6 +5,8 @@ part 'paddler.freezed.dart';
 
 part 'paddler.g.dart';
 
+//TODO: make position preference a set of preference enums. None is just empty.
+
 @Freezed(equal: false)
 class Paddler extends Equatable with _$Paddler {
   const Paddler._();
@@ -15,9 +17,8 @@ class Paddler extends Equatable with _$Paddler {
     required String lastName,
     required int weight,
     required Gender gender,
-    required SidePreference sidePreference,
+    required SidePreference? sidePreference,
     required AgeGroup ageGroup,
-    //TODO: make this a set of preference enums. None is just empty.
     required bool drummerPreference,
     required bool steersPersonPreference,
     required bool strokePreference,
@@ -51,18 +52,26 @@ class Paddler extends Equatable with _$Paddler {
       ];
 }
 
-//TODO: Add sides: strong pref and none
 enum SidePreference {
   left,
-  right;
+  strongLeft,
+  right,
+  strongRight,
+  none;
 
   @override
   String toString() {
     switch (this) {
       case SidePreference.left:
-        return 'L';
+        return 'Left';
       case SidePreference.right:
-        return 'R';
+        return 'Right';
+      case SidePreference.strongLeft:
+        return 'Strong Left';
+      case SidePreference.strongRight:
+        return 'Strong Right';
+      case SidePreference.none:
+        return 'None';
     }
   }
 }
