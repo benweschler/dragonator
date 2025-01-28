@@ -3,6 +3,7 @@ import 'package:dragonator/screens/paddler_popup/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
+import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:flutter/material.dart';
 
 class PaddlerPreviewTile extends StatelessWidget {
@@ -13,7 +14,7 @@ class PaddlerPreviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ResponsiveStrokeButton(
       onTap: () => context.showPopup(PaddlerPopup(paddler.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
@@ -30,7 +31,6 @@ class PaddlerPreviewTile extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -52,26 +52,36 @@ class PaddlerPreviewTile extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              Text(
-                'Gender',
-                style: TextStyles.caption.copyWith(
-                  color: appColors.neutralContent,
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Gender',
+                    style: TextStyles.caption.copyWith(
+                      color: appColors.neutralContent,
+                    ),
+                  ),
+                  Text(
+                    'Side',
+                    style: TextStyles.caption.copyWith(
+                      color: appColors.neutralContent,
+                    ),
+                  ),
+                ].map((e) => Expanded(child: Center(child: e))).toList(),
               ),
-              Text('${paddler.gender}', style: TextStyles.title1),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Text(
-                'Side',
-                style: TextStyles.caption.copyWith(
-                  color: appColors.neutralContent,
-                ),
+              Row(
+                children: [
+                  Text(
+                    '${paddler.gender}',
+                    textAlign: TextAlign.center,
+                    style: TextStyles.title1,
+                  ),
+                  Text(
+                    '${paddler.sidePreference}',
+                    textAlign: TextAlign.center,
+                    style: TextStyles.title1,
+                  ),
+                ].map((e) => Expanded(child: Center(child: e))).toList(),
               ),
-              Text('${paddler.sidePreference}', style: TextStyles.title1),
             ],
           ),
         ),

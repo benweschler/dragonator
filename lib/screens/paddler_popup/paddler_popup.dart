@@ -161,17 +161,21 @@ class _PaddlerStatTable extends StatelessWidget {
         LabeledTableRow(
           labels: ['Weight', 'Gender'],
           stats: [
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                text: '${paddler.weight}',
-                style: TextStyles.title1.copyWith(
-                  fontWeight: FontWeight.normal,
+            Text.rich(
+              TextSpan(children: [
+                TextSpan(
+                  text: '${paddler.weight}',
+                  style: TextStyles.title1.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
-              ),
-              const TextSpan(text: ' lbs', style: TextStyles.body2),
-            ])),
+                const TextSpan(text: ' lbs', style: TextStyles.body2),
+              ]),
+              textAlign: TextAlign.center,
+            ),
             Text(
               '${paddler.gender}',
+              textAlign: TextAlign.center,
               style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
             ),
           ],
@@ -181,10 +185,12 @@ class _PaddlerStatTable extends StatelessWidget {
           stats: [
             Text(
               '${paddler.sidePreference}',
+              textAlign: TextAlign.center,
               style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
             ),
             Text(
               paddler.ageGroup.toString(),
+              textAlign: TextAlign.center,
               style: TextStyles.title1.copyWith(fontWeight: FontWeight.normal),
             ),
           ],
