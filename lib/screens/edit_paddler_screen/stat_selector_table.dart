@@ -3,9 +3,9 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
+import 'package:dragonator/widgets/form_fields.dart';
 import 'package:dragonator/widgets/labeled/labeled_table.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -23,6 +23,8 @@ class StatSelectorTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
     final weightField = FormBuilderTextField(
       name: EditPaddlerFieldNames.weight,
       initialValue: paddler?.weight.toString(),
@@ -31,7 +33,7 @@ class StatSelectorTable extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: Validators.isInt(errorText: 'Enter a weight.'),
       decoration: CustomInputDecoration(
-        AppColors.of(context),
+        colors,
         suffix: const Text('lbs', style: TextStyles.body2),
       ),
     );
@@ -49,8 +51,8 @@ class StatSelectorTable extends StatelessWidget {
               width: double.infinity,
               child: CupertinoSlidingSegmentedControl<Gender>(
                 backgroundColor: state.hasError
-                    ? AppColors.of(context).smallErrorSurface
-                    : AppColors.of(context).smallSurface,
+                    ? colors.smallErrorSurface
+                    : colors.smallSurface,
                 groupValue: state.value,
                 children: Map.fromIterable(
                   Gender.values,
@@ -62,71 +64,38 @@ class StatSelectorTable extends StatelessWidget {
                 onValueChanged: (gender) => state.didChange(gender),
               ),
             ),
-            if (state.errorText != null)
-              ...[
-                SizedBox(height: Insets.xs),
-                Row(
-                  children: [
-                    SizedBox(width: Insets.sm),
-                    Text(
-                      state.errorText!,
-                      style: CustomInputDecoration(AppColors.of(context)).errorStyle,
-                      maxLines: CustomInputDecoration(AppColors.of(context)).errorMaxLines,
-                    ),
-                  ],
-                ),
-              ],
+            if (state.errorText != null) ...[
+              SizedBox(height: Insets.xs),
+              Row(
+                children: [
+                  SizedBox(width: Insets.sm),
+                  Text(
+                    state.errorText!,
+                    style: CustomInputDecoration(colors).errorStyle,
+                    maxLines: CustomInputDecoration(colors).errorMaxLines,
+                  ),
+                ],
+              ),
+            ],
           ],
         );
       },
     );
 
-    final sidePreferenceDropDown = Theme(
-      data: Theme.of(context).copyWith(
-        highlightColor: Colors.transparent,
-        canvasColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-      ),
-      child: FormBuilderDropdown<SidePreference>(
-        name: EditPaddlerFieldNames.sidePreference,
-        isExpanded: true,
-        elevation: 2,
-        borderRadius: Corners.smBorderRadius,
-        initialValue: paddler?.sidePreference,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: Validators.required(errorText: 'Enter a side preference.'),
-        items: [
-          for (var sidePreference in SidePreference.values)
-            DropdownMenuItem(
-              value: sidePreference,
-              child: Text(sidePreference.toString()),
-            ),
-        ],
-        decoration: CustomInputDecoration(AppColors.of(context)),
-      ),
+    final sidePreferenceSelector = FormBuilderSelector(
+      name: EditPaddlerFieldNames.sidePreference,
+      initialValue: paddler?.sidePreference,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: Validators.required(errorText: 'Enter a side preference.'),
+      options: SidePreference.values,
     );
 
-    final ageGroupDropDown = Theme(
-      data: Theme.of(context).copyWith(
-        highlightColor: Colors.transparent,
-        canvasColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-      ),
-      child: FormBuilderDropdown<AgeGroup>(
-        name: EditPaddlerFieldNames.ageGroup,
-        isExpanded: true,
-        elevation: 2,
-        borderRadius: Corners.smBorderRadius,
-        initialValue: paddler?.ageGroup,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: Validators.required(errorText: 'Enter an age group.'),
-        items: [
-          for (var ageGroup in AgeGroup.values)
-            DropdownMenuItem(
-              value: ageGroup,
-              child: Text(ageGroup.toString()),
-            ),
-        ],
-        decoration: CustomInputDecoration(AppColors.of(context)),
-      ),
+    final ageGroupSelector = FormBuilderSelector(
+      name: EditPaddlerFieldNames.ageGroup,
+      initialValue: paddler?.ageGroup,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: Validators.required(errorText: 'Enter an age group.'),
+      options: AgeGroup.values,
     );
 
     return LabeledTable(
@@ -138,7 +107,7 @@ class StatSelectorTable extends StatelessWidget {
         ),
         LabeledTableRow(
           labels: ['Side Preference', 'Age Group'],
-          stats: [sidePreferenceDropDown, ageGroupDropDown],
+          stats: [sidePreferenceSelector, ageGroupSelector],
         ),
       ],
     );

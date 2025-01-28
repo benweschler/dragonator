@@ -9,7 +9,9 @@ class CustomInputDecoration extends InputDecoration {
     this.colors, {
     bool showEmptyErrorText = false,
     super.suffix,
+    super.suffixIcon,
     super.hintText,
+    super.errorText,
   }) : super(
           filled: true,
           fillColor: colors.largeSurface,
