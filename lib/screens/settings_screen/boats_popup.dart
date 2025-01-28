@@ -33,7 +33,9 @@ class _BoatsPopupState extends State<BoatsPopup>
   Widget build(BuildContext context) {
     return PopupDialog(
       child: ModalNavigator(
-        routeBuilder: (path) {
+        onGenerateRoute: (settings) {
+          final path = settings.name;
+
           if (path!.startsWith('/set')) {
             final boatID = Uri.parse(path).queryParameters['id'];
             final boat = context
@@ -41,10 +43,23 @@ class _BoatsPopupState extends State<BoatsPopup>
                 .getTeam(widget.teamID)!
                 .boats[boatID];
 
+            //TODO: manually padding everything is not optimal. maybe do this is popup transition page.
             return PopupTransitionPage(
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
                 child: _EditBoatView(boat, widget.teamID),
+              ),
+            ).createRoute(context);
+          } else if (path.startsWith('/boat-in-use')) {
+            final boatName = Uri.parse(path).queryParameters['name']!;
+
+            return PopupTransitionPage(
+              child: Padding(
+                padding: EdgeInsets.all(Insets.lg),
+                child: _BoatDeletionBlockedView(
+                  boatName: boatName,
+                  inUseLineupIDs: settings.arguments as Iterable<String>,
+                ),
               ),
             ).createRoute(context);
           }
@@ -239,17 +254,17 @@ class _EditBoatView extends StatelessWidget {
   }
 
   String? _capacityValidator(String? value) {
-    final isIntValidation =  Validators.isInt(
+    final isIntValidation = Validators.isInt(
       errorText:
-      'Enter the number of paddlers in the boat, including the drummer and steers person.',
+          'Enter the number of paddlers in the boat, including the drummer and steers person.',
     ).call(value);
 
-    if(isIntValidation != null) {
+    if (isIntValidation != null) {
       return isIntValidation;
     }
 
     final capacity = int.parse(value!);
-    if(capacity.isOdd) {
+    if (capacity.isOdd) {
       return 'Capacity must be even.';
     }
     if (capacity < 10) {
@@ -339,14 +354,19 @@ class _EditBoatView extends StatelessWidget {
                 Expanded(
                   child: ExpandingStadiumButton(
                     onTap: () {
-                      final boatInUse = context
+                      final inUseLineupIDs = context
                           .read<RosterModel>()
                           .lineups
-                          .map((lineup) => lineup.boatID)
-                          .contains(boat?.id);
+                          .where((lineup) => lineup.boatID == boat!.id)
+                          .map((lineup) => lineup.id);
 
-                      //TODO: show info saying boat is in use
-                      if (boatInUse) return;
+                      if (inUseLineupIDs.isNotEmpty) {
+                        Navigator.of(context).pushNamed(
+                          '/boat-in-use?name=${boat!.name}',
+                          arguments: inUseLineupIDs,
+                        );
+                        return;
+                      }
 
                       _deleteBoat(context);
                     },
@@ -370,6 +390,61 @@ class _EditBoatView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BoatDeletionBlockedView extends StatelessWidget {
+  final String boatName;
+  final Iterable<String> inUseLineupIDs;
+
+  const _BoatDeletionBlockedView({
+    required this.boatName,
+    required this.inUseLineupIDs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Text('Can\'t Delete Boat', style: TextStyles.title1),
+        ),
+        const SizedBox(height: Insets.lg),
+        Text.rich(TextSpan(children: [
+          TextSpan(
+            text: boatName,
+            style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text:
+                ' can\'t be deleted because it is currently assigned to the following lineups:',
+            style: TextStyles.body1,
+          ),
+        ])),
+        const SizedBox(height: Insets.med),
+        Consumer<RosterModel>(
+          builder: (context, rosterModel, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              for (String id in inUseLineupIDs)
+                Text(
+                  '    •  ${rosterModel.getLineup(id)?.name}',
+                  style: TextStyles.body1,
+                ),
+            ].separate(SizedBox(height: Insets.xs)).toList(),
+          ),
+        ),
+        SizedBox(height: Insets.xl),
+        ExpandingStadiumButton(
+          onTap: () => Navigator.pop(context),
+          color: AppColors.of(context).primary,
+          label: 'Confirm',
+        ),
+        SizedBox(height: Insets.sm),
+      ],
     );
   }
 }

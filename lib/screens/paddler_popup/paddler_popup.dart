@@ -28,7 +28,9 @@ class PaddlerPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupDialog(
       child: ModalNavigator(
-        routeBuilder: (path) {
+        onGenerateRoute: (settings) {
+          final path = settings.name;
+
           if (path!.startsWith('/copy-to-team')) {
             final bool multipleTeams =
                 bool.parse(Uri.parse(path).queryParameters['multiple-teams']!);

@@ -33,7 +33,9 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
       child: ChangeNotifierProvider(
         create: (_) => ValueNotifier<String>(lineupBoatID),
         child: ModalNavigator(
-          routeBuilder: (String? path) {
+          onGenerateRoute: (settings) {
+            final path = settings.name;
+
             if (path!.startsWith('/change-boat')) {
               return PopupTransitionPage(
                 child: Padding(
@@ -310,37 +312,34 @@ class _ConfirmDestructiveBoatChangeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Confirm Boat Change', style: TextStyles.title1),
-          const SizedBox(height: Insets.lg),
-          Text.rich(TextSpan(children: [
-            TextSpan(
-              text: newLineupBoatName,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(
-                text:
-                    ' has fewer paddlers than the currently selected boat. Changing boats will remove paddlers that are over capacity, starting from the back of the boat. Are you sure you want to continue?',
-                style: TextStyle(fontWeight: FontWeight.normal)),
-          ])),
-          SizedBox(height: Insets.xl),
-          ExpandingStadiumButton(
-            onTap: () => Navigator.pop(context, true),
-            color: AppColors.of(context).primary,
-            label: 'Confirm Change',
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Confirm Boat Change', style: TextStyles.title1),
+        const SizedBox(height: Insets.lg),
+        Text.rich(TextSpan(children: [
+          TextSpan(
+            text: newLineupBoatName,
+            style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: Insets.sm),
-          ExpandingTextButton(
-            onTap: () => Navigator.pop(context, false),
-            text: 'Cancel',
+          TextSpan(
+            text:
+                ' has fewer paddlers than the currently selected boat. Changing boats will remove paddlers that are over capacity, starting from the back of the boat. Are you sure you want to continue?',
+            style: TextStyles.body1,
           ),
-        ],
-      ),
+        ])),
+        SizedBox(height: Insets.xl),
+        ExpandingStadiumButton(
+          onTap: () => Navigator.pop(context, true),
+          color: AppColors.of(context).primary,
+          label: 'Confirm Change',
+        ),
+        SizedBox(height: Insets.sm),
+        ExpandingTextButton(
+          onTap: () => Navigator.pop(context, false),
+          text: 'Cancel',
+        ),
+      ],
     );
   }
 }

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 /// navigation. Animates between page sizes.
 class ModalNavigator extends StatelessWidget {
   final String initialRoute;
-  //TODO: just take widget builder and wrap with popup transition page?
-  final Route Function(String? path) routeBuilder;
+  //TODO: just take widget builder with route and wrap with popup transition page?
+  final Route<dynamic>? Function(RouteSettings)? onGenerateRoute;
 
   const ModalNavigator({
     super.key,
     this.initialRoute = '/',
-    required this.routeBuilder,
+    required this.onGenerateRoute,
   });
 
   @override
@@ -23,7 +23,7 @@ class ModalNavigator extends StatelessWidget {
         child: Navigator(
           initialRoute: initialRoute,
           observers: [HeroController()],
-          onGenerateRoute: (settings) => routeBuilder(settings.name),
+          onGenerateRoute: onGenerateRoute,
         ),
       ),
     );

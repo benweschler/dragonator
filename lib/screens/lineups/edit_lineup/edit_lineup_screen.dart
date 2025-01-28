@@ -87,6 +87,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         ));
   }
 
+  //TODO: changing to a larger boat causes an error
   void _changeLineupBoat(Boat boat) {
     setState(() {
       _boat = boat;
