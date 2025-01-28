@@ -5,6 +5,8 @@ import 'package:defer_pointer/defer_pointer.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
+import 'package:dragonator/screens/paddler_popup/paddler_popup.dart';
+import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
@@ -35,7 +37,7 @@ class EditPaddlerTile extends StatelessWidget {
             child: Selector<RosterModel, Paddler?>(
               selector: (context, model) => model.getPaddler(paddlerID),
               shouldRebuild: (_, newPaddler) => newPaddler != null,
-              builder: (context, paddler, _) => PaddlerTile(paddler!)
+              builder: (context, paddler, _) => PaddlerTile(paddler!),
             ),
           ),
           Positioned(
@@ -48,6 +50,7 @@ class EditPaddlerTile extends StatelessWidget {
                   _PaddlerContextMenu(
                     paddlerID: paddlerID,
                     removePaddler: removePaddler,
+                    popupContext: context,
                   ),
                 ),
               ),
@@ -98,10 +101,12 @@ class _PaddlerOptionsButton extends StatelessWidget {
 class _PaddlerContextMenu extends StatelessWidget {
   final String paddlerID;
   final VoidCallback removePaddler;
+  final BuildContext popupContext;
 
   const _PaddlerContextMenu({
     required this.paddlerID,
     required this.removePaddler,
+    required this.popupContext,
   });
 
   @override
@@ -109,8 +114,12 @@ class _PaddlerContextMenu extends StatelessWidget {
     return ContextMenu([
       ContextMenuAction(
         icon: Icons.info_outline_rounded,
-        //TODO: don't push to the paddler detail screen. should only show abbreviated info without actions, especially edit.
-        onTap: () {},//=> context.push(RoutePaths.paddler(paddlerID)),
+        onTap: () async {
+          await Future.delayed(Timings.long);
+          if (popupContext.mounted) {
+            popupContext.showPopup(PaddlerPopup(paddlerID));
+          }
+        },
         label: 'Information',
       ),
       ContextMenuAction(

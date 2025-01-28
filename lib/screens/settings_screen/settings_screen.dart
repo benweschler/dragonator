@@ -239,7 +239,9 @@ class _TeamContextMenuState extends State<_TeamContextMenu>
         isDestructiveAction: true,
         autoPop: false,
         onTap: () async {
+          //TODO: remove auto pop
           context.pop();
+          //TODO: add a parameter to wait until close to execute on tap.
           await Future.delayed(Timings.long);
           if (!widget.rootContext.mounted) return;
           widget.rootContext.showPopup(DeleteTeamPopup(widget.teamID));

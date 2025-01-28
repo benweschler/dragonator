@@ -14,8 +14,6 @@ class PaddlerPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      //TODO: choose popup or screen
-      //onTap: () => context.push(RoutePaths.paddler(paddler.id)),
       onTap: () => context.showPopup(PaddlerPopup(paddler.id)),
       behavior: HitTestBehavior.translucent,
       child: Container(
