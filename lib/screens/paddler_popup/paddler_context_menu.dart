@@ -52,9 +52,14 @@ class PaddlerContextMenu extends StatelessWidget {
         label: 'View lineups',
       ),
       ContextMenuAction(
+        autoPop: false,
         onTap: () async {
           await context.read<RosterModel>().deletePaddler(paddler.id);
-          if (context.mounted) context.pop();
+          if(context.mounted) {
+            context.pop();
+            await Future.delayed(Timings.long);
+          }
+          if(popupContext.mounted) popupContext.pop();
         },
         isDestructiveAction: true,
         icon: Icons.delete_rounded,
