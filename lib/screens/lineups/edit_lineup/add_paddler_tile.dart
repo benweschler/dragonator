@@ -7,12 +7,12 @@ import 'package:go_router/go_router.dart';
 
 class AddPaddlerTile extends StatelessWidget {
   /// The list of paddlers in the current state of the edited lineup.
-  final List<Paddler?> editedNullablePaddlers;
+  final List<Paddler?> editedLineupPaddlers;
   final ValueChanged<Paddler?> addPaddler;
 
   const AddPaddlerTile({
     super.key,
-    required this.editedNullablePaddlers,
+    required this.editedLineupPaddlers,
     required this.addPaddler,
   });
 
@@ -24,7 +24,7 @@ class AddPaddlerTile extends StatelessWidget {
         extra: {
           //TODO: don't pass add paddler. pop with Paddler? and add here
           'addPaddler': addPaddler,
-          'editedLineupPaddlers': editedNullablePaddlers
+          'editedLineupPaddlers': editedLineupPaddlers
               .where((entry) => entry != null)
               .cast<Paddler>(),
         },
