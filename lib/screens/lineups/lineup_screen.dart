@@ -48,6 +48,7 @@ class _LineupScreenState extends State<LineupScreen>
       },
       builder: (context, data, _) {
         final (lineup, boat, paddlerList) = (data.$1!, data.$2!, data.$3!);
+        const verticalInset = Insets.med;
 
         return CustomScaffold(
           addScreenInset: false,
@@ -96,7 +97,7 @@ class _LineupScreenState extends State<LineupScreen>
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Insets.med),
+                  padding: const EdgeInsets.symmetric(vertical: verticalInset),
                   child: SizedBox(
                     height: kGridRowHeight * (paddlerList.length / 2 + 1),
                     child: Stack(
@@ -139,6 +140,8 @@ class _LineupScreenState extends State<LineupScreen>
                       child: COMOverlay(
                         duration: const Duration(milliseconds: 250),
                         com: calculateCOM(boat: boat, paddlerList: paddlerList),
+                        topInset: verticalInset,
+                        bottomInset: verticalInset,
                         leftAlignment: 0.25,
                         rightAlignment: 0.75,
                       ),

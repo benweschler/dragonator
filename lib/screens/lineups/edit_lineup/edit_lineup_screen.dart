@@ -122,6 +122,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     const headerPadding = Insets.med;
     final footerPadding =
         Insets.med + MediaQuery.of(context).viewPadding.bottom;
+    final comAnimationDuration = 250.ms;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -177,7 +178,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
                   child: child!,
                 ),
                 child: COMOverlay(
-                  duration: const Duration(milliseconds: 250),
+                  duration: comAnimationDuration,
                   com: calculateCOM(boat: _boat, paddlerList: _history.current),
                   topInset: headerPadding,
                   bottomInset: footerPadding,
@@ -205,9 +206,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
                     child: CustomIconButton(
                       icon: Icons.undo_rounded,
                       onTap: _history.undo,
-                    )
-                        .animate(target: _history.canUndo ? 1 : 0)
-                        .fade(begin: 0.5, end: 1),
+                    ).animate(target: _history.canUndo ? 1 : 0).fade(
+                        duration: comAnimationDuration, begin: 0.5, end: 1),
                   ),
                   SizedBox(width: Insets.med),
                   IgnorePointer(
@@ -215,9 +215,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
                     child: CustomIconButton(
                       icon: Icons.redo_rounded,
                       onTap: _history.redo,
-                    )
-                        .animate(target: _history.canRedo ? 1 : 0)
-                        .fade(begin: 0.5, end: 1),
+                    ).animate(target: _history.canRedo ? 1 : 0).fade(
+                        duration: comAnimationDuration, begin: 0.5, end: 1),
                   ),
                 ],
               ),
