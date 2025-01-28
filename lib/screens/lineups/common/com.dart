@@ -177,5 +177,8 @@ Offset calculateCOM({
     total += paddler.weight;
   }
 
+  // The COM should be in the middle of the boat if there are no paddlers added.
+  if (total == 0) return Offset(0.5, 0.5);
+
   return Offset(xWeighted / total, yWeighted / total);
 }

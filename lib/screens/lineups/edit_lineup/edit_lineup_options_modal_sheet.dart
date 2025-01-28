@@ -244,6 +244,28 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
     _initialBoatID = _selectedBoatID;
   }
 
+  void _saveBoatChange(Map<String, Boat> boats) async {
+    final boat = boats[_selectedBoatID];
+    // True if the boat was deleted from the lineup before saving. No
+    // boat will be selected if this is the case.
+    if (boat == null) return;
+
+    final selectedBoatIDNotifier =
+    context.read<ValueNotifier<String>>();
+
+    if (boats[_initialBoatID] != null &&
+        boat.capacity < boats[_initialBoatID]!.capacity) {
+      final confirmChange = await Navigator.of(context)
+          .pushNamed<bool>('/confirm-boat-change?name=${boat.name}');
+
+      if (confirmChange != true) return;
+    }
+
+    selectedBoatIDNotifier.value = boat.id;
+    widget.onChangeBoat(boat);
+    if (mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final boats = context.select<RosterModel, Map<String, Boat>>(
@@ -271,27 +293,8 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
         ),
         SizedBox(height: Insets.xl),
         ExpandingStadiumButton(
-          onTap: () async {
-            final boat = boats[_selectedBoatID];
-            // True if the boat was deleted from the lineup before saving. No
-            // boat will be selected if this is the case.
-            if (boat == null) return;
-
-            final selectedBoatIDNotifier =
-                context.read<ValueNotifier<String>>();
-
-            if (boats[_initialBoatID] != null &&
-                boat.capacity < boats[_initialBoatID]!.capacity) {
-              final confirmChange = await Navigator.of(context)
-                  .pushNamed<bool>('/confirm-boat-change?name=${boat.name}');
-
-              if (confirmChange != true) return;
-            }
-
-            selectedBoatIDNotifier.value = boat.id;
-            widget.onChangeBoat(boat);
-            if (context.mounted) Navigator.of(context).pop();
-          },
+          enabled: _selectedBoatID != _initialBoatID,
+          onTap: () => _saveBoatChange(boats),
           color: AppColors.of(context).primary,
           label: 'Save',
         ),

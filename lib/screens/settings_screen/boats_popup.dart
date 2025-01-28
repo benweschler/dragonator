@@ -264,11 +264,11 @@ class _EditBoatView extends StatelessWidget {
     }
 
     final capacity = int.parse(value!);
-    if (capacity.isOdd) {
-      return 'Capacity must be even.';
-    }
     if (capacity < 10) {
       return 'Capacity must be at least 10.';
+    }
+    if (capacity.isOdd) {
+      return 'Capacity must be even.';
     }
 
     return null;
