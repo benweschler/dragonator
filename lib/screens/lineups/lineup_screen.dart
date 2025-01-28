@@ -157,11 +157,14 @@ class _LineupScreenState extends State<LineupScreen>
   }
 
   @override
-  String get detailType => 'lineup';
+  String get detailLabel => 'lineup';
 
   @override
   Object? Function() get getDetail =>
       () => context.read<RosterModel>().getLineup(widget.lineupID);
+
+  @override
+  VoidCallback get dismissWidget => context.popToRoot;
 }
 
 class _TileLayoutDelegate extends MultiChildLayoutDelegate {

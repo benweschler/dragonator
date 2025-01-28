@@ -4,16 +4,16 @@ import 'package:dragonator/widgets/popups/team_detail_deleted_popup.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-//TODO: use in paddler screen
-/// Differentiated from a Dependent Modal State Mixin in that this will pop to
-/// root instead of popping once.
 mixin TeamDetailDependentStateMixin<T extends StatefulWidget> on State<T> {
   late final RosterModel _rosterModel;
   late final String _initialTeamID;
 
   Object? Function() get getDetail;
 
-  String get detailType;
+  String get detailLabel;
+
+  /// Dismisses the dependent widget when the target detail is dismissed.
+  VoidCallback get dismissWidget;
 
   @override
   void initState() {
@@ -45,8 +45,8 @@ mixin TeamDetailDependentStateMixin<T extends StatefulWidget> on State<T> {
     // These actions should still be taken even if this page is no longer
     // mounted, so use the navigator context instead of the state context.
     if (mounted) {
-      context.popToRoot();
-      context.showPopup(TeamDetailDeletedPopup(detailType));
+      dismissWidget();
+      context.showPopup(TeamDetailDeletedPopup(detailLabel));
     }
   }
 }

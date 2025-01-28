@@ -4,6 +4,7 @@ import 'package:dragonator/data/team/team.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
+import 'package:dragonator/utils/dependence_mixins/team_detail_dependent_state_mixin.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
@@ -19,11 +20,17 @@ import 'package:provider/provider.dart';
 
 import 'paddler_context_menu.dart';
 
-class PaddlerPopup extends StatelessWidget {
+class PaddlerPopup extends StatefulWidget {
   final String paddlerID;
 
   const PaddlerPopup(this.paddlerID, {super.key});
 
+  @override
+  State<PaddlerPopup> createState() => _PaddlerPopupState();
+}
+
+class _PaddlerPopupState extends State<PaddlerPopup>
+    with TeamDetailDependentStateMixin {
   @override
   Widget build(BuildContext context) {
     return PopupDialog(
@@ -47,7 +54,7 @@ class PaddlerPopup extends StatelessWidget {
             return PopupTransitionPage(
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
-                child: _ActiveLineupsView(paddlerID),
+                child: _ActiveLineupsView(widget.paddlerID),
               ),
             ).createRoute(context);
           }
@@ -58,13 +65,23 @@ class PaddlerPopup extends StatelessWidget {
                 horizontal: Insets.lg,
                 vertical: Insets.lg,
               ),
-              child: _PaddlerInfoView(paddlerID),
+              child: _PaddlerInfoView(widget.paddlerID),
             ),
           );
         },
       ),
     );
   }
+
+  @override
+  String get detailLabel => 'paddler';
+
+  @override
+  VoidCallback get dismissWidget => context.pop;
+
+  @override
+  Object? Function() get getDetail =>
+      () => context.read<RosterModel>().getPaddler(widget.paddlerID);
 }
 
 class _PaddlerInfoView extends StatelessWidget {

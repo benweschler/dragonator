@@ -27,7 +27,7 @@ extension NavigationUtils on BuildContext {
   /// Pops to the root page of the current path, and to the first root page of
   /// the app navigator if the current path's root isn't a root page.
   void popToRoot() {
-    final currentPath = GoRouter.of(this).state!.uri;
+    final currentPath = GoRouter.of(this).state.uri;
     var rootPath = '/${currentPath.pathSegments.first}';
     if (!RoutePaths.rootPaths.contains(rootPath)) {
       rootPath = RoutePaths.rootPaths.first;
