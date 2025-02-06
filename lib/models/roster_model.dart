@@ -294,7 +294,7 @@ class RosterModel extends Notifier {
 
   //TODO: needs to remove paddler from lineup
   Future<void> deletePaddler(String paddlerID) =>
-      _deletePaddlerCommand(paddlerID, _currentTeamID!);
+      _deletePaddlerCommand(paddlerID, _currentTeamID!, lineups);
 
   //* LINEUP SETTERS *//
 
