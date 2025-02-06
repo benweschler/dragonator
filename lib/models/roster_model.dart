@@ -128,7 +128,6 @@ class RosterModel extends Notifier {
     // True if all teams are deleted.
     if (_currentTeamID == null) return null;
 
-
     // A snapshot is immediately provided by Firestore from local storage, so we
     // can treat the initial load is treated as an update and the detail is
     // loaded by onDetailUpdate.
@@ -256,11 +255,13 @@ class RosterModel extends Notifier {
 
   Lineup? getLineup(String lineupID) => _lineupIDMap[lineupID];
 
-  Boat? getLineupBoat(String lineupID) {
-    return currentTeam?.boats[_lineupIDMap[lineupID]?.boatID];
-  }
+  Boat? getLineupBoat(String lineupID) =>
+      currentTeam?.boats[_lineupIDMap[lineupID]?.boatID];
 
   //* TEAM SETTERS *//
+  /// Returns the names of the lineups where a boat is in use.
+  static Future<List<String>> getBoatUsage(String teamID, String boatID) =>
+      _getLineupsUsingBoatCommand(teamID, boatID);
 
   void setCurrentTeam(String teamID) {
     if (teamID == _currentTeamID || !_teamIDMap.containsKey(teamID)) return;

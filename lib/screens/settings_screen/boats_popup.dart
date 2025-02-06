@@ -51,14 +51,16 @@ class _BoatsPopupState extends State<BoatsPopup>
               ),
             ).createRoute(context);
           } else if (path.startsWith('/boat-in-use')) {
-            final boatName = Uri.parse(path).queryParameters['name']!;
+            final boatName = Uri.parse(path).queryParameters['boatName']!;
+            final teamName = Uri.parse(path).queryParameters['teamName']!;
 
             return PopupTransitionPage(
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
                 child: _BoatDeletionBlockedView(
                   boatName: boatName,
-                  inUseLineupIDs: settings.arguments as Iterable<String>,
+                  teamName: teamName,
+                  inUseLineupNames: settings.arguments as Iterable<String>,
                 ),
               ),
             ).createRoute(context);
@@ -187,7 +189,9 @@ class _BoatTile extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed('/set?id=${boat.id}'),
+      onTap: () => Navigator.of(context).pushNamed(
+        Uri.parse('/set').replace(queryParameters: {'id': boat.id}).toString(),
+      ),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -353,17 +357,26 @@ class _EditBoatView extends StatelessWidget {
                 SizedBox(width: Insets.med),
                 Expanded(
                   child: ExpandingStadiumButton(
-                    onTap: () {
-                      final inUseLineupIDs = context
-                          .read<RosterModel>()
-                          .lineups
-                          .where((lineup) => lineup.boatID == boat!.id)
-                          .map((lineup) => lineup.id);
+                    onTap: () async {
+                      final inUseLineupNames =
+                          await RosterModel.getBoatUsage(teamID, boat!.id);
 
-                      if (inUseLineupIDs.isNotEmpty) {
+                      if (!context.mounted) return;
+
+                      if (inUseLineupNames.isNotEmpty) {
+                        final teamName =
+                            context.read<RosterModel>().getTeam(teamID)!.name;
+
+                        final uri = Uri.parse('/boat-in-use').replace(
+                          queryParameters: {
+                            'boatName': boat!.name,
+                            'teamName': teamName,
+                          },
+                        );
+
                         Navigator.of(context).pushNamed(
-                          '/boat-in-use?name=${boat!.name}',
-                          arguments: inUseLineupIDs,
+                          uri.toString(),
+                          arguments: inUseLineupNames,
                         );
                         return;
                       }
@@ -384,7 +397,6 @@ class _EditBoatView extends StatelessWidget {
             flightShuttleBuilder: _heroFlightShuttleBuilder,
             child: ExpandingTextButton(
               onTap: () => Navigator.pop(context),
-              //onTap: () => NestedNavigator.popHome(context),
               text: 'Cancel',
             ),
           ),
@@ -396,11 +408,13 @@ class _EditBoatView extends StatelessWidget {
 
 class _BoatDeletionBlockedView extends StatelessWidget {
   final String boatName;
-  final Iterable<String> inUseLineupIDs;
+  final String teamName;
+  final Iterable<String> inUseLineupNames;
 
   const _BoatDeletionBlockedView({
     required this.boatName,
-    required this.inUseLineupIDs,
+    required this.teamName,
+    required this.inUseLineupNames,
   });
 
   @override
@@ -420,7 +434,15 @@ class _BoatDeletionBlockedView extends StatelessWidget {
           ),
           TextSpan(
             text:
-                ' can\'t be deleted because it is currently assigned to the following lineups:',
+                ' can\'t be deleted because it is currently assigned to the following lineups on ',
+            style: TextStyles.body1,
+          ),
+          TextSpan(
+            text: teamName,
+            style: TextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: ':',
             style: TextStyles.body1,
           ),
         ])),
@@ -429,9 +451,9 @@ class _BoatDeletionBlockedView extends StatelessWidget {
           builder: (context, rosterModel, _) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              for (String id in inUseLineupIDs)
+              for (String lineupName in inUseLineupNames)
                 Text(
-                  '    •  ${rosterModel.getLineup(id)?.name}',
+                  '    •  $lineupName',
                   style: TextStyles.body1,
                 ),
             ].separate(SizedBox(height: Insets.xs)).toList(),
