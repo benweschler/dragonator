@@ -292,9 +292,8 @@ class RosterModel extends Notifier {
   Future<void> copyPaddlerToTeam(Paddler paddler, String teamID) =>
       _setPaddlerCommand(paddler.copyWith(id: Uuid().v4()), teamID);
 
-  //TODO: needs to remove paddler from lineup
   Future<void> deletePaddler(String paddlerID) =>
-      _deletePaddlerCommand(paddlerID, _currentTeamID!, lineups);
+      _deletePaddlerCommand(paddlerID, _currentTeamID!);
 
   //* LINEUP SETTERS *//
 

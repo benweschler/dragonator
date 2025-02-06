@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // entered.
     if (!credentialsEntered) return;
 
+    //TODO: move to command
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),

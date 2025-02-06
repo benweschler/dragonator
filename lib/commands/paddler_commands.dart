@@ -5,28 +5,28 @@ Future<void> _setPaddlerCommand(Paddler paddler, String teamID) async {
       .set({paddler.id: paddler.toFirestore()}, SetOptions(merge: true));
 }
 
-Future<void> _deletePaddlerCommand(
-  String paddlerID,
-  String teamID,
-  Iterable<Lineup> lineups,
-) async {
-  final batch = FirebaseFirestore.instance.batch();
+Future<void> _deletePaddlerCommand(String paddlerID, String teamID) async {
+  await FirebaseFirestore.instance.runTransaction((transaction) async {
+    final lineupsDoc = await transaction.get(getLineupsDoc(teamID));
+    final lineupsData = lineupsDoc.data();
 
-  await getPaddlersDoc(teamID).update({paddlerID: FieldValue.delete()});
+    if (lineupsData == null) return;
 
-  for (Lineup lineup in lineups) {
-    if (lineup.paddlerIDs.contains(paddlerID)) {
-      final updatedLineup = lineup.copyWith(
-        paddlerIDs: lineup.paddlerIDs.map((id) => id == paddlerID ? null : id),
-      );
-      batch.update(
-        getLineupsDoc(teamID),
-        {lineup.id: updatedLineup.toFirestore()},
-      );
+    // Remove paddler from lineups.
+    for (MapEntry<String, dynamic> lineupEntry in lineupsData.entries) {
+      final data = lineupEntry.value;
+      final paddlerIDs = data['paddlerIDs'] as List;
+
+      if (paddlerIDs.contains(paddlerID)) {
+        data['paddlerIDs'] = paddlerIDs.map(
+          (id) => id == paddlerID ? null : id,
+        );
+        transaction.update(getLineupsDoc(teamID), {lineupEntry.key: data});
+      }
     }
-  }
 
-  batch.update(getPaddlersDoc(teamID), {paddlerID: FieldValue.delete()});
-
-  return batch.commit();
+    // Delete the paddler
+    transaction
+        .update(getPaddlersDoc(teamID), {paddlerID: FieldValue.delete()});
+  });
 }

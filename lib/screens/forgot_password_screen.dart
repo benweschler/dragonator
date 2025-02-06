@@ -84,6 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 action: () async {
                   if (!_formKey.currentState!.validate()) return;
 
+                  //TODO: move to command
                   return FirebaseAuth.instance.sendPasswordResetEmail(
                     email: _emailController.text,
                   ).then((_) {
