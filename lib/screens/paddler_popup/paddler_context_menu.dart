@@ -2,6 +2,7 @@ import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/utils/dependence_mixins/team_detail_dependent_state_mixin.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
@@ -20,29 +21,46 @@ class PaddlerContextMenu extends StatelessWidget {
     required this.popupContext,
   });
 
+  void _edit() async {
+    await Future.delayed(Timings.long);
+
+    if (!popupContext.mounted) return;
+    popupContext.push(RoutePaths.editPaddler(paddlerID: paddler.id));
+  }
+
+  void _addToTeam() async {
+    await Future.delayed(Timings.long);
+
+    if (!popupContext.mounted) return;
+    popupContext.showModal(CopyPaddlerToTeamMenu(
+      paddler: paddler,
+      popupContext: popupContext,
+    ));
+  }
+
+  void _delete({required BuildContext context}) async {
+    final paddlerPopupState = popupContext
+        .findAncestorStateOfType<TeamDetailDependentStateMixin>();
+    paddlerPopupState!.cancelDetailDependence();
+
+    await context.read<RosterModel>().deletePaddler(paddler.id);
+    if (context.mounted) {
+      context.pop();
+      await Future.delayed(Timings.long);
+    }
+    if (popupContext.mounted) popupContext.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ContextMenu([
       ContextMenuAction(
-        onTap: () async {
-          await Future.delayed(Timings.long);
-
-          if (!popupContext.mounted) return;
-          popupContext.push(RoutePaths.editPaddler(paddlerID: paddler.id));
-        },
+        onTap: _edit,
         icon: Icons.edit_rounded,
         label: 'Edit',
       ),
       ContextMenuAction(
-        onTap: () async {
-          await Future.delayed(Timings.long);
-
-          if (!popupContext.mounted) return;
-          popupContext.showModal(CopyPaddlerToTeamMenu(
-            paddler: paddler,
-            popupContext: popupContext,
-          ));
-        },
+        onTap: _addToTeam,
         icon: Icons.add_rounded,
         label: 'Add to team',
       ),
@@ -53,14 +71,7 @@ class PaddlerContextMenu extends StatelessWidget {
       ),
       ContextMenuAction(
         autoPop: false,
-        onTap: () async {
-          await context.read<RosterModel>().deletePaddler(paddler.id);
-          if(context.mounted) {
-            context.pop();
-            await Future.delayed(Timings.long);
-          }
-          if(popupContext.mounted) popupContext.pop();
-        },
+        onTap: () => _delete(context: context),
         isDestructiveAction: true,
         icon: Icons.delete_rounded,
         label: 'Delete',
