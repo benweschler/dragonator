@@ -43,5 +43,6 @@ extension NavigationUtils on BuildContext {
 
 /// Appropriately appends to a route path in order to add [queryParams].
 String appendQueryParams(String path, Map<String, String?> queryParams) {
+  queryParams.removeWhere((key, value) => value == null);
   return Uri.parse(path).replace(queryParameters: queryParams).toString();
 }
