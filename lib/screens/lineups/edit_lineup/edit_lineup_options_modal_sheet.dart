@@ -4,6 +4,7 @@ import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/widgets/boat_selection_tile.dart';
 import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
@@ -250,13 +251,13 @@ class _ChangeBoatViewState extends State<_ChangeBoatView> {
     // boat will be selected if this is the case.
     if (boat == null) return;
 
-    final selectedBoatIDNotifier =
-    context.read<ValueNotifier<String>>();
+    final selectedBoatIDNotifier = context.read<ValueNotifier<String>>();
 
     if (boats[_initialBoatID] != null &&
         boat.capacity < boats[_initialBoatID]!.capacity) {
-      final confirmChange = await Navigator.of(context)
-          .pushNamed<bool>('/confirm-boat-change?name=${boat.name}');
+      final confirmChange = await Navigator.of(context).pushNamed<bool>(
+        appendQueryParams('/confirm-boat-change', {'name': boat.name}),
+      );
 
       if (confirmChange != true) return;
     }

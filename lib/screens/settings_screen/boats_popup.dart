@@ -5,6 +5,7 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/iterable_utils.dart';
 import 'package:dragonator/utils/dependence_mixins/team_dependent_modal_state_mixin.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/utils/validators.dart';
 import 'package:dragonator/widgets/buttons/expanding_buttons.dart';
 import 'package:dragonator/widgets/custom_input_decoration.dart';
@@ -190,7 +191,7 @@ class _BoatTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        Uri.parse('/set').replace(queryParameters: {'id': boat.id}).toString(),
+        appendQueryParams('/set', {'id': boat.id}),
       ),
       behavior: HitTestBehavior.opaque,
       child: Row(
@@ -367,15 +368,11 @@ class _EditBoatView extends StatelessWidget {
                         final teamName =
                             context.read<RosterModel>().getTeam(teamID)!.name;
 
-                        final uri = Uri.parse('/boat-in-use').replace(
-                          queryParameters: {
+                        Navigator.of(context).pushNamed(
+                          appendQueryParams('/boat-in-use', {
                             'boatName': boat!.name,
                             'teamName': teamName,
-                          },
-                        );
-
-                        Navigator.of(context).pushNamed(
-                          uri.toString(),
+                          }),
                           arguments: inUseLineupNames,
                         );
                         return;

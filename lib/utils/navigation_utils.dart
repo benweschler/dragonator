@@ -40,3 +40,8 @@ extension NavigationUtils on BuildContext {
     GoRouter.of(this).go(rootPath);
   }
 }
+
+/// Appropriately appends to a route path in order to add [queryParams].
+String appendQueryParams(String path, Map<String, String?> queryParams) {
+  return Uri.parse(path).replace(queryParameters: queryParams).toString();
+}

@@ -17,6 +17,7 @@ import 'package:dragonator/screens/settings_screen/settings_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_library_screen.dart';
 import 'package:dragonator/screens/splash_screen.dart';
 import 'package:dragonator/styles/styles.dart';
+import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -38,12 +39,12 @@ abstract class RoutePaths {
   static String signUp = '/sign-up';
 
   static String editPaddler({String? paddlerID}) =>
-      _appendQueryParams('$roster/edit-paddler', {'paddlerID': paddlerID});
+      appendQueryParams('$roster/edit-paddler', {'paddlerID': paddlerID});
 
   static String lineup(String lineupID) => '$lineupLibrary/lineup/$lineupID';
 
   /// If an ID is passed, the lineup is renamed. Otherwise, a lineup is created.
-  static String nameLineup([String? lineupID]) => _appendQueryParams(
+  static String nameLineup([String? lineupID]) => appendQueryParams(
         '$lineupLibrary/name-lineup',
         {'lineupID': lineupID},
       );
@@ -56,7 +57,7 @@ abstract class RoutePaths {
 
   /// If an ID is passed, the team is renamed. Otherwise, a team is created.
   static String nameTeam([String? id]) =>
-      _appendQueryParams('$settings/name-team', {if (id != null) 'id': id});
+      appendQueryParams('$settings/name-team', {if (id != null) 'id': id});
 }
 
 class AppRouter {
@@ -252,21 +253,6 @@ class AppRoute extends GoRoute {
             return AppPage(child: builder!(state));
           },
         );
-}
-
-/// Appropriately appends to a route path in order to add [queryParams].
-String _appendQueryParams(String path, Map<String, String?> queryParams) {
-  if (queryParams.isEmpty) return path;
-  path += '?';
-
-  int index = 0;
-  for (var entry in queryParams.entries) {
-    if (entry.value == null) continue;
-    path += '${entry.key}=${entry.value}';
-    if (index < queryParams.length - 1) path += '&';
-  }
-
-  return path;
 }
 
 /// Converts a [Stream] to a [Listenable], which can then be passed as a
