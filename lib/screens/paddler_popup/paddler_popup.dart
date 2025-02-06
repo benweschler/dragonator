@@ -272,27 +272,36 @@ class _ActiveLineupsView extends StatelessWidget {
           '${paddler.firstName} ${paddler.lastName}',
           style: TextStyles.h2,
         ),
-        Text(
-          'Active Lineups',
-          style: TextStyles.body1.copyWith(
-            color: AppColors.of(context).neutralContent,
+        if (activeLineups.isNotEmpty)
+          Text(
+            'Active Lineups',
+            style: TextStyles.body1.copyWith(
+              color: AppColors.of(context).neutralContent,
+            ),
           ),
-        ),
         SizedBox(height: Insets.med),
-        ...List.generate(
-          activeLineups.length,
-          (index) {
-            final tile = LineupPreviewTile(
-              iterator.current,
-              onTap: () async {
-                context.pop();
-                await Future.delayed(Timings.long);
-              },
-            );
-            iterator.moveNext();
-            return tile;
-          },
-        ),
+        if (activeLineups.isNotEmpty)
+          ...List.generate(
+            activeLineups.length,
+            (index) {
+              final tile = LineupPreviewTile(
+                iterator.current,
+                onTap: () async {
+                  context.pop();
+                  await Future.delayed(Timings.long);
+                },
+              );
+              iterator.moveNext();
+              return tile;
+            },
+          )
+        else
+          Text(
+            'No Active Lineups',
+            style: TextStyles.body2.copyWith(
+              color: AppColors.of(context).neutralContent,
+            ),
+          ),
         SizedBox(height: Insets.xl),
         ExpandingTextButton(
           onTap: Navigator.of(context).pop,
