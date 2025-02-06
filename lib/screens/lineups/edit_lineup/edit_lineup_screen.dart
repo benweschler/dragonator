@@ -60,6 +60,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     super.dispose();
   }
 
+  //TODO: paddler tile throws null check error when paddler is deleted before it is removed.
   // Remove paddlers from the editing list
   void _checkPaddlerDeleted() {
     final deletedPaddlerNames = <String>[];

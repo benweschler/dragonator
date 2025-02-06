@@ -8,9 +8,6 @@ Future<Map<String, dynamic>> _getSettingsCommand(String userID) async {
   return snapshot.data() ?? {};
 }
 
-Future<void> _setSettingsCommand(
-  Map<String, dynamic> data,
-  String userID,
-) {
+Future<void> _setSettingsCommand(Map<String, dynamic> data, String userID) {
   return getSettingsDoc(userID).set(data, SetOptions(merge: true));
 }

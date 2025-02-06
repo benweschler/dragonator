@@ -282,7 +282,13 @@ class _ActiveLineupsView extends StatelessWidget {
         ...List.generate(
           activeLineups.length,
           (index) {
-            final tile = LineupPreviewTile(iterator.current);
+            final tile = LineupPreviewTile(
+              iterator.current,
+              onTap: () async {
+                context.pop();
+                await Future.delayed(Timings.long);
+              },
+            );
             iterator.moveNext();
             return tile;
           },

@@ -9,13 +9,18 @@ import 'package:provider/provider.dart';
 
 class LineupPreviewTile extends StatelessWidget {
   final Lineup lineup;
+  final Future<void> Function()? onTap;
 
-  const LineupPreviewTile(this.lineup, {super.key});
+  const LineupPreviewTile(this.lineup, {super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(RoutePaths.lineup(lineup.id)),
+      onTap: () async {
+        final router = GoRouter.of(context);
+        await onTap?.call();
+        router.go(RoutePaths.lineup(lineup.id));
+      },
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.symmetric(
