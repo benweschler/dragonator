@@ -95,6 +95,7 @@ class RosterModel extends Notifier {
   /// Does nothing if current team is null (i.e. no teams exist).
   void _updateCurrentTeamWithDetails(String? newTeamID) {
     _currentTeamID = newTeamID;
+    //TODO: must await for the first even to be emitted
     _loadTeamPaddlers();
     _loadTeamLineups();
   }

@@ -2,6 +2,11 @@ import 'package:dragonator/commands/user_commands.dart';
 import 'package:dragonator/data/user/app_user.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'roster_model.dart';
+import 'settings_model.dart';
 
 //TODO: must add realtime listener to user doc.
 class AppModel extends Notifier {
@@ -21,6 +26,19 @@ class AppModel extends Notifier {
   //TODO: user and app management should be move to auth state changes?
   Future<void> loadUser() async {
     _user = await getUserCommand(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  Future<void> logIn({required String email, required String password}) async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<void> logOut(BuildContext context) {
+    context.read<RosterModel>().clear();
+    context.read<SettingsModel>().clear();
+    return FirebaseAuth.instance.signOut();
   }
 
   /// Whether a user is logged into the app.

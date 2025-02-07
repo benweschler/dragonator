@@ -1,3 +1,4 @@
+import 'package:dragonator/models/app_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -8,6 +9,7 @@ import 'package:dragonator/widgets/error_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'login_errors.dart';
 
@@ -37,11 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
     // entered.
     if (!credentialsEntered) return;
 
-    //TODO: move to command
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    context.read<AppModel>().logIn(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
   }
 
   void catchLoginError(FirebaseAuthException error) {

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dragonator/main_app_scaffold.dart';
 import 'package:dragonator/models/app_model.dart';
-import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_to_lineup_screen.dart';
 import 'package:dragonator/screens/lineups/lineup_screen.dart';
 import 'package:dragonator/screens/lineups/name_lineup_screen.dart';
@@ -21,9 +20,7 @@ import 'package:dragonator/utils/navigation_utils.dart';
 import 'package:dragonator/utils/notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-import 'models/roster_model.dart';
 
 typedef AppPage = CupertinoPage;
 
@@ -194,9 +191,6 @@ class AppRouter {
         path != RoutePaths.logIn &&
         path != RoutePaths.signUp &&
         path != RoutePaths.forgotPassword) {
-      //TODO: this should probably be put somewhere else.
-      context.read<RosterModel>().clear();
-      context.read<SettingsModel>().clear();
       return RoutePaths.logIn;
     } else if (appModel.isLoggedIn) {
       if (!appModel.isAppInitialized && path != RoutePaths.splash) {

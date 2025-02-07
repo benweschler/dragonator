@@ -15,7 +15,6 @@ import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/buttons/responsive_buttons.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
 import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: Insets.med),
             ResponsiveStrokeButton(
               //TODO: logout logic currently in router but happens after auth logout. should be put into a top-level command.
-              onTap: FirebaseAuth.instance.signOut,
+              onTap: () => context.read<AppModel>().logOut(context),
               child: Text('Log Out', style: TextStyles.body1),
             ),
             const SizedBox(height: Insets.lg),
