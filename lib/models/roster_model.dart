@@ -50,7 +50,7 @@ class RosterModel extends Notifier {
     // Updates the teamIDMap
     _updateTeams(snapshot);
 
-    _updateCurrentTeamWithDetails(_teamIDMap.keys.elementAtOrNull(0));
+    await _updateCurrentTeamWithDetails(_teamIDMap.keys.elementAtOrNull(0));
 
     _teamsSubscription = teamsQuery.snapshots().listen(_onTeamsQueryUpdate);
 
@@ -93,25 +93,25 @@ class RosterModel extends Notifier {
   /// paddlers, lineups, and boats.
   ///
   /// Does nothing if current team is null (i.e. no teams exist).
-  void _updateCurrentTeamWithDetails(String? newTeamID) {
+  Future<void> _updateCurrentTeamWithDetails(String? newTeamID) async {
     _currentTeamID = newTeamID;
     //TODO: must await for the first even to be emitted
-    _loadTeamPaddlers();
-    _loadTeamLineups();
+    await _loadTeamPaddlers();
+    await _loadTeamLineups();
   }
 
-  void _loadTeamPaddlers() {
+  Future<void> _loadTeamPaddlers() async {
     _paddlersSubscription?.cancel();
-    _paddlersSubscription = _loadTeamDetail(
+    _paddlersSubscription = await _loadTeamDetail(
       getPaddlersDoc,
       _paddlerIDMap,
       _onPaddlerDocUpdate,
     );
   }
 
-  void _loadTeamLineups() async {
+  Future<void> _loadTeamLineups() async {
     _lineupsSubscription?.cancel();
-    _lineupsSubscription = _loadTeamDetail(
+    _lineupsSubscription = await _loadTeamDetail(
       getLineupsDoc,
       _lineupIDMap,
       _onLineupDocUpdate,
@@ -119,20 +119,24 @@ class RosterModel extends Notifier {
   }
 
   // Returns the StreamSubscription to the detail's Firestore document.
-  StreamSubscription? _loadTeamDetail<T extends dynamic>(
+  Future<StreamSubscription?> _loadTeamDetail<T extends dynamic>(
     GetDetailDoc getDetailDoc,
     Map<String, T> idMap,
     OnDetailUpdate onDetailUpdate,
-  ) {
+  ) async {
     idMap.clear();
 
     // True if all teams are deleted.
     if (_currentTeamID == null) return null;
 
     // A snapshot is immediately provided by Firestore from local storage, so we
-    // can treat the initial load is treated as an update and the detail is
-    // loaded by onDetailUpdate.
-    return getDetailDoc(_currentTeamID!).snapshots().listen(onDetailUpdate);
+    // can treat the initial load as an update and the detail is loaded by
+    // onDetailUpdate.
+
+    final updateStream = getDetailDoc(_currentTeamID!).snapshots();
+    await updateStream.first;
+
+    return updateStream.listen(onDetailUpdate);
   }
 
   //* UPDATE DATA *//

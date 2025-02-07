@@ -24,7 +24,7 @@ class SettingsModel extends Notifier {
       );
       _isInitialized = true;
     }
-    _updateFromFirestore();
+    await _updateFromFirestore();
     notifyListeners();
   }
 
@@ -33,7 +33,7 @@ class SettingsModel extends Notifier {
     if (_isInitialized) _sharedPreferences.clear();
   }
 
-  void _updateFromFirestore() async {
+  Future<void> _updateFromFirestore() async {
     final userID = FirebaseAuth.instance.currentUser?.uid;
     if (userID == null) return;
 
