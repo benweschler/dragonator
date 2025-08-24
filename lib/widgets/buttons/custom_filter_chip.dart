@@ -10,12 +10,14 @@ import 'package:flutter/material.dart';
 class CustomFilterChip<T> extends StatefulWidget {
   final String label;
   final ValueChanged<T?> onFiltered;
+  final T? selectedOption;
   final List<T> options;
 
   const CustomFilterChip({
     super.key,
     required this.label,
     required this.onFiltered,
+    required this.selectedOption,
     required this.options,
   });
 
@@ -25,18 +27,16 @@ class CustomFilterChip<T> extends StatefulWidget {
 
 class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
   bool isActive = false;
-  T? selectedOption;
 
   @override
   Widget build(BuildContext context) {
     return ChipButton(
       onTap: () => context.showModal(SelectionMenu<T>.single(
         options: widget.options,
-        initiallySelectedOption: selectedOption,
+        initiallySelectedOption: widget.selectedOption,
         allowNoSelection: true,
         onSelect: (option) => setState(() {
           isActive = option != null ? true : false;
-          selectedOption = option;
           widget.onFiltered(option);
         }),
       )),
@@ -45,7 +45,9 @@ class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
       child: Row(
         children: [
           Text(
-            isActive ? '${widget.label}: $selectedOption' : widget.label,
+            isActive
+                ? '${widget.label}: ${widget.selectedOption}'
+                : widget.label,
           ),
           const SizedBox(width: Insets.xs),
           Transform.rotate(

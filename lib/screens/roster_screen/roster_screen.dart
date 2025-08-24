@@ -110,17 +110,20 @@ class _RosterContentState extends State<_RosterContent> {
           CustomFilterChip<Gender>(
             label: 'Gender',
             onFiltered: (gender) => setState(() => genderFilter = gender),
+            selectedOption: genderFilter,
             options: Gender.values,
           ),
           CustomFilterChip<SidePreference>(
             label: 'Side',
             onFiltered: (sidePreference) =>
                 setState(() => sidePreferenceFilter = sidePreference),
+            selectedOption: sidePreferenceFilter,
             options: SidePreference.values,
           ),
           CustomFilterChip<AgeGroup>(
             label: 'Age Group',
             onFiltered: (ageGroup) => setState(() => ageGroupFilter = ageGroup),
+            selectedOption: ageGroupFilter,
             options: AgeGroup.values,
           ),
         ].separate(const SizedBox(width: Insets.sm)).toList(),
