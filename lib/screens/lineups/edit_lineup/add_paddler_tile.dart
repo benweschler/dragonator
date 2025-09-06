@@ -1,9 +1,11 @@
 import 'package:dragonator/data/paddler/paddler.dart';
+import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class AddPaddlerTile extends StatelessWidget {
   /// The list of paddlers in the current state of the edited lineup.
@@ -18,15 +20,20 @@ class AddPaddlerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final unassignedPaddlers = context
+        .read<RosterModel>()
+        .paddlers
+        .toSet()
+        .difference(editedLineupPaddlers.toSet())
+        .toList();
+
     return GestureDetector(
       onTap: () => context.push(
         RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
         extra: {
           //TODO: don't pass add paddler. pop with Paddler? and add here
           'addPaddler': addPaddler,
-          'editedLineupPaddlers': editedLineupPaddlers
-              .where((entry) => entry != null)
-              .cast<Paddler>(),
+          'unassignedPaddlers': unassignedPaddlers,
         },
       ),
       child: Container(

@@ -49,15 +49,14 @@ enum _Position {
 
 class AddPaddlerToLineupScreen extends StatefulWidget {
   /// The list of paddlers in the current state of the edited lineup.
-  final Iterable<Paddler> editedLineupPaddlers;
+  final List<Paddler> unassignedPaddlers;
 
   /// A callback to add a paddler to the edited lineup.
   final ValueChanged<Paddler?> addPaddler;
 
   const AddPaddlerToLineupScreen({
     super.key,
-    //TODO: just pass the paddlers we want?
-    required this.editedLineupPaddlers,
+    required this.unassignedPaddlers,
     required this.addPaddler,
   });
 
@@ -76,8 +75,6 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
     final rosterModel = context.watch<RosterModel>();
     // Only show paddlers that aren't in the lineup.
     final rosterPaddlers = rosterModel.paddlers.toSet();
-    final unassignedPaddlers =
-        rosterPaddlers.difference(widget.editedLineupPaddlers.toSet()).toList();
 
     final filterRow = SingleChildScrollView(
       padding: EdgeInsets.zero,
@@ -112,7 +109,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
         icon: Icons.check_rounded,
         onTap: () {
           widget.addPaddler(_selectedPaddlerIndex != null
-              ? unassignedPaddlers[_selectedPaddlerIndex!]
+              ? widget.unassignedPaddlers[_selectedPaddlerIndex!]
               : null);
           context.pop();
         },
@@ -129,7 +126,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
           Expanded(
             child: _PaddlerList(
               rosterPaddlers: rosterPaddlers,
-              unassignedPaddlers: unassignedPaddlers,
+              unassignedPaddlers: widget.unassignedPaddlers,
               selectedPaddlerIndex: _selectedPaddlerIndex,
               onSelect: (selectedIndex) => setState(() {
                 _selectedPaddlerIndex == selectedIndex
@@ -148,7 +145,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
 
 class _PaddlerList extends StatelessWidget {
   final Iterable<Paddler> rosterPaddlers;
-  final List<Paddler> unassignedPaddlers;
+  final Iterable<Paddler> unassignedPaddlers;
   final int? selectedPaddlerIndex;
   final ValueChanged<int> onSelect;
   final SidePreference? sidePreferenceFilter;
@@ -163,7 +160,7 @@ class _PaddlerList extends StatelessWidget {
     required this.positionFilter,
   });
 
-  List<Paddler> _filterPaddlers(List<Paddler> paddlers) {
+  List<Paddler> _filterPaddlers(Iterable<Paddler> paddlers) {
     return paddlers.where((paddler) {
       if (sidePreferenceFilter != null &&
           paddler.sidePreference != sidePreferenceFilter) {

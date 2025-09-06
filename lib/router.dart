@@ -21,7 +21,6 @@ import 'package:dragonator/utils/notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
-
 typedef AppPage = CupertinoPage;
 
 //TODO: consider using go_router_builder for strongly-typed routing.
@@ -151,8 +150,8 @@ class AppRouter {
                           path: 'add-paddler',
                           parentNavigatorKey: _rootNavigatorKey,
                           builder: (state) => AddPaddlerToLineupScreen(
-                            editedLineupPaddlers:
-                                (state.extra as Map)['editedLineupPaddlers'],
+                            unassignedPaddlers:
+                                (state.extra as Map)['unassignedPaddlers'],
                             addPaddler: (state.extra as Map)['addPaddler'],
                           ),
                         ),
