@@ -20,6 +20,7 @@ class SelectorButton extends StatelessWidget {
       builder: (overlay) => Container(
         width: 28,
         height: 28,
+        //TODO: why is there a margin
         margin: EdgeInsets.all(Insets.med),
         decoration: BoxDecoration(
           color: selected
