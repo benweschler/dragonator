@@ -153,6 +153,8 @@ class AppRouter {
                             unassignedPaddlers:
                                 (state.extra as Map)['unassignedPaddlers'],
                             addPaddler: (state.extra as Map)['addPaddler'],
+                            side: (state.extra as Map)['side'],
+                            position: (state.extra as Map)['position'],
                           ),
                         ),
                       ],

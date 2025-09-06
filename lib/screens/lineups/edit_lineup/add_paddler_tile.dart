@@ -1,6 +1,7 @@
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/router.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/utils.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,15 @@ class AddPaddlerTile extends StatelessWidget {
   /// The list of paddlers in the current state of the edited lineup.
   final List<Paddler?> editedLineupPaddlers;
   final ValueChanged<Paddler?> addPaddler;
+  final SidePreference? side;
+  final Position? position;
 
   const AddPaddlerTile({
     super.key,
     required this.editedLineupPaddlers,
     required this.addPaddler,
+    required this.side,
+    required this.position,
   });
 
   @override
@@ -28,14 +33,18 @@ class AddPaddlerTile extends StatelessWidget {
         .toList();
 
     return GestureDetector(
-      onTap: () => context.push(
+      onTap: () {
+        context.push(
         RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
         extra: {
           //TODO: don't pass add paddler. pop with Paddler? and add here
           'addPaddler': addPaddler,
           'unassignedPaddlers': unassignedPaddlers,
+          'side': side,
+          'position': position,
         },
-      ),
+      );
+      },
       child: Container(
         constraints: BoxConstraints(
           maxWidth: 0.4 * MediaQuery.of(context).size.width,

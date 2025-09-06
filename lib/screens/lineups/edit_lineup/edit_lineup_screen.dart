@@ -9,6 +9,7 @@ import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal_sheet.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/lineup_history.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/utils.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/utils/navigation_utils.dart';
@@ -115,6 +116,8 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
         if (paddler == null) return;
         _history.set(index, paddler);
       },
+      side: calculateSide(index, _boat),
+      position: calculatePosition(index, _boat),
     );
   }
 

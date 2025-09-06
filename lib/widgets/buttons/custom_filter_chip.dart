@@ -7,7 +7,7 @@ import 'package:dragonator/widgets/buttons/chip_button.dart';
 import 'package:dragonator/widgets/modal_sheets/selection_menu.dart';
 import 'package:flutter/material.dart';
 
-class CustomFilterChip<T> extends StatefulWidget {
+class CustomFilterChip<T> extends StatelessWidget {
   final String label;
   final ValueChanged<T?> onFiltered;
   final T? selectedOption;
@@ -22,23 +22,15 @@ class CustomFilterChip<T> extends StatefulWidget {
   });
 
   @override
-  State<CustomFilterChip> createState() => _CustomFilterChipState<T>();
-}
-
-class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
-  bool isActive = false;
-
-  @override
   Widget build(BuildContext context) {
+    final isActive = selectedOption != null;
+
     return ChipButton(
       onTap: () => context.showModal(SelectionMenu<T>.single(
-        options: widget.options,
-        initiallySelectedOption: widget.selectedOption,
+        options: options,
+        initiallySelectedOption: selectedOption,
         allowNoSelection: true,
-        onSelect: (option) => setState(() {
-          isActive = option != null ? true : false;
-          widget.onFiltered(option);
-        }),
+        onSelect: onFiltered,
       )),
       fillColor: isActive ? AppColors.of(context).buttonContainer : null,
       contentColor: isActive ? AppColors.of(context).onButtonContainer : null,
@@ -46,8 +38,8 @@ class _CustomFilterChipState<T> extends State<CustomFilterChip<T>> {
         children: [
           Text(
             isActive
-                ? '${widget.label}: ${widget.selectedOption}'
-                : widget.label,
+                ? '$label: $selectedOption'
+                : label,
           ),
           const SizedBox(width: Insets.xs),
           Transform.rotate(

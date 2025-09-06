@@ -12,40 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-bool steersPersonFilter(Paddler paddler) => paddler.steersPersonPreference;
-
-bool drummerFilter(Paddler paddler) => paddler.drummerPreference;
-
-bool strokeFilter(Paddler paddler) => paddler.strokePreference;
-
-enum _Position {
-  drummer,
-  steersPerson,
-  stroke;
-
-  bool filter(Paddler paddler) {
-    switch (this) {
-      case _Position.drummer:
-        return drummerFilter(paddler);
-      case _Position.steersPerson:
-        return steersPersonFilter(paddler);
-      case _Position.stroke:
-        return strokeFilter(paddler);
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case _Position.drummer:
-        return 'Drummer';
-      case _Position.steersPerson:
-        return 'Steers Person';
-      case _Position.stroke:
-        return 'Stroke';
-    }
-  }
-}
+import 'utils.dart';
 
 class AddPaddlerToLineupScreen extends StatefulWidget {
   /// The list of paddlers in the current state of the edited lineup.
@@ -54,10 +21,19 @@ class AddPaddlerToLineupScreen extends StatefulWidget {
   /// A callback to add a paddler to the edited lineup.
   final ValueChanged<Paddler?> addPaddler;
 
+  /// The side of the seat being filled. A null value represents either the fore
+  /// or aft seat, which are centered.
+  final SidePreference? side;
+
+  /// The position of the seat being filled, if applicable.
+  final Position? position;
+
   const AddPaddlerToLineupScreen({
     super.key,
     required this.unassignedPaddlers,
     required this.addPaddler,
+    required this.side,
+    required this.position,
   });
 
   @override
@@ -66,8 +42,8 @@ class AddPaddlerToLineupScreen extends StatefulWidget {
 }
 
 class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
-  _Position? positionFilter;
-  SidePreference? sidePreferenceFilter;
+  late Position? positionFilter = widget.position;
+  late SidePreference? sidePreferenceFilter = widget.side;
   int? _selectedPaddlerIndex;
 
   @override
@@ -86,7 +62,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
             label: 'Position',
             onFiltered: (position) => setState(() => positionFilter = position),
             selectedOption: positionFilter,
-            options: _Position.values,
+            options: Position.values,
           ),
           CustomFilterChip(
             label: 'Side',
@@ -149,7 +125,7 @@ class _PaddlerList extends StatelessWidget {
   final int? selectedPaddlerIndex;
   final ValueChanged<int> onSelect;
   final SidePreference? sidePreferenceFilter;
-  final _Position? positionFilter;
+  final Position? positionFilter;
 
   const _PaddlerList({
     required this.rosterPaddlers,
