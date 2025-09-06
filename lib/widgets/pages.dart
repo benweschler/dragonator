@@ -16,7 +16,6 @@ class PopupTransitionPage<T> extends CustomTransitionPage<T> {
               child: ColoredBox(
                 // Add a background color to obscure the previous route during a push
                 // animation.
-                //TODO: this causes corner overflow
                 color: Theme.of(context).colorScheme.surfaceContainerLow,
                 child: child,
               ),

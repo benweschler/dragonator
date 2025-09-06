@@ -30,9 +30,9 @@ class EditLineupOptionsModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ModalSheet(
-      child: ChangeNotifierProvider(
-        create: (_) => ValueNotifier<String>(lineupBoatID),
+    return ChangeNotifierProvider(
+      create: (_) => ValueNotifier<String>(lineupBoatID),
+      child: ModalSheet(
         child: ModalNavigator(
           onGenerateRoute: (settings) {
             final path = settings.name;

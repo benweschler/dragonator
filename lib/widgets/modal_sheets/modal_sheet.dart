@@ -37,6 +37,11 @@ class ModalSheet extends StatelessWidget {
                   right: Insets.sm,
                   bottom: Insets.sm,
                 ),
+                // Add clipping to maintain rounded corners if the child does
+                // not have rounded corners. This is the case when using a
+                // ModalNavigator, since PopupTransitionPage adds a background
+                // to obscure the previous route during the push animation.
+                clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainerLow,
                   borderRadius: Corners.medBorderRadius,

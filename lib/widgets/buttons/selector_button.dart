@@ -27,7 +27,6 @@ class SelectorButton extends StatelessWidget {
               ? Color.alphaBlend(overlay, AppColors.of(context).primary)
               : null,
           shape: BoxShape.circle,
-          //TODO: black should be onBackground
           border: Border.all(
             color: selected
                 ? Colors.transparent

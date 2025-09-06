@@ -10,12 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-//TODO: lineups are broken when a paddler is deleted.
-
 class LineupLibraryScreen extends StatelessWidget {
   const LineupLibraryScreen({super.key});
 
-  //TODO: add screen if user has no lineups
   //TODO: add screen if user has no teams
 
   @override

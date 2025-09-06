@@ -145,7 +145,6 @@ class AppRouter {
                         ),
                       ),
                       routes: [
-                        // TODO: navigating to paddler details goes to roster screen.
                         AppRoute(
                           path: 'add-paddler',
                           parentNavigatorKey: _rootNavigatorKey,

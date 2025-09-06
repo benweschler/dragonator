@@ -29,10 +29,13 @@ class PopupDialog extends StatelessWidget {
             ),
             child: Material(
               color: Theme.of(context).colorScheme.surfaceContainerLow,
+              // Add clipping to maintain rounded corners if the child does
+              // not have rounded corners. This is the case when using a
+              // ModalNavigator, since PopupTransitionPage adds a background
+              // to obscure the previous route during the push animation.
+              clipBehavior: Clip.antiAlias,
               borderRadius: Corners.medBorderRadius,
               elevation: 15,
-              //TODO: this should be uneeded
-              clipBehavior: Clip.antiAlias,
               // Do not add padding to avoid clipping shadows.
               child: child,
             ).animate().slideY(
