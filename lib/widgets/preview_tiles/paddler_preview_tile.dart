@@ -32,6 +32,7 @@ class PaddlerPreviewTile extends StatelessWidget {
       children: [
         Expanded(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -51,6 +52,7 @@ class PaddlerPreviewTile extends StatelessWidget {
         ),
         Expanded(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [

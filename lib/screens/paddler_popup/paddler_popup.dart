@@ -110,6 +110,7 @@ class _PaddlerInfoView extends StatelessWidget {
                     icon: Icons.close_rounded,
                     onTap: context.pop,
                   ),
+                  SizedBox(width: Insets.med),
                   Expanded(
                     child: Center(
                       child: Column(
@@ -117,11 +118,13 @@ class _PaddlerInfoView extends StatelessWidget {
                           Text(
                             '${paddler.firstName} ${paddler.lastName}',
                             style: TextStyles.h2,
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
                   ),
+                  SizedBox(width: Insets.med),
                   CustomIconButton(
                     onTap: () => context.showModal(PaddlerContextMenu(
                       paddler: paddler!,

@@ -83,14 +83,14 @@ class SettingsModel extends Notifier {
   //* SETTINGS SETTERS *//
 
   //TODO: theme mode and com overlay probably don't have to be stored in a database. Store more important settings once present (i.e. make discoverable).
-  setThemeMode(String themeModeName) {
+  void setThemeMode(String themeModeName) {
     _sharedPreferences.setString(_themeKey, themeModeName);
     final userID = FirebaseAuth.instance.currentUser!.uid;
     _setSettingsCommand({_themeKey: themeModeName}, userID);
     notifyListeners();
   }
 
-  setShowComOverlay(bool showComOverlay) {
+  void setShowComOverlay(bool showComOverlay) {
     _sharedPreferences.setBool(_showComKey, showComOverlay);
     final userID = FirebaseAuth.instance.currentUser!.uid;
     _setSettingsCommand({_showComKey: showComOverlay}, userID);

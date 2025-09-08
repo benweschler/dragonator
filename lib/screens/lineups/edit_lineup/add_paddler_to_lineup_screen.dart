@@ -95,10 +95,10 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
         children: [
           SizedBox(height: Insets.lg),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Insets.offset),
+            padding: EdgeInsets.only(left: Insets.offset),
             child: filterRow,
           ),
-          SizedBox(height: Insets.xs),
+          SizedBox(height: Insets.sm),
           Expanded(
             child: _PaddlerList(
               rosterPaddlers: rosterPaddlers,
@@ -182,6 +182,8 @@ class _PaddlerList extends StatelessWidget {
       itemCount: filteredPaddlers.length,
       itemBuilder: (context, index) => IntrinsicHeight(
         child: Row(
+          // Stretch the hit box of the selector button to cover the entire
+          // height of the tile.
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SelectorButton(
