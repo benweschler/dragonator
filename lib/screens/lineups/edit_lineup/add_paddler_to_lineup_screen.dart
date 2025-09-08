@@ -93,7 +93,7 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: Insets.lg),
+          SizedBox(height: Insets.xl),
           Padding(
             padding: EdgeInsets.only(left: Insets.offset),
             child: filterRow,
@@ -136,15 +136,49 @@ class _PaddlerList extends StatelessWidget {
     required this.positionFilter,
   });
 
-  List<Paddler> _filterPaddlers(Iterable<Paddler> paddlers) {
-    return paddlers.where((paddler) {
+  (List<Paddler> matchedPaddlers, List<Paddler> unmatchedPaddlers)
+      _filterPaddlers(Iterable<Paddler> paddlers) {
+    final List<Paddler> matchedPaddlers = [];
+    final List<Paddler> unmatchedPaddlers = [];
+    for (Paddler paddler in paddlers) {
+      // If the side preference filter is present and fails, no need to check
+      // the position filter.
       if (sidePreferenceFilter != null &&
           paddler.sidePreference != sidePreferenceFilter) {
-        return false;
+        unmatchedPaddlers.add(paddler);
+        continue;
       }
 
-      return positionFilter?.filter(paddler) ?? true;
-    }).toList();
+      // If the position filter is not present, pass the paddler to the filtered
+      // list by returning true.
+      if (positionFilter?.filter(paddler) ?? true) {
+        matchedPaddlers.add(paddler);
+      } else {
+        unmatchedPaddlers.add(paddler);
+      }
+    }
+
+    return (matchedPaddlers, unmatchedPaddlers);
+  }
+
+  void _buildPaddlerTiles(List<Widget> children, List<Paddler> paddlers) {
+    for (int index = 0; index < paddlers.length; index++) {
+      children.add(IntrinsicHeight(
+        child: Row(
+          // Stretch the hit box of the selector button to cover the entire
+          // height of the tile.
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SelectorButton(
+              selected: selectedPaddlerIndex == index,
+              onTap: () => onSelect(index),
+            ),
+            Expanded(child: PaddlerPreviewTile(paddlers[index])),
+            SizedBox(width: Insets.offset),
+          ],
+        ),
+      ));
+    }
   }
 
   @override
@@ -164,9 +198,12 @@ class _PaddlerList extends StatelessWidget {
       );
     }
 
-    final filteredPaddlers = _filterPaddlers(unassignedPaddlers);
-    if (filteredPaddlers.isEmpty) {
-      return Padding(
+    final (matchedPaddlers, unmatchedPaddlers) =
+        _filterPaddlers(unassignedPaddlers);
+
+    final List<Widget> children = [];
+    if (matchedPaddlers.isEmpty) {
+      children.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: Insets.xl),
         child: Align(
           alignment: Alignment.topCenter,
@@ -175,26 +212,27 @@ class _PaddlerList extends StatelessWidget {
             style: TextStyle(color: AppColors.of(context).neutralContent),
           ),
         ),
-      );
+      ));
+    } else {
+      _buildPaddlerTiles(children, matchedPaddlers);
     }
 
-    return ListView.builder(
-      itemCount: filteredPaddlers.length,
-      itemBuilder: (context, index) => IntrinsicHeight(
-        child: Row(
-          // Stretch the hit box of the selector button to cover the entire
-          // height of the tile.
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SelectorButton(
-              selected: selectedPaddlerIndex == index,
-              onTap: () => onSelect(index),
-            ),
-            Expanded(child: PaddlerPreviewTile(filteredPaddlers[index])),
-            SizedBox(width: Insets.offset),
-          ],
-        ),
-      ),
-    );
+    if (unmatchedPaddlers.isNotEmpty) {
+      // If there are no matched paddlers, the 'No matching paddlers' text
+      // should be centered between the filter row and the title of the
+      // following section. Because this text has its own padding, less padding
+      // is required here.
+      final topPadding = matchedPaddlers.isNotEmpty ? Insets.xl : Insets.sm;
+      children.add(SizedBox(height: topPadding));
+
+      children.add(Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Insets.offset),
+        child: Text('Other Paddlers', style: TextStyles.h2),
+      ));
+      children.add(SizedBox(height: Insets.xs));
+      _buildPaddlerTiles(children, unmatchedPaddlers);
+    }
+
+    return ListView(children: children);
   }
 }
