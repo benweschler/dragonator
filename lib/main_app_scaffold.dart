@@ -19,6 +19,11 @@ class MainAppScaffold extends StatefulWidget {
       label: 'Roster',
     ),
     NavigationTab(
+      rootLocation: RoutePaths.races,
+      icon: Icons.emoji_events_rounded,
+      label: 'Races',
+    ),
+    NavigationTab(
       rootLocation: RoutePaths.lineupLibrary,
       icon: Icons.library_books_outlined,
       label: 'Lineups',

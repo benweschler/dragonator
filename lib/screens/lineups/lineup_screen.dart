@@ -5,7 +5,7 @@ import 'package:dragonator/models/roster_model.dart';
 import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/router.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
-import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
+import 'package:dragonator/screens/lineups/common/lineup_paddler_tile.dart';
 import 'package:dragonator/screens/paddler_popup/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -119,7 +119,7 @@ class _LineupScreenState extends State<LineupScreen>
                                         onTap: () => context.showPopup(
                                           PaddlerPopup(paddlerList[i]!.id),
                                         ),
-                                        child: PaddlerTile(paddlerList[i]!),
+                                        child: LineupPaddlerTile(paddlerList[i]!),
                                       )
                                     : const _EmptyPaddlerTile(),
                               )

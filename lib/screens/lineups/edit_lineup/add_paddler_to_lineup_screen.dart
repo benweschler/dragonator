@@ -44,14 +44,10 @@ class AddPaddlerToLineupScreen extends StatefulWidget {
 class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
   late Position? positionFilter = widget.position;
   late SidePreference? sidePreferenceFilter = widget.side;
-  int? _selectedPaddlerIndex;
+  String? _selectedPaddlerID;
 
   @override
   Widget build(BuildContext context) {
-    final rosterModel = context.watch<RosterModel>();
-    // Only show paddlers that aren't in the lineup.
-    final rosterPaddlers = rosterModel.paddlers.toSet();
-
     final filterRow = SingleChildScrollView(
       padding: EdgeInsets.zero,
       scrollDirection: Axis.horizontal,
@@ -84,16 +80,16 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
       trailing: CustomIconButton(
         icon: Icons.check_rounded,
         onTap: () {
-          widget.addPaddler(_selectedPaddlerIndex != null
-              ? widget.unassignedPaddlers[_selectedPaddlerIndex!]
-              : null);
+          widget.addPaddler(
+            context.read<RosterModel>().getPaddler(_selectedPaddlerID),
+          );
           context.pop();
         },
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: Insets.xl),
+          SizedBox(height: Insets.lg),
           Padding(
             padding: EdgeInsets.only(left: Insets.offset),
             child: filterRow,
@@ -101,13 +97,11 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
           SizedBox(height: Insets.sm),
           Expanded(
             child: _PaddlerList(
-              rosterPaddlers: rosterPaddlers,
               unassignedPaddlers: widget.unassignedPaddlers,
-              selectedPaddlerIndex: _selectedPaddlerIndex,
-              onSelect: (selectedIndex) => setState(() {
-                _selectedPaddlerIndex == selectedIndex
-                    ? _selectedPaddlerIndex = null
-                    : _selectedPaddlerIndex = selectedIndex;
+              selectedPaddlerID: _selectedPaddlerID,
+              onSelect: (selectedID) => setState(() {
+                _selectedPaddlerID =
+                    _selectedPaddlerID == selectedID ? null : selectedID;
               }),
               sidePreferenceFilter: sidePreferenceFilter,
               positionFilter: positionFilter,
@@ -120,17 +114,15 @@ class _AddPaddlerToLineupScreenState extends State<AddPaddlerToLineupScreen> {
 }
 
 class _PaddlerList extends StatelessWidget {
-  final Iterable<Paddler> rosterPaddlers;
   final Iterable<Paddler> unassignedPaddlers;
-  final int? selectedPaddlerIndex;
-  final ValueChanged<int> onSelect;
+  final String? selectedPaddlerID;
+  final ValueChanged<String> onSelect;
   final SidePreference? sidePreferenceFilter;
   final Position? positionFilter;
 
   const _PaddlerList({
-    required this.rosterPaddlers,
     required this.unassignedPaddlers,
-    required this.selectedPaddlerIndex,
+    required this.selectedPaddlerID,
     required this.onSelect,
     required this.sidePreferenceFilter,
     required this.positionFilter,
@@ -162,7 +154,7 @@ class _PaddlerList extends StatelessWidget {
   }
 
   void _buildPaddlerTiles(List<Widget> children, List<Paddler> paddlers) {
-    for (int index = 0; index < paddlers.length; index++) {
+    for (Paddler paddler in paddlers) {
       children.add(IntrinsicHeight(
         child: Row(
           // Stretch the hit box of the selector button to cover the entire
@@ -170,10 +162,10 @@ class _PaddlerList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SelectorButton(
-              selected: selectedPaddlerIndex == index,
-              onTap: () => onSelect(index),
+              selected: selectedPaddlerID == paddler.id,
+              onTap: () => onSelect(paddler.id),
             ),
-            Expanded(child: PaddlerPreviewTile(paddlers[index])),
+            Expanded(child: PaddlerPreviewTile(paddler)),
             SizedBox(width: Insets.offset),
           ],
         ),
@@ -187,12 +179,15 @@ class _PaddlerList extends StatelessWidget {
       return Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.75,
-          child: Text(
-            rosterPaddlers.isEmpty
-                ? 'This team has no paddlers.'
-                : 'All paddlers are already in this lineup.',
-            style: TextStyles.body1,
-            textAlign: TextAlign.center,
+          child: Selector<RosterModel, Iterable<Paddler>>(
+            selector: (_, model) => model.paddlers,
+            builder: (_, rosterPaddlers, __) => Text(
+              rosterPaddlers.isEmpty
+                  ? 'This team has no paddlers.'
+                  : 'All paddlers are already in this lineup.',
+              style: TextStyles.body1,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );

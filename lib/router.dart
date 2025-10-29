@@ -9,6 +9,7 @@ import 'package:dragonator/screens/edit_paddler_screen/edit_paddler_screen.dart'
 import 'package:dragonator/screens/forgot_password_screen.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_screen.dart';
 import 'package:dragonator/screens/login_screen/login_screen.dart';
+import 'package:dragonator/screens/races_screen.dart';
 import 'package:dragonator/screens/settings_screen/name_team_screen.dart';
 import 'package:dragonator/screens/signup_screen/signup_screen.dart';
 import 'package:dragonator/screens/roster_screen/roster_screen.dart';
@@ -28,6 +29,7 @@ abstract class RoutePaths {
   static List<String> rootPaths = [roster, lineupLibrary, settings];
   static String splash = '/';
   static String roster = '/roster';
+  static String races = '/races';
   static String lineupLibrary = '/lineup-library';
   static String settings = '/settings';
   static String logIn = '/log-in';
@@ -112,6 +114,11 @@ class AppRouter {
                   ),
                 ),
               ],
+            ),
+            AppRoute(
+              path: RoutePaths.races,
+              isNavBarTab: true,
+              builder: (_) => const RacesScreen(),
             ),
             AppRoute(
               path: RoutePaths.lineupLibrary,

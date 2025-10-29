@@ -3,10 +3,10 @@ import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:flutter/material.dart';
 
-class PaddlerTile extends StatelessWidget {
+class LineupPaddlerTile extends StatelessWidget {
   final Paddler paddler;
 
-  const PaddlerTile(this.paddler, {super.key});
+  const LineupPaddlerTile(this.paddler, {super.key});
 
   @override
   Widget build(BuildContext context) {

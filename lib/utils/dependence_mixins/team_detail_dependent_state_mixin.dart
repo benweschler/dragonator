@@ -42,8 +42,6 @@ mixin TeamDetailDependentStateMixin<T extends StatefulWidget> on State<T> {
     // team.
     if (!initialTeamExists) return;
 
-    // These actions should still be taken even if this page is no longer
-    // mounted, so use the navigator context instead of the state context.
     if (mounted) {
       dismissWidget();
       context.showPopup(TeamDetailDeletedPopup(detailLabel));

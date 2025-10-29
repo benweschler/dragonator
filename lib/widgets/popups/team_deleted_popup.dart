@@ -32,7 +32,7 @@ class TeamDeletedPopup extends StatelessWidget {
             ExpandingStadiumButton(
               onTap: Navigator.of(context).pop,
               color: AppColors.of(context).primary,
-              label: 'Done',
+              label: 'Dismiss',
             ),
             SizedBox(height: Insets.sm),
           ],

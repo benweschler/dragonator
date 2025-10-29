@@ -4,7 +4,7 @@ import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:dragonator/data/paddler/paddler.dart';
 import 'package:dragonator/models/roster_model.dart';
-import 'package:dragonator/screens/lineups/common/paddler_tile.dart';
+import 'package:dragonator/screens/lineups/common/lineup_paddler_tile.dart';
 import 'package:dragonator/screens/paddler_popup/paddler_popup.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
@@ -14,12 +14,12 @@ import 'package:dragonator/widgets/modal_sheets/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EditPaddlerTile extends StatelessWidget {
+class EditLineupPaddlerTile extends StatelessWidget {
   final String paddlerID;
   final int index;
   final VoidCallback removePaddler;
 
-  const EditPaddlerTile({
+  const EditLineupPaddlerTile({
     super.key,
     required this.paddlerID,
     required this.index,
@@ -37,7 +37,7 @@ class EditPaddlerTile extends StatelessWidget {
             child: Selector<RosterModel, Paddler?>(
               selector: (context, model) => model.getPaddler(paddlerID),
               shouldRebuild: (_, newPaddler) => newPaddler != null,
-              builder: (context, paddler, _) => PaddlerTile(paddler!),
+              builder: (context, paddler, _) => LineupPaddlerTile(paddler!),
             ),
           ),
           Positioned(

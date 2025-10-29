@@ -22,20 +22,17 @@ class RosterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: this big consumer at the top can be deleted. roster model dependence should be moved down.
     return Consumer<RosterModel>(
       builder: (context, rosterModel, _) {
         final currentTeam = rosterModel.currentTeam;
         final hasPaddlers = rosterModel.paddlers.isNotEmpty;
 
-        //TODO: implement screen if user has no teams.
         final content = currentTeam != null && hasPaddlers
-            ? _RosterContent(
-                paddlerIDs: rosterModel.paddlerIDs,
-                rosterModel: rosterModel,
-              )
+            ? _RosterContent(paddlers: rosterModel.paddlers)
             : _EmptyRoster(
                 content: currentTeam != null
-                    ? '${rosterModel.currentTeam!.name} doesn\'t have any paddlers yet.'
+                    ? '${currentTeam.name} doesn\'t have any paddlers yet.'
                     //TODO: navigate to creating a team if there are no teams
                     : 'You haven\'t created any teams yet. Head to settings to create your first team.',
               );
@@ -56,13 +53,9 @@ class RosterScreen extends StatelessWidget {
 }
 
 class _RosterContent extends StatefulWidget {
-  final Iterable<String> paddlerIDs;
-  final RosterModel rosterModel;
+  final Iterable<Paddler> paddlers;
 
-  const _RosterContent({
-    required this.paddlerIDs,
-    required this.rosterModel,
-  });
+  const _RosterContent({required this.paddlers});
 
   @override
   State<_RosterContent> createState() => _RosterContentState();
@@ -77,10 +70,6 @@ class _RosterContentState extends State<_RosterContent> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Paddler> paddlers = [
-      for (String id in widget.paddlerIDs) widget.rosterModel.getPaddler(id)!
-    ];
-
     final Widget filterRow = SingleChildScrollView(
       padding: EdgeInsets.zero,
       scrollDirection: Axis.horizontal,
@@ -130,7 +119,7 @@ class _RosterContentState extends State<_RosterContent> {
       ),
     );
 
-    List<Paddler> sortedPaddlers = paddlers.where((paddler) {
+    List<Paddler> sortedPaddlers = widget.paddlers.where((paddler) {
       if (genderFilter != null && paddler.gender != genderFilter) {
         return false;
       } else if (sidePreferenceFilter != null &&
@@ -153,6 +142,7 @@ class _RosterContentState extends State<_RosterContent> {
       children: [
         const Text('Roster', style: TextStyles.h1),
         const SizedBox(height: Insets.xs),
+        SizedBox(height: Insets.xl),
         filterRow,
         const SizedBox(height: Insets.sm),
         if (sortedPaddlers.isNotEmpty)

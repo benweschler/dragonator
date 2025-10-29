@@ -7,7 +7,7 @@ import 'package:dragonator/screens/lineups/common/com.dart';
 import 'package:dragonator/screens/lineups/common/constants.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/add_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_options_modal_sheet.dart';
-import 'package:dragonator/screens/lineups/edit_lineup/edit_paddler_tile.dart';
+import 'package:dragonator/screens/lineups/edit_lineup/edit_lineup_paddler_tile.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/lineup_history.dart';
 import 'package:dragonator/screens/lineups/edit_lineup/utils.dart';
 import 'package:dragonator/styles/styles.dart';
@@ -17,13 +17,12 @@ import 'package:dragonator/models/settings_model.dart';
 import 'package:dragonator/widgets/buttons/custom_fab.dart';
 import 'package:dragonator/widgets/buttons/custom_icon_button.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/popups/paddler_deleted_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_reorderable_grid/animated_reorderable_grid.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import 'paddler_deleted_popup.dart';
 
 //TODO: can't handle odd boat capacities
 class EditLineupScreen extends StatefulWidget {
@@ -47,6 +46,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
 
     _rosterModel = context.read<RosterModel>();
     _lineup = _rosterModel.getLineup(widget.lineupID)!;
+    //TODO: history storing paddlers doesn't update :(
     _history = LineupHistory(
       initial:
           _lineup.paddlerIDs.map((id) => _rosterModel.getPaddler(id)).toList(),
@@ -61,7 +61,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
     super.dispose();
   }
 
-  //TODO: paddler tile throws null check error when paddler is deleted before it is removed.
   // Remove paddlers from the editing list
   void _checkPaddlerDeleted() {
     final deletedPaddlerNames = <String>[];
@@ -82,7 +81,6 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   }
 
   Future<void> _saveLineup() {
-    // TODO: could throw an error if one of these paddlers was deleted. Must check if paddlers are deleted. Maybe also check if lineup was deleted, renamed, i.e. other properties changed.
     return context.read<RosterModel>().setLineup(_lineup.copyWith(
           boatID: _boat.id,
           paddlerIDs: _history.current.map((paddler) => paddler?.id),
@@ -103,7 +101,7 @@ class _EditLineupScreenState extends State<EditLineupScreen> {
   Widget _itemBuilder(BuildContext context, int index) {
     final paddler = _history.at(index);
     if (paddler != null) {
-      return EditPaddlerTile(
+      return EditLineupPaddlerTile(
         paddlerID: paddler.id,
         index: index,
         removePaddler: () => _history.set(index, null),

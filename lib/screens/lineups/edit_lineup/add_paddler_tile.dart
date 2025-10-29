@@ -35,15 +35,15 @@ class AddPaddlerTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.push(
-        RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
-        extra: {
-          //TODO: don't pass add paddler. pop with Paddler? and add here
-          'addPaddler': addPaddler,
-          'unassignedPaddlers': unassignedPaddlers,
-          'side': side,
-          'position': position,
-        },
-      );
+          RoutePaths.addPaddlerToLineup(GoRouterState.of(context).uri.path),
+          extra: {
+            //TODO: don't pass add paddler. pop with Paddler? and add here
+            'addPaddler': addPaddler,
+            'unassignedPaddlers': unassignedPaddlers,
+            'side': side,
+            'position': position,
+          },
+        );
       },
       child: Container(
         constraints: BoxConstraints(

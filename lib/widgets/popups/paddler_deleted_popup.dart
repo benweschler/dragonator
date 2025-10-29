@@ -71,7 +71,7 @@ class PaddlerDeletedPopup extends StatelessWidget {
             ExpandingStadiumButton(
               onTap: context.pop,
               color: AppColors.of(context).primary,
-              label: 'Confirm',
+              label: 'Dismiss',
             ),
             SizedBox(height: Insets.sm),
           ],

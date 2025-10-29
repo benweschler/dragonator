@@ -65,7 +65,11 @@ class PaddlerContextMenu extends StatelessWidget {
         label: 'Add to team',
       ),
       ContextMenuAction(
-        onTap: () => Navigator.of(popupContext).pushNamed('/lineups'),
+        onTap: () async {
+          await Future.delayed(Timings.short);
+          if(!popupContext.mounted) return;
+          Navigator.of(popupContext).pushNamed('/lineups');
+        },
         icon: Icons.library_books,
         label: 'View lineups',
       ),
