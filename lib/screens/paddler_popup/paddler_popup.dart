@@ -173,9 +173,7 @@ class _PaddlerInfoView extends StatelessWidget {
                     SizedBox(width: Insets.lg),
                     SizedBox.square(
                       dimension: 25,
-                      child: Image.network(
-                        'https://static.thenounproject.com/png/126432-200.png',
-                      ),
+                      child: Image.asset('assets/cancer_survivor_symbol.png'),
                     ),
                   ],
                 ),
