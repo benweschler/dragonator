@@ -6,8 +6,7 @@ part of 'paddler.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
-    _$PaddlerImpl(
+_Paddler _$PaddlerFromJson(Map<String, dynamic> json) => _Paddler(
       id: json['id'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
@@ -19,10 +18,10 @@ _$PaddlerImpl _$$PaddlerImplFromJson(Map<String, dynamic> json) =>
       drummerPreference: json['drummerPreference'] as bool,
       steersPersonPreference: json['steersPersonPreference'] as bool,
       strokePreference: json['strokePreference'] as bool,
+      cancerSurvivor: json['cancerSurvivor'] as bool,
     );
 
-Map<String, dynamic> _$$PaddlerImplToJson(_$PaddlerImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PaddlerToJson(_Paddler instance) => <String, dynamic>{
       'id': instance.id,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
@@ -33,6 +32,7 @@ Map<String, dynamic> _$$PaddlerImplToJson(_$PaddlerImpl instance) =>
       'drummerPreference': instance.drummerPreference,
       'steersPersonPreference': instance.steersPersonPreference,
       'strokePreference': instance.strokePreference,
+      'cancerSurvivor': instance.cancerSurvivor,
     };
 
 const _$GenderEnumMap = {

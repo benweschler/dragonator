@@ -5,7 +5,7 @@ part 'boat.freezed.dart';
 part 'boat.g.dart';
 
 @Freezed(equal: false)
-class Boat extends Equatable with _$Boat {
+abstract class Boat extends Equatable with _$Boat {
   const Boat._();
 
   const factory Boat({

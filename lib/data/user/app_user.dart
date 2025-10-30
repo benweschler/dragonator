@@ -4,7 +4,7 @@ part 'app_user.freezed.dart';
 part 'app_user.g.dart';
 
 @freezed
-class AppUser with _$AppUser {
+abstract class AppUser with _$AppUser {
   const AppUser._();
 
   const factory AppUser({

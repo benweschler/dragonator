@@ -6,7 +6,7 @@ part 'lineup.freezed.dart';
 part 'lineup.g.dart';
 
 @Freezed(equal: false)
-class Lineup extends Equatable with _$Lineup {
+abstract class Lineup extends Equatable with _$Lineup {
   const Lineup._();
 
   const factory Lineup({

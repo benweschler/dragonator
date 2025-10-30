@@ -7,7 +7,7 @@ part 'team.freezed.dart';
 part 'team.g.dart';
 
 @Freezed(equal: false)
-class Team extends Equatable with _$Team {
+abstract class Team extends Equatable with _$Team {
   const Team._();
 
   const factory Team({

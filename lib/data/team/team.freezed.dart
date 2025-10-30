@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,49 +9,42 @@ part of 'team.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Team _$TeamFromJson(Map<String, dynamic> json) {
-  return _Team.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Team {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String get id;
+  String get name;
   @_BoatMapConverter()
-  Map<String, Boat> get boats => throw _privateConstructorUsedError;
-
-  /// Serializes this Team to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, Boat> get boats;
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TeamCopyWith<Team> get copyWith => throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $TeamCopyWith<Team> get copyWith =>
+      _$TeamCopyWithImpl<Team>(this as Team, _$identity);
+
+  /// Serializes this Team to a JSON map.
+  Map<String, dynamic> toJson();
 }
 
 /// @nodoc
-abstract class $TeamCopyWith<$Res> {
-  factory $TeamCopyWith(Team value, $Res Function(Team) then) =
-      _$TeamCopyWithImpl<$Res, Team>;
+abstract mixin class $TeamCopyWith<$Res> {
+  factory $TeamCopyWith(Team value, $Res Function(Team) _then) =
+      _$TeamCopyWithImpl;
   @useResult
   $Res call(
       {String id, String name, @_BoatMapConverter() Map<String, Boat> boats});
 }
 
 /// @nodoc
-class _$TeamCopyWithImpl<$Res, $Val extends Team>
-    implements $TeamCopyWith<$Res> {
-  _$TeamCopyWithImpl(this._value, this._then);
+class _$TeamCopyWithImpl<$Res> implements $TeamCopyWith<$Res> {
+  _$TeamCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Team _self;
+  final $Res Function(Team) _then;
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
@@ -62,79 +55,196 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
     Object? name = null,
     Object? boats = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       boats: null == boats
-          ? _value.boats
-          : boats // ignore: cast_nullable_to_non_nullable
-              as Map<String, Boat>,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
-  factory _$$TeamImplCopyWith(
-          _$TeamImpl value, $Res Function(_$TeamImpl) then) =
-      __$$TeamImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String id, String name, @_BoatMapConverter() Map<String, Boat> boats});
-}
-
-/// @nodoc
-class __$$TeamImplCopyWithImpl<$Res>
-    extends _$TeamCopyWithImpl<$Res, _$TeamImpl>
-    implements _$$TeamImplCopyWith<$Res> {
-  __$$TeamImplCopyWithImpl(_$TeamImpl _value, $Res Function(_$TeamImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Team
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? boats = null,
-  }) {
-    return _then(_$TeamImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      boats: null == boats
-          ? _value._boats
+          ? _self.boats
           : boats // ignore: cast_nullable_to_non_nullable
               as Map<String, Boat>,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [Team].
+extension TeamPatterns on Team {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Team value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Team() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_Team value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Team():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Team value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Team() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(String id, String name,
+            @_BoatMapConverter() Map<String, Boat> boats)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Team() when $default != null:
+        return $default(_that.id, _that.name, _that.boats);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(String id, String name,
+            @_BoatMapConverter() Map<String, Boat> boats)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Team():
+        return $default(_that.id, _that.name, _that.boats);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(String id, String name,
+            @_BoatMapConverter() Map<String, Boat> boats)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Team() when $default != null:
+        return $default(_that.id, _that.name, _that.boats);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
-class _$TeamImpl extends _Team {
-  const _$TeamImpl(
+class _Team extends Team {
+  const _Team(
       {required this.id,
       required this.name,
       @_BoatMapConverter() required final Map<String, Boat> boats})
       : _boats = boats,
         super._();
-
-  factory _$TeamImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TeamImplFromJson(json);
+  factory _Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
   @override
   final String id;
@@ -151,42 +261,61 @@ class _$TeamImpl extends _Team {
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$$TeamImplCopyWith<_$TeamImpl> get copyWith =>
-      __$$TeamImplCopyWithImpl<_$TeamImpl>(this, _$identity);
+  _$TeamCopyWith<_Team> get copyWith =>
+      __$TeamCopyWithImpl<_Team>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TeamImplToJson(
+    return _$TeamToJson(
       this,
     );
   }
 }
 
-abstract class _Team extends Team {
-  const factory _Team(
-          {required final String id,
-          required final String name,
-          @_BoatMapConverter() required final Map<String, Boat> boats}) =
-      _$TeamImpl;
-  const _Team._() : super._();
+/// @nodoc
+abstract mixin class _$TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
+  factory _$TeamCopyWith(_Team value, $Res Function(_Team) _then) =
+      __$TeamCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String id, String name, @_BoatMapConverter() Map<String, Boat> boats});
+}
 
-  factory _Team.fromJson(Map<String, dynamic> json) = _$TeamImpl.fromJson;
+/// @nodoc
+class __$TeamCopyWithImpl<$Res> implements _$TeamCopyWith<$Res> {
+  __$TeamCopyWithImpl(this._self, this._then);
 
-  @override
-  String get id;
-  @override
-  String get name;
-  @override
-  @_BoatMapConverter()
-  Map<String, Boat> get boats;
+  final _Team _self;
+  final $Res Function(_Team) _then;
 
   /// Create a copy of Team
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TeamImplCopyWith<_$TeamImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? boats = null,
+  }) {
+    return _then(_Team(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      boats: null == boats
+          ? _self._boats
+          : boats // ignore: cast_nullable_to_non_nullable
+              as Map<String, Boat>,
+    ));
+  }
 }
+
+// dart format on

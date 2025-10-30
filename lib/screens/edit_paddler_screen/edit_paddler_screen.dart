@@ -40,6 +40,7 @@ class EditPaddlerScreen extends StatelessWidget {
         steersPersonPreference:
             formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
+        cancerSurvivor: formData[EditPaddlerFieldNames.cancerSurvivor],
       );
     } else {
       updatedPaddler = Paddler(
@@ -54,6 +55,7 @@ class EditPaddlerScreen extends StatelessWidget {
         steersPersonPreference:
             formData[EditPaddlerFieldNames.steersPersonPreference],
         strokePreference: formData[EditPaddlerFieldNames.strokePreference],
+        cancerSurvivor: formData[EditPaddlerFieldNames.cancerSurvivor],
       );
     }
 

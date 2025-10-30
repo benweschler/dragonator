@@ -160,6 +160,26 @@ class _PaddlerInfoView extends StatelessWidget {
                 label: 'Stroke',
                 hasPreference: paddler.strokePreference,
               ),
+              if (paddler.cancerSurvivor) ...[
+                SizedBox(height: Insets.xl),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Cancer Survivor',
+                      style: TextStyles.body2.copyWith(
+                          color: AppColors.of(context).neutralContent),
+                    ),
+                    SizedBox(width: Insets.lg),
+                    SizedBox.square(
+                      dimension: 25,
+                      child: Image.network(
+                        'https://static.thenounproject.com/png/126432-200.png',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               SizedBox(height: Insets.sm),
             ],
           ),

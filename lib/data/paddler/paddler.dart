@@ -8,7 +8,7 @@ part 'paddler.g.dart';
 //TODO: make position preference a set of preference enums. None is just empty.
 
 @Freezed(equal: false)
-class Paddler extends Equatable with _$Paddler {
+abstract class Paddler extends Equatable with _$Paddler {
   const Paddler._();
 
   const factory Paddler({
@@ -22,6 +22,7 @@ class Paddler extends Equatable with _$Paddler {
     required bool drummerPreference,
     required bool steersPersonPreference,
     required bool strokePreference,
+    required bool cancerSurvivor,
   }) = _Paddler;
 
   factory Paddler.fromJson(Map<String, Object?> json) =>
@@ -49,6 +50,7 @@ class Paddler extends Equatable with _$Paddler {
         drummerPreference,
         steersPersonPreference,
         strokePreference,
+        cancerSurvivor,
       ];
 }
 

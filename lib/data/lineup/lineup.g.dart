@@ -6,7 +6,7 @@ part of 'lineup.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LineupImpl _$$LineupImplFromJson(Map<String, dynamic> json) => _$LineupImpl(
+_Lineup _$LineupFromJson(Map<String, dynamic> json) => _Lineup(
       id: json['id'] as String,
       name: json['name'] as String,
       boatID: json['boatID'] as String,
@@ -14,8 +14,7 @@ _$LineupImpl _$$LineupImplFromJson(Map<String, dynamic> json) => _$LineupImpl(
           (json['paddlerIDs'] as List<dynamic>).map((e) => e as String?),
     );
 
-Map<String, dynamic> _$$LineupImplToJson(_$LineupImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$LineupToJson(_Lineup instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'boatID': instance.boatID,

@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,41 +9,38 @@ part of 'paddler.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Paddler _$PaddlerFromJson(Map<String, dynamic> json) {
-  return _Paddler.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Paddler {
-  String get id => throw _privateConstructorUsedError;
-  String get firstName => throw _privateConstructorUsedError;
-  String get lastName => throw _privateConstructorUsedError;
-  int get weight => throw _privateConstructorUsedError;
-  Gender get gender => throw _privateConstructorUsedError;
-  SidePreference? get sidePreference => throw _privateConstructorUsedError;
-  AgeGroup get ageGroup => throw _privateConstructorUsedError;
-  bool get drummerPreference => throw _privateConstructorUsedError;
-  bool get steersPersonPreference => throw _privateConstructorUsedError;
-  bool get strokePreference => throw _privateConstructorUsedError;
-
-  /// Serializes this Paddler to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get id;
+  String get firstName;
+  String get lastName;
+  int get weight;
+  Gender get gender;
+  SidePreference? get sidePreference;
+  AgeGroup get ageGroup;
+  bool get drummerPreference;
+  bool get steersPersonPreference;
+  bool get strokePreference;
+  bool get cancerSurvivor;
 
   /// Create a copy of Paddler
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PaddlerCopyWith<Paddler> get copyWith => throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $PaddlerCopyWith<Paddler> get copyWith =>
+      _$PaddlerCopyWithImpl<Paddler>(this as Paddler, _$identity);
+
+  /// Serializes this Paddler to a JSON map.
+  Map<String, dynamic> toJson();
 }
 
 /// @nodoc
-abstract class $PaddlerCopyWith<$Res> {
-  factory $PaddlerCopyWith(Paddler value, $Res Function(Paddler) then) =
-      _$PaddlerCopyWithImpl<$Res, Paddler>;
+abstract mixin class $PaddlerCopyWith<$Res> {
+  factory $PaddlerCopyWith(Paddler value, $Res Function(Paddler) _then) =
+      _$PaddlerCopyWithImpl;
   @useResult
   $Res call(
       {String id,
@@ -55,18 +52,16 @@ abstract class $PaddlerCopyWith<$Res> {
       AgeGroup ageGroup,
       bool drummerPreference,
       bool steersPersonPreference,
-      bool strokePreference});
+      bool strokePreference,
+      bool cancerSurvivor});
 }
 
 /// @nodoc
-class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
-    implements $PaddlerCopyWith<$Res> {
-  _$PaddlerCopyWithImpl(this._value, this._then);
+class _$PaddlerCopyWithImpl<$Res> implements $PaddlerCopyWith<$Res> {
+  _$PaddlerCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Paddler _self;
+  final $Res Function(Paddler) _then;
 
   /// Create a copy of Paddler
   /// with the given fields replaced by the non-null parameter values.
@@ -83,145 +78,287 @@ class _$PaddlerCopyWithImpl<$Res, $Val extends Paddler>
     Object? drummerPreference = null,
     Object? steersPersonPreference = null,
     Object? strokePreference = null,
+    Object? cancerSurvivor = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
-          ? _value.firstName
+          ? _self.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
               as String,
       lastName: null == lastName
-          ? _value.lastName
+          ? _self.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
       weight: null == weight
-          ? _value.weight
+          ? _self.weight
           : weight // ignore: cast_nullable_to_non_nullable
               as int,
       gender: null == gender
-          ? _value.gender
+          ? _self.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
       sidePreference: freezed == sidePreference
-          ? _value.sidePreference
+          ? _self.sidePreference
           : sidePreference // ignore: cast_nullable_to_non_nullable
               as SidePreference?,
       ageGroup: null == ageGroup
-          ? _value.ageGroup
+          ? _self.ageGroup
           : ageGroup // ignore: cast_nullable_to_non_nullable
               as AgeGroup,
       drummerPreference: null == drummerPreference
-          ? _value.drummerPreference
+          ? _self.drummerPreference
           : drummerPreference // ignore: cast_nullable_to_non_nullable
               as bool,
       steersPersonPreference: null == steersPersonPreference
-          ? _value.steersPersonPreference
+          ? _self.steersPersonPreference
           : steersPersonPreference // ignore: cast_nullable_to_non_nullable
               as bool,
       strokePreference: null == strokePreference
-          ? _value.strokePreference
+          ? _self.strokePreference
           : strokePreference // ignore: cast_nullable_to_non_nullable
               as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$PaddlerImplCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
-  factory _$$PaddlerImplCopyWith(
-          _$PaddlerImpl value, $Res Function(_$PaddlerImpl) then) =
-      __$$PaddlerImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String id,
-      String firstName,
-      String lastName,
-      int weight,
-      Gender gender,
-      SidePreference? sidePreference,
-      AgeGroup ageGroup,
-      bool drummerPreference,
-      bool steersPersonPreference,
-      bool strokePreference});
-}
-
-/// @nodoc
-class __$$PaddlerImplCopyWithImpl<$Res>
-    extends _$PaddlerCopyWithImpl<$Res, _$PaddlerImpl>
-    implements _$$PaddlerImplCopyWith<$Res> {
-  __$$PaddlerImplCopyWithImpl(
-      _$PaddlerImpl _value, $Res Function(_$PaddlerImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Paddler
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? firstName = null,
-    Object? lastName = null,
-    Object? weight = null,
-    Object? gender = null,
-    Object? sidePreference = freezed,
-    Object? ageGroup = null,
-    Object? drummerPreference = null,
-    Object? steersPersonPreference = null,
-    Object? strokePreference = null,
-  }) {
-    return _then(_$PaddlerImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstName: null == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as int,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
-              as Gender,
-      sidePreference: freezed == sidePreference
-          ? _value.sidePreference
-          : sidePreference // ignore: cast_nullable_to_non_nullable
-              as SidePreference?,
-      ageGroup: null == ageGroup
-          ? _value.ageGroup
-          : ageGroup // ignore: cast_nullable_to_non_nullable
-              as AgeGroup,
-      drummerPreference: null == drummerPreference
-          ? _value.drummerPreference
-          : drummerPreference // ignore: cast_nullable_to_non_nullable
-              as bool,
-      steersPersonPreference: null == steersPersonPreference
-          ? _value.steersPersonPreference
-          : steersPersonPreference // ignore: cast_nullable_to_non_nullable
-              as bool,
-      strokePreference: null == strokePreference
-          ? _value.strokePreference
-          : strokePreference // ignore: cast_nullable_to_non_nullable
+      cancerSurvivor: null == cancerSurvivor
+          ? _self.cancerSurvivor
+          : cancerSurvivor // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [Paddler].
+extension PaddlerPatterns on Paddler {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Paddler value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_Paddler value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Paddler value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String firstName,
+            String lastName,
+            int weight,
+            Gender gender,
+            SidePreference? sidePreference,
+            AgeGroup ageGroup,
+            bool drummerPreference,
+            bool steersPersonPreference,
+            bool strokePreference,
+            bool cancerSurvivor)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler() when $default != null:
+        return $default(
+            _that.id,
+            _that.firstName,
+            _that.lastName,
+            _that.weight,
+            _that.gender,
+            _that.sidePreference,
+            _that.ageGroup,
+            _that.drummerPreference,
+            _that.steersPersonPreference,
+            _that.strokePreference,
+            _that.cancerSurvivor);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String firstName,
+            String lastName,
+            int weight,
+            Gender gender,
+            SidePreference? sidePreference,
+            AgeGroup ageGroup,
+            bool drummerPreference,
+            bool steersPersonPreference,
+            bool strokePreference,
+            bool cancerSurvivor)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler():
+        return $default(
+            _that.id,
+            _that.firstName,
+            _that.lastName,
+            _that.weight,
+            _that.gender,
+            _that.sidePreference,
+            _that.ageGroup,
+            _that.drummerPreference,
+            _that.steersPersonPreference,
+            _that.strokePreference,
+            _that.cancerSurvivor);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String id,
+            String firstName,
+            String lastName,
+            int weight,
+            Gender gender,
+            SidePreference? sidePreference,
+            AgeGroup ageGroup,
+            bool drummerPreference,
+            bool steersPersonPreference,
+            bool strokePreference,
+            bool cancerSurvivor)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _Paddler() when $default != null:
+        return $default(
+            _that.id,
+            _that.firstName,
+            _that.lastName,
+            _that.weight,
+            _that.gender,
+            _that.sidePreference,
+            _that.ageGroup,
+            _that.drummerPreference,
+            _that.steersPersonPreference,
+            _that.strokePreference,
+            _that.cancerSurvivor);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
-class _$PaddlerImpl extends _Paddler {
-  const _$PaddlerImpl(
+class _Paddler extends Paddler {
+  const _Paddler(
       {required this.id,
       required this.firstName,
       required this.lastName,
@@ -231,11 +368,11 @@ class _$PaddlerImpl extends _Paddler {
       required this.ageGroup,
       required this.drummerPreference,
       required this.steersPersonPreference,
-      required this.strokePreference})
+      required this.strokePreference,
+      required this.cancerSurvivor})
       : super._();
-
-  factory _$PaddlerImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PaddlerImplFromJson(json);
+  factory _Paddler.fromJson(Map<String, dynamic> json) =>
+      _$PaddlerFromJson(json);
 
   @override
   final String id;
@@ -257,64 +394,116 @@ class _$PaddlerImpl extends _Paddler {
   final bool steersPersonPreference;
   @override
   final bool strokePreference;
+  @override
+  final bool cancerSurvivor;
 
   /// Create a copy of Paddler
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$$PaddlerImplCopyWith<_$PaddlerImpl> get copyWith =>
-      __$$PaddlerImplCopyWithImpl<_$PaddlerImpl>(this, _$identity);
+  _$PaddlerCopyWith<_Paddler> get copyWith =>
+      __$PaddlerCopyWithImpl<_Paddler>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PaddlerImplToJson(
+    return _$PaddlerToJson(
       this,
     );
   }
 }
 
-abstract class _Paddler extends Paddler {
-  const factory _Paddler(
-      {required final String id,
-      required final String firstName,
-      required final String lastName,
-      required final int weight,
-      required final Gender gender,
-      required final SidePreference? sidePreference,
-      required final AgeGroup ageGroup,
-      required final bool drummerPreference,
-      required final bool steersPersonPreference,
-      required final bool strokePreference}) = _$PaddlerImpl;
-  const _Paddler._() : super._();
+/// @nodoc
+abstract mixin class _$PaddlerCopyWith<$Res> implements $PaddlerCopyWith<$Res> {
+  factory _$PaddlerCopyWith(_Paddler value, $Res Function(_Paddler) _then) =
+      __$PaddlerCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String id,
+      String firstName,
+      String lastName,
+      int weight,
+      Gender gender,
+      SidePreference? sidePreference,
+      AgeGroup ageGroup,
+      bool drummerPreference,
+      bool steersPersonPreference,
+      bool strokePreference,
+      bool cancerSurvivor});
+}
 
-  factory _Paddler.fromJson(Map<String, dynamic> json) = _$PaddlerImpl.fromJson;
+/// @nodoc
+class __$PaddlerCopyWithImpl<$Res> implements _$PaddlerCopyWith<$Res> {
+  __$PaddlerCopyWithImpl(this._self, this._then);
 
-  @override
-  String get id;
-  @override
-  String get firstName;
-  @override
-  String get lastName;
-  @override
-  int get weight;
-  @override
-  Gender get gender;
-  @override
-  SidePreference? get sidePreference;
-  @override
-  AgeGroup get ageGroup;
-  @override
-  bool get drummerPreference;
-  @override
-  bool get steersPersonPreference;
-  @override
-  bool get strokePreference;
+  final _Paddler _self;
+  final $Res Function(_Paddler) _then;
 
   /// Create a copy of Paddler
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PaddlerImplCopyWith<_$PaddlerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? weight = null,
+    Object? gender = null,
+    Object? sidePreference = freezed,
+    Object? ageGroup = null,
+    Object? drummerPreference = null,
+    Object? steersPersonPreference = null,
+    Object? strokePreference = null,
+    Object? cancerSurvivor = null,
+  }) {
+    return _then(_Paddler(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      firstName: null == firstName
+          ? _self.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastName: null == lastName
+          ? _self.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
+              as String,
+      weight: null == weight
+          ? _self.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as int,
+      gender: null == gender
+          ? _self.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as Gender,
+      sidePreference: freezed == sidePreference
+          ? _self.sidePreference
+          : sidePreference // ignore: cast_nullable_to_non_nullable
+              as SidePreference?,
+      ageGroup: null == ageGroup
+          ? _self.ageGroup
+          : ageGroup // ignore: cast_nullable_to_non_nullable
+              as AgeGroup,
+      drummerPreference: null == drummerPreference
+          ? _self.drummerPreference
+          : drummerPreference // ignore: cast_nullable_to_non_nullable
+              as bool,
+      steersPersonPreference: null == steersPersonPreference
+          ? _self.steersPersonPreference
+          : steersPersonPreference // ignore: cast_nullable_to_non_nullable
+              as bool,
+      strokePreference: null == strokePreference
+          ? _self.strokePreference
+          : strokePreference // ignore: cast_nullable_to_non_nullable
+              as bool,
+      cancerSurvivor: null == cancerSurvivor
+          ? _self.cancerSurvivor
+          : cancerSurvivor // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
+
+// dart format on

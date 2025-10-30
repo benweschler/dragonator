@@ -6,15 +6,14 @@ part of 'team.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TeamImpl _$$TeamImplFromJson(Map<String, dynamic> json) => _$TeamImpl(
+_Team _$TeamFromJson(Map<String, dynamic> json) => _Team(
       id: json['id'] as String,
       name: json['name'] as String,
       boats: const _BoatMapConverter()
           .fromJson(json['boats'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$TeamImplToJson(_$TeamImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'boats': const _BoatMapConverter().toJson(instance.boats),

@@ -8,4 +8,5 @@ abstract class EditPaddlerFieldNames {
   static const drummerPreference = 'drummer';
   static const steersPersonPreference = 'steersPerson';
   static const strokePreference = 'stroke';
+  static const cancerSurvivor = 'cancerSurvivor';
 }
