@@ -170,7 +170,7 @@ class _PaddlerInfoView extends StatelessWidget {
                       style: TextStyles.body2.copyWith(
                           color: AppColors.of(context).neutralContent),
                     ),
-                    SizedBox(width: Insets.lg),
+                    SizedBox(width: Insets.sm),
                     SizedBox.square(
                       dimension: 25,
                       child: Image.asset('assets/cancer_survivor_symbol.png'),

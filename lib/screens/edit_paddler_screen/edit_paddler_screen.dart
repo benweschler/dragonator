@@ -8,6 +8,7 @@ import 'package:dragonator/widgets/custom_input_decoration.dart';
 import 'package:dragonator/styles/styles.dart';
 import 'package:dragonator/styles/theme.dart';
 import 'package:dragonator/widgets/custom_scaffold.dart';
+import 'package:dragonator/widgets/platform_aware/platform_aware_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
@@ -101,7 +102,7 @@ class EditPaddlerScreen extends StatelessWidget {
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: Validators.required(
-                    errorText: 'Enter a last name.'
+                    errorText: 'Enter a last name.',
                   ),
                   keyboardType: TextInputType.name,
                   decoration: CustomInputDecoration(AppColors.of(context)),
@@ -126,6 +127,27 @@ class EditPaddlerScreen extends StatelessWidget {
                 name: EditPaddlerFieldNames.strokePreference,
                 label: 'Stroke',
                 initialValue: paddler?.strokePreference ?? false,
+              ),
+              SizedBox(height: Insets.lg),
+              FormBuilderField(
+                name: EditPaddlerFieldNames.cancerSurvivor,
+                initialValue: paddler?.cancerSurvivor ?? false,
+                builder: (state) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Cancer Survivor',
+                      style: TextStyles.body2.copyWith(
+                        color: AppColors.of(context).neutralContent,
+                      ),
+                    ),
+                    SizedBox(width: Insets.lg),
+                    PlatformAwareSwitch(
+                      value: state.value!,
+                      onChanged: (value) => state.didChange(value),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: Insets.xl * 1.5),
               Row(
